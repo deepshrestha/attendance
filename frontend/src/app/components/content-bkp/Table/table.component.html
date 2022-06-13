@@ -1,0 +1,16 @@
+<table class="table">
+    <thead>
+        <tr [innerHTML]="tableColumns | safeHtml"></tr>
+    </thead>
+    <!-- call apihandler to fetch data -->
+    <tbody>
+        <tr *ngFor="let publisher of tableData; let i= index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ publisher?.name }}</td>
+            <td>{{ publisher?.city }}</td>
+            <td>{{ publisher?.email }}</td>
+            <td>{{ publisher?.telephoneNo }}</td>
+            <td>{{ publisher?.createdAt | formatdate }}</td>
+        </tr>
+    </tbody>
+</table>

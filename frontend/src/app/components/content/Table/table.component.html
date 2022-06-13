@@ -1,0 +1,60 @@
+<app-breadcrumb></app-breadcrumb>
+<div *ngIf="type === 'add'" class="float-left" style="position: absolute;">
+    <button class="btn btn-primary" (click)="showForm()"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add</button>
+</div>
+<div *ngIf="type === 'select'" class="float-left" style="position: absolute;">
+    <select class="form-control">
+        <option>---select---</option>
+        <option *ngFor="let option of options" [ngValue]="option.id">
+            {{option.value}}
+          </option>
+    </select>
+</div>
+<app-search (onSearchHandler)="searchHandler($event)" (onPaginationHandler)="paginateHandler($event)"></app-search>
+<table class="table">
+    <thead>
+        <!-- <tr [innerHTML]="tableColumns | safeHtml"></tr> -->
+        <tr>   
+            <ng-container *ngFor="let item of tableHeadersKeyList">
+                <th 
+                    attr.data-column="{{item}}" 
+                    class="table-{{item}}" 
+                    data-order="desc" 
+                    scope="col" 
+                    *ngIf="item !== 'searchFilter'"
+                    (click)="item !== 'action' ? onClickHandler($event) : ''"
+                >
+                {{tableHeaders[item]}}
+                </th>
+            </ng-container>
+        </tr>
+    </thead>
+    <!-- <tbody [innerHTML]="tableDataColumns | safeHtml"></tbody> -->
+        <tbody>
+            <!-- <tr *ngFor="let item of tableData"> -->
+            <tr *ngFor="let item of paginateData">
+                <ng-container *ngFor="let key of tableHeadersKeyList">
+                    <td *ngIf="isBoolean(item[key]) == 'string' && key !== 'action' && key !== 'searchFilter'">
+                        {{item[key]}}
+                    </td>
+                    <td *ngIf="isBoolean(item[key]) == 'boolean'">
+                        <input type="checkbox" [checked]="item[key] == 'true' ? true : false">
+                    </td>
+                    <td *ngIf="key === 'action'" class="text-center">
+                        <button
+                            id="showModalButton"
+                            class="btn btn-primary"
+                            data-toggle="modal"
+                            data-target="#showModal"
+                            (click)="onToggle(item.sn)"
+                        >
+                        <li class="fa fa-edit" aria-hidden="true"></li>
+                        Edit
+                        </button>
+                    </td>
+                </ng-container>
+            </tr>
+        </tbody>
+</table>
+<app-modal [modalTitle]="modalTitle" [modalBody]="modalBody" (onSaveInfo)="onSaveInfoDetail($event)" (onCancel)="onCancelModal()"></app-modal>
+<app-pagination [paginationConfig]="paginationConfig" (onPaginationHandler)="paginateHandler($event)"></app-pagination>

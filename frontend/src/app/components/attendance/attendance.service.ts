@@ -1,0 +1,30 @@
+import { Injectable, Inject } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators'
+
+const httpOptions = {
+    headers: new HttpHeaders(
+        {
+            "Content-Type": "application/json"
+        }
+    )
+}
+
+@Injectable({
+    providedIn: "root"
+})
+export class AttendanceService {
+    http: HttpClient;
+    constructor(@Inject(HttpClient) http: HttpClient){
+        this.http = http;
+    }
+
+    getDataFromService(): Observable<any> {
+        return this.http.get("http://localhost:3000/api/attendance/", httpOptions).pipe(map(data => data));
+    }
+
+    postDataFromService(data): Observable<any> {
+        return this.http.post("http://localhost:3000/api/attendance`/", data, httpOptions).pipe(map(data => data));
+    }
+}

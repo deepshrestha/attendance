@@ -1,0 +1,33 @@
+<!-- pageNumbers: {{pageNumbers}} -->
+<nav *ngIf="pageNumbers.length > 0">
+    <ul class="pagination justify-content-center">
+        &nbsp;
+        <li class="page-item" [ngClass]="startRecord <= 1 ? 'disabled' :  null">
+            <a routerLink="{{pathname}}" class="page-link" (click)="doPaginate(1)" tabIndex="-1">
+                First
+            </a>
+        </li>
+        <li class="page-item" [ngClass]="startRecord <= 1 ? 'disabled' :  null">
+            <a routerLink="{{pathname}}" class="page-link" (click)="doPaginate(pageNumber - 1)" tabIndex="-1">
+                Previous
+            </a>
+        </li>
+        <li *ngFor="let number of pageNumbers" class="page-item" [ngClass]="pageNumber == number ? 'active' :  ''">
+            <a routerLink="{{pathname}}" class="page-link" (click)="doPaginate(number)">
+                {{number}}
+            </a>
+        </li>
+        <li class="page-item" [ngClass]="endRecord === totalRecordsCount ? 'disabled' :  null">
+            <a routerLink="{{pathname}}" class="page-link" (click)="doPaginate(pageNumber + 1)">
+                Next
+            </a>
+        </li>
+        <li class="page-item" [ngClass]="endRecord === totalRecordsCount ? 'disabled' :  null">
+            <a routerLink="{{pathname}}" class="page-link" (click)="doPaginate(totalPages)">
+                Last
+            </a>
+        </li>
+        &nbsp;
+    </ul>
+</nav>
+<p *ngIf="pageNumbers.length == 0" class="no-record text-center">No Records Found</p>

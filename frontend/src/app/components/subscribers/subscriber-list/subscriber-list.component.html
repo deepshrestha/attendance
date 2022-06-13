@@ -1,0 +1,225 @@
+<!-- <app-header></app-header>
+<app-sidebar [basePathName]="basePathName" [type]="type"></app-sidebar> -->
+
+<div class="content-wrapper">
+  <h5>Approval Status</h5>
+  <input
+    type="radio"
+    id="pending"
+    name="subscriberType"
+    checked
+    (change)="onSubscriberTypeChange($event)"
+  />
+  <label for="pending">Pending</label>
+
+  <input
+    type="radio"
+    id="approved"
+    name="subscriberType"
+    (change)="onSubscriberTypeChange($event)"
+  />
+  <label for="approved">Approved</label>
+
+  <input
+    type="radio"
+    id="disapproved"
+    name="subscriberType"
+    (change)="onSubscriberTypeChange($event)"
+  />
+  <label for="disapproved">Dispproved</label>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Full Name</th>
+        <th>City</th>
+        <th>Email</th>
+        <th>Telephone No</th>
+        <th>Created Date</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let subscriber of subscribers">
+        <td>{{ subscriber?.txtFullName }}</td>
+        <td>{{ subscriber?.txtCity }}</td>
+        <td>{{ subscriber?.txtEmail }}</td>
+        <td>{{ subscriber?.txtTelephoneNo }}</td>
+        <td>{{ formatDate(subscriber?.createdAt) | formatdate }}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="open(mymodal, subscriber)"
+          >
+            Edit
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #mymodal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Bootstrap Modal</h4>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="modal.dismiss()"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form [formGroup]="editForm">
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Password</label>
+            <button
+              type="button"
+              class="btn btn-sm btn-primary"
+              (click)="generateRandomPassword()"
+            >
+              Change
+            </button>
+            <input
+              type="text"
+              formControlName="password"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': f['password'].errors }"
+            />
+            <div *ngIf="f['password'].errors" class="invalid-feedback">
+              <div *ngIf="f['password'].errors['required']">
+                Password is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label>Full Name</label>
+            <input
+              type="text"
+              formControlName="txtFullName"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': f['txtFullName'].errors }"
+            />
+            <div *ngIf="f['txtFullName'].errors" class="invalid-feedback">
+              <div *ngIf="f['txtFullName'].errors['required']">
+                Full Name is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label>City</label>
+            <input
+              type="text"
+              formControlName="txtCity"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': f['txtCity'].errors }"
+            />
+            <div *ngIf="f['txtCity'].errors" class="invalid-feedback">
+              <div *ngIf="f['txtCity'].errors['required']">
+                City is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label>Email</label>
+            <input
+              type="email"
+              formControlName="txtEmail"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': f['txtEmail'].errors }"
+            />
+            <div *ngIf="f['txtEmail'].errors" class="invalid-feedback">
+              <div *ngIf="f['txtEmail'].errors['required']">
+                Email is required
+              </div>
+              <div *ngIf="f['txtEmail'].errors['email']">Email is invalid</div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-6">
+            <label>Telephone No.</label>
+            <input
+              type="text"
+              formControlName="txtTelephoneNo"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': f['txtTelephoneNo'].errors }"
+            />
+            <div *ngIf="f['txtTelephoneNo'].errors" class="invalid-feedback">
+              <div *ngIf="f['txtTelephoneNo'].errors['required']">
+                Telephone No. is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label>Primary Link</label>
+            <input
+              type="text"
+              formControlName="primaryLink"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': f['primaryLink'].errors }"
+            />
+            <div *ngIf="f['primaryLink'].errors" class="invalid-feedback">
+              <div *ngIf="f['primaryLink'].errors['required']">
+                Primary Link is required
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label>Secondary Link</label>
+            <input
+              type="text"
+              formControlName="secondaryLink"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label>Timeout(In Seconds)</label>
+            <input
+              type="number"
+              formControlName="timeoutInSeconds"
+              class="form-control"
+              max="60"
+              min="10"
+              [ngClass]="{ 'is-invalid': f['timeoutInSeconds'].errors }"
+            />
+            <div *ngIf="f['timeoutInSeconds'].errors" class="invalid-feedback">
+              <div *ngIf="f['timeoutInSeconds'].errors['required']">
+                Timeout is required
+              </div>
+              <div *ngIf="f['timeoutInSeconds'].errors['max']">
+                Timeout must be less than 60
+              </div>
+              <div *ngIf="f['timeoutInSeconds'].errors['min']">
+                Timeout must be greater than 10
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          [disabled]="this.editForm.invalid"
+          type="button"
+          (click)="updateSubscriberApprovalStatus('APPROVED')"
+          class="btn btn-success"
+        >
+          Approve
+        </button>
+        <button
+          [disabled]="this.editForm.invalid"
+          type="button"
+          (click)="updateSubscriberApprovalStatus('DISAPPROVED')"
+          class="btn btn-danger"
+        >
+          Disapprove
+        </button>
+      </div>
+    </form>
+  </ng-template>
+</div>
+
+<!-- <app-footer></app-footer> -->

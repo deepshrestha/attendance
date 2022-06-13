@@ -1,0 +1,130 @@
+<ng-container *ngIf="isLoading || isCompleted; else showContent">
+  <div id="container">
+    <h1>{{ displayMessage }}</h1>
+    <div id="userInfo" *ngIf="!isCompleted">
+      <input
+        type="hidden"
+        id="uuidInitial"
+        value=""
+        (change)="onUserInformationChange($event)"
+      />
+      <input
+        type="hidden"
+        id="ipaddressInitial"
+        value=""
+        (change)="onUserInformationChange($event)"
+      />
+      <input
+        type="hidden"
+        id="macidInitial"
+        value=""
+        (change)="onUserInformationChange($event)"
+      />
+      <input
+        type="hidden"
+        id="hwidInitial"
+        value=""
+        (change)="onUserInformationChange($event)"
+      />
+    </div>
+  </div>
+</ng-container>
+<ng-template #showContent>
+  <div id="container" align="center">
+    <form [formGroup]="registrationForm" id="form1" method="post">
+      <input type="hidden" formControlName="uuid" id="uuid" />
+      <input type="hidden" formControlName="ipaddress" id="ipaddress" />
+      <input type="hidden" formControlName="macid" id="macid" />
+      <input type="hidden" formControlName="hwid" id="hwid" />
+
+      <table cellpadding="0" cellspacing="5">
+        <tr>
+          <td align="right">Full Name&nbsp;:&nbsp;</td>
+          <td align="left">
+            <input
+              type="text"
+              formControlName="txtFullName"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': f['txtFullName'].errors }"
+            />
+            <div *ngIf="f['txtFullName'].errors" class="invalid-feedback">
+              <div *ngIf="f['txtFullName'].errors['required']">
+                Full Name is required
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td align="right">City&nbsp;:&nbsp;</td>
+          <td align="left">
+            <input
+              type="text"
+              formControlName="txtCity"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': f['txtCity'].errors }"
+            />
+            <div *ngIf="f['txtCity'].errors" class="invalid-feedback">
+              <div *ngIf="f['txtCity'].errors['required']">
+                City is required
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td align="right">Email&nbsp;:&nbsp;</td>
+          <td align="left">
+            <input
+              type="email"
+              formControlName="txtEmail"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': f['txtEmail'].errors }"
+            />
+            <div *ngIf="f['txtEmail'].errors" class="invalid-feedback">
+              <div *ngIf="f['txtEmail'].errors['required']">
+                Email is required
+              </div>
+              <div *ngIf="f['txtEmail'].errors['email']">Email is invalid</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td align="right">Telephone No&nbsp;:&nbsp;</td>
+          <td align="left">
+            <input
+              type="text"
+              formControlName="txtTelephoneNo"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': f['txtTelephoneNo'].errors }"
+            />
+            <div *ngIf="f['txtTelephoneNo'].errors" class="invalid-feedback">
+              <div *ngIf="f['txtTelephoneNo'].errors['required']">
+                Telephone No is required
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td>
+            <button
+              [disabled]="this.registrationForm.invalid"
+              type="button"
+              (click)="onSubmitHandler()"
+              class="btn btn-primary"
+            >
+              Register
+            </button>
+            <button
+              type="button"
+              (click)="clearForm()"
+              class="btn btn-secondary"
+            >
+              Clear
+            </button>
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+</ng-template>

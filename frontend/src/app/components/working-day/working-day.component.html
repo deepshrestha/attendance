@@ -1,0 +1,103 @@
+<div *ngIf="showTable; then table; else form;"></div>
+
+<ng-template #table>
+    <app-home>
+        <app-table type="add" 
+                (onAddHandler)="showForm()" 
+                [tableHeaders]="tableHeaders" 
+                [tableData]="tableData" 
+                [paginationConfig]="paginationConfig" 
+                modalTitle="Edit"
+                (onSaveHandler)="editInfo($event, this)" 
+                (onCancelModalHandler)="onCancelModal()">
+        </app-table>
+    </app-home>
+</ng-template>
+
+<ng-template #form>
+    <app-home>
+        <app-breadcrumb></app-breadcrumb>
+            <div class="form">
+                <div class="form-bar"><h5 class="form-title"><i class="fa fa-plus"></i>&nbsp;Add Working Days</h5></div>
+                <div class="form-header">
+                    <div class="card-body">
+                        <form #workingDayForm="ngForm" (ngSubmit)="saveInfo($event, workingDayForm);" autocomplete="off">
+                            <div class="input-group">
+                                <label class="text-sm">Working Day</label>
+                                <select class="inputText w-75" 
+                                        name="workingDay"
+                                        #wname
+                                        [ngModel]="workingDays.workingDay"
+                                        #workingDay="ngModel"
+                                        (change)="onHandleChange($event)"
+                                        (blur)="onHandleBlur($event)">
+                                    <option [ngValue]="" selected disabled="disabled">
+                                        Working Day
+                                    </option>
+                                    <option *ngFor="let option of workingDayOptions" [ngValue]="option.id">
+                                    {{option.value}}
+                                    </option>
+                                </select>
+                                <div class="modal-text-danger">
+                                    {{errors.workingDay}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="bootstrap-timepicker">
+                                        <div class="input-group date" id="startTimePicker" data-target-input="nearest">
+                                            <label class="text-sm">Start Time</label>
+                                            <input type="text" 
+                                                    name="startTime" 
+                                                    class="form-control datetimepicker-input"
+                                                    [(ngModel)]="workingDays.startTime" 
+                                                    #startTime="ngModel" 
+                                                    data-target="#startTimePicker"
+                                                    placeholder="Start Time"
+                                                    (input)="onHandleChange($event)" 
+                                                    (blur)="onHandleBlur($event)">
+                                            <div class="input-group-append" data-target="#startTimePicker" data-toggle="datetimepicker">
+                                                <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                            </div>
+                                            <div class="modal-text-danger">
+                                                {{errors.startTime}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="bootstrap-timepicker">
+                                        <div class="input-group date" id="endTimePicker" data-target-input="nearest">
+                                            <label class="text-sm">End Time</label>
+                                            <input type="text" 
+                                                    class="form-control datetimepicker-input"
+                                                    name="endTime" 
+                                                    [ngModel]="workingDays.endTime" 
+                                                    #endTime="ngModel" 
+                                                    data-target="#endTimePicker"
+                                                    placeholder="End Time"
+                                                    (change)="onHandleChange($event)" 
+                                                    (blur)="onHandleBlur($event)">
+                                            <div class="input-group-append" data-target="#endTimePicker" data-toggle="datetimepicker">
+                                                <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                            </div>
+                                            <div class="modal-text-danger">
+                                                {{errors.endTime}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-center">
+                                <div class="btn-group">
+                                    <button class="btn btn-primary"><span><i class="fa fa-save"></i></span>&nbsp;Save</button>
+                                </div>    
+                                <button type="button" class="btn btn-danger ml-2" (click)="onCancelModal()"><span><i class="fa fa-ban"></i></span>&nbsp;Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+    </app-home>
+</ng-template>
