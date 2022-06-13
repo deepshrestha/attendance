@@ -2,6 +2,7 @@ var db = require('../db').db;
 
 exports.getAll = function(req, res) {
     var query = `select row_number() over(order by id) as sn,
+                        id,
                         shift_name, 
                         start_week_day, 
                         CASE WHEN allow_overtime = 1 THEN 'true' ELSE 'false' END AS allow_overtime, 

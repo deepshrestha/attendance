@@ -16,6 +16,7 @@ const  formValidator = (props) => {
     const onHandleSubmit = (event) => {
       event.preventDefault();
       let errors = fields.errors;
+      
       Object.keys(errors).map((error, index) => {
         if(event.target[error] !== undefined && fields[error] !== null)
           validate(

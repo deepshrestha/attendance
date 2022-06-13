@@ -9,6 +9,7 @@ var shifts = require('./routes/shift/shiftRouter');
 var departments = require('./routes/department/departmentRouter');
 var workingDays = require('./routes/workingDay/workingDayRouter');
 var attendance = require('./routes/attendance/attendanceRouter');
+var employee = require('./routes/employee/employeeRouter');
 
 app.use(cors());
 
@@ -19,6 +20,7 @@ app.use('/', shifts);
 app.use('/', departments);
 app.use('/', workingDays);
 app.use('/', attendance);
+app.use('/', employee);
 
 /* app.post("/getRealTimeData", (req, res) => {
     let userId = req.body.userId;

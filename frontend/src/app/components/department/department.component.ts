@@ -142,7 +142,7 @@ export class DepartmentComponent implements OnInit, OnDestroy {
     }
 
     onDisplayModalData(id){
-        //console.log(id)
+        console.log(id)
         this.subscribeData = this.departmentService.getDataByIdFromService(id)
         .subscribe(            
             {

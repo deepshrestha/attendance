@@ -106,6 +106,7 @@ export class ShiftComponent implements OnInit {
         .subscribe(            
             {
                 next: data => {
+                    console.log(data);
                     this.tableData = data;
                     this.paginationConfig = {
                         ...this.paginationConfig,
