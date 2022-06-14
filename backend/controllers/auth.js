@@ -36,5 +36,8 @@ exports.signin = function (req, res) {
     } else {
       return res.status(404).send({ accessToken: null, message: "User Not found." });
     }
+    if(!data){
+        return res.status(404).send({ accessToken: null, message: "User Not Found." });
+    }
   });
 };
