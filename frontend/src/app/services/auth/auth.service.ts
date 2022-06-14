@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 
 const AUTH_API = "http://localhost:3000/api/auth";
 const httpOptions = {
@@ -11,13 +12,12 @@ const httpOptions = {
   providedIn: "root"
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  http: HttpClient;
+  constructor(@Inject(HttpClient) http: HttpClient) {
+    this.http = http;
+  }
 
-  login(email: string, password: string): Observable<any> {
-    let formData = {
-      email,
-      password
-    };
-    return this.http.post(`${AUTH_API}/signin`, formData, httpOptions);
+  login(data): Observable<any> {
+    return this.http.post(`${AUTH_API}/signin`, data, httpOptions).pipe(map((data) => data));
   }
 }

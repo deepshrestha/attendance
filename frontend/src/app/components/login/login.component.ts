@@ -9,10 +9,12 @@ import { formValidator } from "./../../helpers/form-validator";
   template: require("./login.component.html"),
 })
 export class LoginComponent implements OnInit {
-  
+
   router: Router;
-  constructor(@Inject(Router) router: Router) {
-    this.router = router
+  authService: AuthService;
+  constructor(@Inject(Router) router: Router, @Inject(AuthService) authService: AuthService) {
+    this.router = router;
+    this.authService = authService;
   }
 
   @ViewChild('password') password: any;
@@ -23,7 +25,7 @@ export class LoginComponent implements OnInit {
   onHandleSubmit: any;
   onHandleChange: any;
   onHandleBlur: any;
-  
+
   initialState = {
     email: "",
     password: "",
@@ -31,8 +33,8 @@ export class LoginComponent implements OnInit {
       email: "",
       password: "",
     }
-};
-  
+  };
+
   ngOnInit(): void {
     const { onHandleChange, onHandleSubmit, onHandleBlur, fields } = formValidator(this.initialState);
     this.onHandleSubmit = onHandleSubmit;
@@ -44,16 +46,28 @@ export class LoginComponent implements OnInit {
 
   onSubmit(event, obj) {
     event.preventDefault();
-      if (this.onHandleSubmit(event)) {
-        if(obj.email === 'admin@admin.com' && obj.password === 'deep@123') {
-          console.log(obj);
-          this.router.navigate(["home"]);
-        }
-        else {
-          this.errorMsg = "Username or password is incorrect";
-          this.password.nativeElement.focus();
-        }
-      }
+    if (this.onHandleSubmit(event)) {
+      console.log(obj)
+      this.authService.login(obj)
+        .subscribe(
+          {
+            next: data => {
+              console.log(data);
+            },
+            error: err => {
+              console.log(err)
+            }
+          }
+        );
+      // if (obj.email === 'admin@admin.com' && obj.password === 'deep@123') {
+      //   console.log(obj);
+      //   this.router.navigate(["home"]);
+      // }
+      // else {
+      //   this.errorMsg = "Username or password is incorrect";
+      //   this.password.nativeElement.focus();
+      // }
+    }
   }
 }
 /* export class LoginComponent implements OnInit {

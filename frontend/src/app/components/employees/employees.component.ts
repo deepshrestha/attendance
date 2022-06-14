@@ -37,6 +37,8 @@ export class EmployeesComponent implements OnInit {
     //     {id: '4', value: 'Night'},
     // ];
     shiftOptions: any[] = [];
+    roleOptions: any[] = [];
+    departmentOptions: any[] = [];
 
     tableHeaders = {
         sn: "#",
@@ -46,6 +48,8 @@ export class EmployeesComponent implements OnInit {
         contact_no: "Contact No",
         dob: "Date of Birth",
         shift_name: "Shift",
+        role_name: "Role",
+        department_name: "Department",
         action: "Action",
         searchFilter: ["full_name", "created_by"]
     };
@@ -67,6 +71,9 @@ export class EmployeesComponent implements OnInit {
         contact_no: '',
         dob: '',
         shift_id: '',
+        role_id: '',
+        department_id: '',
+
         errors: {
             full_name: '',
             email_id: '',
@@ -74,6 +81,8 @@ export class EmployeesComponent implements OnInit {
             contact_no: '',
             dob: '',
             shift_id: '',
+            role_id: '',
+            department_id: '',
         }
     };
 
@@ -124,6 +133,8 @@ export class EmployeesComponent implements OnInit {
             email_id: event.target.elements['email_id'].value,
             full_name: event.target.elements['full_name'].value,
             shift_id: event.target.elements['shift_id'].value,
+            role_id: event.target.elements['role_id'].value,
+            department_id: event.target.elements['department_id'].value,
         }
         if (this.onHandleSubmit(event)) {
             //console.log(obj);
@@ -157,6 +168,8 @@ export class EmployeesComponent implements OnInit {
             contact_no: '',
             dob: '',
             shift_id: '',
+            role_id: '',
+            department_id: '',
             errors: {
                 full_name: '',
                 email_id: '',
@@ -164,6 +177,8 @@ export class EmployeesComponent implements OnInit {
                 contact_no: '',
                 dob: '',
                 shift_id: '',
+                role_id: '',
+                department_id: '',
             }
         }
         this.initializeFormValidation();
@@ -185,6 +200,8 @@ export class EmployeesComponent implements OnInit {
                             contact_no: data.contact_no,
                             dob: data.dob,
                             shift_id: data.shift_id,
+                            role_id: data.role_id,
+                            department_id: data.department_id,
                         }
                         this.initializeFormValidation();
                     },
