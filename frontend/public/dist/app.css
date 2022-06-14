@@ -545,23 +545,26 @@ th.table-employee_number {
 }
 th.table-name,
 th.table-full_name,
-th.table-city {
+th.table-city,
+th.table-address {
     width: 18%;
 }
-th.table-email {
-    width: 22%;
-}
+th.table-email_id,
 th.table-department_name {
-    width: 30%;
+    width: 22%;
 }
 th.table-created_at {
     width: 18%;
 }
-th.table-created_by {
+th.table-created_by,
+th.table-shift_name {
     width: 10%;
 }
-th.table-telephone_no {
-    width: 12%;
+th.table-telephone_no,
+th.table-contact_no,
+th.table-role_name,
+th.table-dob {
+    width: 15%;
 }
 th.table-in_time,
 th.table-out_time,
@@ -569,7 +572,7 @@ th.table-total_hours {
     width: 10%;
 }
 th.table-action {
-    width: 10%;
+    width: 12%;
 }
 div#accordion .table {
     table-layout: unset;
