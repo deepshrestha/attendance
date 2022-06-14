@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 13, 2022 at 08:52 AM
+-- Generation Time: Jun 14, 2022 at 06:30 AM
 -- Server version: 10.4.18-MariaDB
 -- PHP Version: 7.4.16
 
@@ -25,7 +25,9 @@ DELIMITER $$
 --
 -- Functions
 --
-CREATE DEFINER=`root`@`localhost` FUNCTION `fn_dateFormat` (`date` DATETIME) RETURNS VARCHAR(25) CHARSET utf8mb4 BEGIN
+CREATE DEFINER=`root`@`localhost` FUNCTION `fn_dateFormat` (`date` DATETIME) RETURNS VARCHAR(25) CHARSET utf8mb4 BEGIN DECLARE sql_var varchar(1000); set sql_var = (SELECT DATE_FORMAT(date, '%Y-%m-%d') AS CONVERTED_DATETIME); return sql_var; END$$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `fn_dateTimeFormat` (`date` DATETIME) RETURNS VARCHAR(25) CHARSET utf8mb4 BEGIN
 DECLARE sql_var varchar(1000);
 set sql_var = (SELECT DATE_FORMAT(date, '%Y-%m-%d %h:%i:%s %p') AS CONVERTED_DATETIME);
 return sql_var;
@@ -66,12 +68,12 @@ CREATE TABLE `departments` (
 --
 
 INSERT INTO `departments` (`id`, `department_name`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(1, 'Administrator', '2022-05-26 08:41:19', 1, NULL, NULL),
+(1, 'Administrator123', '2022-05-26 08:41:19', 1, NULL, NULL),
 (2, 'Information Technology', '2022-05-26 08:41:30', 1, NULL, NULL),
 (3, 'Accounts', '2022-05-26 08:43:01', 1, NULL, NULL),
 (4, 'Human Resources', '2022-05-26 08:44:51', 1, NULL, NULL),
 (5, 'Quality Assurance', '2022-05-26 08:46:08', 1, NULL, NULL),
-(6, 'Compliance', '2022-05-26 08:47:16', 1, NULL, NULL),
+(6, 'Compliance 123', '2022-05-26 08:47:16', 1, NULL, NULL),
 (7, 'Security', '2022-05-28 19:50:51', 1, NULL, NULL),
 (8, 'Treasury', '2022-05-28 20:48:42', 1, NULL, NULL);
 
@@ -95,6 +97,13 @@ CREATE TABLE `employees` (
   `updated_at` datetime DEFAULT NULL,
   `updated_by` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `employees`
+--
+
+INSERT INTO `employees` (`id`, `shift_id`, `full_name`, `email_id`, `password`, `dob`, `contact_no`, `address`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(1, 6, 'Deep Shrestha', 'deepshrestha83@gmail', '$2a$08$AZKtiLnouopF4', '1983-07-28', '9851181046', 'Gwarko, Bafal', '2022-06-14 09:18:50', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -204,6 +213,12 @@ ALTER TABLE `attendance_logs`
 --
 ALTER TABLE `departments`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `employees`
+--
+ALTER TABLE `employees`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `shifts`
