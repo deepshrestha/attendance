@@ -4,7 +4,7 @@ exports.getById = function(req, res) {
     //console.log(req.params.id)
     var query = `select id,
                         department_name,
-                        fn_dateFormat(created_at) as created_at
+                        fn_dateTimeFormat(created_at) as created_at
                 from departments
                 where id = ${req.params.id}`;
 
@@ -22,7 +22,7 @@ exports.getAll = function(req, res) {
     var query = `select row_number() over(order by id) as sn,
                         id,
                         department_name,
-                        fn_dateFormat(created_at) as created_at
+                        fn_dateTimeFormat(created_at) as created_at
                 from departments
                 order by id`;
 

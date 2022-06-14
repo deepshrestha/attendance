@@ -5,7 +5,7 @@ exports.getAll = function(req, res) {
                         working_day, 
                         start_time, 
                         end_time, 
-                        fn_dateFormat(created_at) as created_at
+                        fn_dateTimeFormat(created_at) as created_at
                 from working_days
                 order by id`;
 

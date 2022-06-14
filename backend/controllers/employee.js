@@ -5,12 +5,12 @@ const mailSenderHelper = require("../helpers/mailSender");
 exports.getById = function (req, res) {
   //console.log(req.params.id)
   var query = `select id,
-                        shift_id, full_name, email_id, password, fn_dateFormat(dob) as dob, 
-                        contact_no, address,
-                        fn_dateFormat(created_at) as created_at
-                from employees
-                where id = ${req.params.id}`;
-
+                      shift_id, full_name, email_id, password, fn_dateFormat(dob) as dob, 
+                      contact_no, address,
+                      fn_dateTimeFormat(created_at) as created_at
+              from employees
+              where id = ${req.params.id}`;
+  console.log(query);
   var result = db.queryHandler(query);
 
   result
@@ -27,7 +27,7 @@ exports.getAll = function (req, res) {
                         employees.id as id,
                         shifts.shift_name as shift_name, shifts.id as shift_id, full_name, email_id, password, fn_dateFormat(dob) as dob, 
                         contact_no, address,
-                        fn_dateFormat(employees.created_at) as created_at
+                        fn_dateTimeFormat(employees.created_at) as created_at
                 from employees join shifts on employees.shift_id = shifts.id
                 order by id `;
 

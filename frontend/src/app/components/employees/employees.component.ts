@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { ShiftService } from "../shift/shift.service";
 import { formValidator } from "./../../helpers/form-validator";
 import { EmployeeService } from "./employee.service";
@@ -115,7 +115,7 @@ export class EmployeesComponent implements OnInit {
 
     editInfo(modalEvent) {
         let { event } = modalEvent;
-        console.log(event.target.elements['shift_id']);
+        //console.log(event.target.elements['shift_id']);
         let formObject = {
             id: event.target.elements['employee_id'].value,
             address: event.target.elements['address'].value,
@@ -167,16 +167,15 @@ export class EmployeesComponent implements OnInit {
             }
         }
         this.initializeFormValidation();
+        this.getAll();
     }
 
     onDisplayModalData(id) {
-        console.log(id)
         this.subscribeData = this.service.getDataByIdFromService(id)
             .subscribe(
                 {
                     next: data => {
                         this.employees = data;
-                        console.log(data.shift_id)
                         this.initialState = {
                             ...this.initialState,
                             employee_id: data.id,
@@ -201,7 +200,6 @@ export class EmployeesComponent implements OnInit {
             .subscribe(
                 {
                     next: data => {
-                        console.log("Data", data)
                         this.tableData = data;
                         this.paginationConfig = {
                             ...this.paginationConfig,
@@ -221,7 +219,13 @@ export class EmployeesComponent implements OnInit {
     ngOnInit(): void {
         this.initializeFormValidation();
         this.getAll();
-        this.shiftService.getDataFromService().subscribe(
+        this.shiftService.getShiftData().subscribe(
+            data => {
+                this.shiftOptions = data;
+            }
+        );
+
+        /* this.shiftService.getDataFromService().subscribe(
             {
                 next: data => {
                     // this.shiftOptions = data;
@@ -237,7 +241,7 @@ export class EmployeesComponent implements OnInit {
                     console.log("completed!")
                 }
             }
-        );
+        ); */
     }
 
     ngOnDestroy(): void {

@@ -139,6 +139,7 @@ export class DepartmentComponent implements OnInit, OnDestroy {
             }
         }
         this.initializeFormValidation();
+        this.getAll();
     }
 
     onDisplayModalData(id){

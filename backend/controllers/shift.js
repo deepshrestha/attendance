@@ -7,7 +7,7 @@ exports.getAll = function(req, res) {
                         start_week_day, 
                         CASE WHEN allow_overtime = 1 THEN 'true' ELSE 'false' END AS allow_overtime, 
                         start_overtime,
-                        fn_dateFormat(created_at) as created_at
+                        fn_dateTimeFormat(created_at) as created_at
                 from shifts
                 order by id`;
 
