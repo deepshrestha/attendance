@@ -46,10 +46,32 @@ exports.insertEmployeeData = function (req, res) {
   let password = req.body.email_id.split("@")[0];
   let encryptedPassword = bcrypt.hashSync(password, 8)
   
-  var query = `insert into employees (shift_id, full_name, email_id, password, dob, 
-                 contact_no, address, created_at, created_by) 
-                 values ('${req.body.shift_id}', '${req.body.full_name}', '${req.body.email_id}', '${encryptedPassword}',
-                 '${req.body.dob}', '${req.body.contact_no}', '${req.body.address}', now(), '1')`;
+  var query = `insert into employees (
+                shift_id, 
+                department_id, 
+                role_id, 
+                full_name, 
+                email_id, 
+                password, 
+                dob, 
+                contact_no, 
+                address, 
+                created_at, 
+                created_by
+              ) 
+              values (
+                '${req.body.shift_id}', 
+                '1', 
+                '1', 
+                '${req.body.full_name}', 
+                '${req.body.email_id}', 
+                '${encryptedPassword}',
+                '${req.body.dob}', 
+                '${req.body.contact_no}', 
+                '${req.body.address}', 
+                now(),
+                '1'
+              )`;
 
 
 

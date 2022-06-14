@@ -80,6 +80,15 @@ export class DepartmentComponent implements OnInit, OnDestroy {
         this.departments = {};
     }
 
+    clearForm() {
+        this.initialState = {
+            ...this.initialState,
+            department_name: '',
+            errors: {
+                department_name: ''
+            }
+        }
+    }
     editInfo(modalEvent) {
         let { event } = modalEvent;
         let formObject = {
@@ -131,13 +140,7 @@ export class DepartmentComponent implements OnInit, OnDestroy {
     onCancelModal(){
         this.showTable = true;
         this.showAddForm = false;
-        this.initialState = {
-            ...this.initialState,
-            department_name: '',
-            errors: {
-                department_name: ''
-            }
-        }
+        this.clearForm();
         this.initializeFormValidation();
         this.getAll();
     }
@@ -186,7 +189,6 @@ export class DepartmentComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-
         this.initializeFormValidation();
         this.getAll();
     }
