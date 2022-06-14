@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 14, 2022 at 06:30 AM
+-- Generation Time: Jun 14, 2022 at 07:21 AM
 -- Server version: 10.4.18-MariaDB
 -- PHP Version: 7.4.16
 
@@ -86,8 +86,10 @@ INSERT INTO `departments` (`id`, `department_name`, `created_at`, `created_by`, 
 CREATE TABLE `employees` (
   `id` int(11) NOT NULL,
   `shift_id` int(11) NOT NULL,
+  `department_id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL,
   `full_name` varchar(100) NOT NULL,
-  `email_id` varchar(20) NOT NULL,
+  `email_id` varchar(40) NOT NULL,
   `password` varchar(20) NOT NULL,
   `dob` date DEFAULT NULL,
   `contact_no` varchar(15) NOT NULL,
@@ -98,12 +100,21 @@ CREATE TABLE `employees` (
   `updated_by` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `employees`
+-- Table structure for table `roles`
 --
 
-INSERT INTO `employees` (`id`, `shift_id`, `full_name`, `email_id`, `password`, `dob`, `contact_no`, `address`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(1, 6, 'Deep Shrestha', 'deepshrestha83@gmail', '$2a$08$AZKtiLnouopF4', '1983-07-28', '9851181046', 'Gwarko, Bafal', '2022-06-14 09:18:50', 1, NULL, NULL);
+CREATE TABLE `roles` (
+  `id` int(11) NOT NULL,
+  `parent_id` int(11) NOT NULL,
+  `role_name` varchar(30) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -184,7 +195,16 @@ ALTER TABLE `departments`
 --
 ALTER TABLE `employees`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_employees_shifts` (`shift_id`);
+  ADD UNIQUE KEY `email_id` (`email_id`),
+  ADD KEY `fk_employee_department` (`department_id`),
+  ADD KEY `fk_employees_shifts` (`shift_id`),
+  ADD KEY `fk_employee_role` (`role_id`);
+
+--
+-- Indexes for table `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `shifts`
@@ -218,7 +238,13 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `shifts`
@@ -240,13 +266,15 @@ ALTER TABLE `working_days`
 -- Constraints for table `attendance_logs`
 --
 ALTER TABLE `attendance_logs`
-  ADD CONSTRAINT `fk_employees_attendance_logs` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`);
+  ADD CONSTRAINT `fk_employees_attendance_logs` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `employees`
 --
 ALTER TABLE `employees`
-  ADD CONSTRAINT `fk_employees_shifts` FOREIGN KEY (`shift_id`) REFERENCES `shifts` (`id`);
+  ADD CONSTRAINT `fk_employee_department` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_employee_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_employees_shifts` FOREIGN KEY (`shift_id`) REFERENCES `shifts` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
