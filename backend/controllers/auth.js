@@ -5,9 +5,12 @@ var db = require("../db").db;
 const config = require("../auth");
 
 exports.signin = function (req, res) {
-  var employeeByEmail = `select * from employees join roles on employees.role_id = roles.id
-    where employees.email_id = '${req.body.email}' `;
-  var result = db.queryHandler(employeeByEmail);
+  var query = `select * from employees 
+                join roles on employees.role_id = roles.id
+                where employees.email_id = '${req.body.email}' `;
+
+  var result = db.queryHandler(query);
+  
   result.then((data) => {
     if (data.length > 0) {
       employee = data[0];
@@ -30,14 +33,18 @@ exports.signin = function (req, res) {
       } else {
         return res.status(401).send({
           accessToken: null,
-          message: "Invalid Password!",
+          message: "Username or password is incorrect",
         });
       }
     } else {
-      return res.status(404).send({ accessToken: null, message: "User Not found." });
+      return res
+        .status(404)
+        .send({ accessToken: null, message: "User doesn't exist" });
     }
-    if(!data){
-        return res.status(404).send({ accessToken: null, message: "User Not Found." });
+    if (!data) {
+      return res
+        .status(404)
+        .send({ accessToken: null, message: "User doesn't exist" });
     }
   });
 };
