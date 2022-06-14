@@ -5,7 +5,8 @@ const mailSenderHelper = require("../helpers/mailSender");
 exports.getById = function (req, res) {
   //console.log(req.params.id)
   var query = `select id,
-                      shift_id, full_name, email_id, password, fn_dateFormat(dob) as dob, 
+                      shift_id, role_id, department_id, 
+                      full_name, email_id, password, fn_dateFormat(dob) as dob, 
                       contact_no, address,
                       fn_dateTimeFormat(created_at) as created_at
               from employees
@@ -25,10 +26,17 @@ exports.getById = function (req, res) {
 exports.getAll = function (req, res) {
   var query = `select row_number() over(order by id) as sn,
                         employees.id as id,
-                        shifts.shift_name as shift_name, shifts.id as shift_id, full_name, email_id, password, fn_dateFormat(dob) as dob, 
+                        shifts.shift_name as shift_name, shifts.id as shift_id, 
+                        roles.role_name as role_name, roles.id as role_id, 
+                        departments.department_name as department_name, departments.id as department_id, 
+                        full_name, 
+                        email_id, password, fn_dateFormat(dob) as dob, 
                         contact_no, address,
                         fn_dateTimeFormat(employees.created_at) as created_at
-                from employees join shifts on employees.shift_id = shifts.id
+                from employees 
+                join shifts on employees.shift_id = shifts.id
+                join roles on employees.role_id = roles.id
+                join departments on employees.department_id = departments.id
                 order by id `;
 
   var result = db.queryHandler(query);
@@ -43,9 +51,6 @@ exports.getAll = function (req, res) {
 };
 
 exports.insertEmployeeData = function (req, res) {
-  let password = req.body.email_id.split("@")[0];
-  let encryptedPassword = bcrypt.hashSync(password, 8)
-  
   var query = `insert into employees (
                 shift_id, 
                 department_id, 
@@ -61,11 +66,11 @@ exports.insertEmployeeData = function (req, res) {
               ) 
               values (
                 '${req.body.shift_id}', 
-                '1', 
-                '1', 
+                '${req.body.department_id}',
+                '${req.body.role_id}',
                 '${req.body.full_name}', 
                 '${req.body.email_id}', 
-                '${encryptedPassword}',
+                '${getEncryptedPasswordFromEmail(req.body.email_id)}',
                 '${req.body.dob}', 
                 '${req.body.contact_no}', 
                 '${req.body.address}', 
@@ -102,11 +107,12 @@ exports.updateEmployeeData = function (req, res) {
                  contact_no = '${req.body.contact_no}', 
                  dob = '${req.body.dob}', 
                  email_id = '${req.body.email_id}', 
+                 password = '${getEncryptedPasswordFromEmail(req.body.email_id)}',
                  full_name = '${req.body.full_name}', 
-                 shift_id = '${req.body.shift_id}'
+                 shift_id = '${req.body.shift_id}',
+                 role_id = '${req.body.role_id}',
+                 department_id = '${req.body.department_id}'
                  where id = '${req.body.id}'`;
-
-  console.log(query);
 
   var result = db.queryHandler(query);
 
@@ -122,3 +128,8 @@ exports.updateEmployeeData = function (req, res) {
       console.log(err);
     });
 };
+
+function getEncryptedPasswordFromEmail(email){
+  let password = email.split("@")[0];
+  return encryptedPassword = bcrypt.hashSync(password, 8)
+}

@@ -21,6 +21,7 @@ import { EmployeesComponent } from "./components/employees/employees.component";
 import { DepartmentComponent } from "./components/department/department.component";
 import { WorkingDayComponent } from "./components/working-day/working-day.component";
 import { ShiftComponent } from "./components/shift/shift.component";
+import { RolesComponent } from "./role/role.component";
 //import { SettingsComponent } from "./components/settings/settings.component";
 
 const routes: Routes = [
@@ -30,27 +31,38 @@ const routes: Routes = [
   {
     path: "attendance",
     component: AttendanceComponent,
-    data: { breadcrumb: 'Attendance' },
+    // canActivate: [AuthGuard],
+    data: { role: "ROLE_ADMIN",  breadcrumb: 'Attendance' }
   },
   {
     path: "employees",
     component: EmployeesComponent,
-    data: { breadcrumb: 'Employees' },
+    canActivate: [AuthGuard],
+    data: { role: "ROLE_ADMIN",  breadcrumb: 'Employees' }
   },
   {
     path: "departments",
     component: DepartmentComponent,
-    data: { breadcrumb: 'Departments' },
+    canActivate: [AuthGuard],
+    data: { role: "ROLE_ADMIN",  breadcrumb: 'Departments' }
   },
   {
     path: "working-days",
     component: WorkingDayComponent,
-    data: { breadcrumb: 'Working Days' },
+    canActivate: [AuthGuard],
+    data: { role: "ROLE_ADMIN",  breadcrumb: 'Working Days' }
   },
   {
     path: "shifts",
     component: ShiftComponent,
-    data: { breadcrumb: 'Shifts' },
+    canActivate: [AuthGuard],
+    data: { role: "ROLE_ADMIN",  breadcrumb: 'Shifts' }
+  },
+  {
+    path: "roles",
+    component: RolesComponent,
+    canActivate: [AuthGuard],
+    data: { role: "ROLE_ADMIN",  breadcrumb: 'Roles' }
   },
   {
     path: "subscribers",
@@ -94,4 +106,5 @@ export const appRoutingComponents = [
   DepartmentComponent,
   WorkingDayComponent,
   ShiftComponent,
+  RolesComponent
 ]

@@ -4,6 +4,8 @@ import { ShiftService } from "../shift/shift.service";
 import { formValidator } from "./../../helpers/form-validator";
 import { EmployeeService } from "./employee.service";
 import * as $ from "jquery";
+import { RoleService } from "../../role/role.service";
+import { DepartmentService } from "../department/department.service";
 
 @Component({
     selector: "app-employees",
@@ -14,9 +16,15 @@ export class EmployeesComponent implements OnInit {
 
     service: EmployeeService;
     shiftService: ShiftService;
-    constructor(@Inject(EmployeeService) service: EmployeeService, @Inject(ShiftService) shiftService: ShiftService) {
+    roleService: RoleService;
+    departmentService: DepartmentService;
+    constructor(@Inject(EmployeeService) service: EmployeeService, @Inject(ShiftService) shiftService: ShiftService,
+        @Inject(RoleService) roleService: RoleService,
+        @Inject(DepartmentService) departmentService: DepartmentService) {
         this.service = service;
         this.shiftService = shiftService;
+        this.roleService = roleService;
+        this.departmentService = departmentService;
     }
 
     showTable: boolean = true;
@@ -71,9 +79,8 @@ export class EmployeesComponent implements OnInit {
         contact_no: '',
         dob: '',
         shift_id: '',
-        role_id: '',
         department_id: '',
-
+        role_id: '',
         errors: {
             full_name: '',
             email_id: '',
@@ -81,8 +88,8 @@ export class EmployeesComponent implements OnInit {
             contact_no: '',
             dob: '',
             shift_id: '',
-            role_id: '',
             department_id: '',
+            role_id: '',
         }
     };
 
@@ -102,16 +109,39 @@ export class EmployeesComponent implements OnInit {
         this.employees = {};
     }
 
+    clearForm() {
+        this.initialState = {
+            ...this.initialState,
+            full_name: '',
+            email_id: '',
+            address: '',
+            contact_no: '',
+            dob: '',
+            shift_id: '',
+            department_id: '',
+            role_id: '',
+            errors: {
+                full_name: '',
+                email_id: '',
+                address: '',
+                contact_no: '',
+                dob: '',
+                shift_id: '',
+                department_id: '',
+                role_id: '',
+            }
+        }
+    }
+
     saveInfo(event: any, obj: any) {
-        console.log(obj)
         event.preventDefault();
         if (this.onHandleSubmit(event)) {
-            console.log("fields", obj.value);
             this.subscribeData = this.service.postDataFromService(obj.value)
                 .subscribe(
                     {
                         next: data => {
-                            console.log(data);
+                            this.clearForm();
+                            this.initializeFormValidation();
                         },
                         error: err => {
                             console.log(err)
@@ -124,7 +154,6 @@ export class EmployeesComponent implements OnInit {
 
     editInfo(modalEvent) {
         let { event } = modalEvent;
-        //console.log(event.target.elements['shift_id']);
         let formObject = {
             id: event.target.elements['employee_id'].value,
             address: event.target.elements['address'].value,
@@ -137,50 +166,27 @@ export class EmployeesComponent implements OnInit {
             department_id: event.target.elements['department_id'].value,
         }
         if (this.onHandleSubmit(event)) {
-            //console.log(obj);
-            console.log("fields", formObject)
             this.subscribeData = this.service.editDataFromService(formObject)
-            .subscribe(
-                {
-                    next: data => {
-                        console.log(data);
-                        if(data.success) {
-                            $('#showModal').modal('hide');
-                            this.getAll();
+                .subscribe(
+                    {
+                        next: data => {
+                            if (data.success) {
+                                $('#showModal').modal('hide');
+                                this.getAll();
+                            }
+                        },
+                        error: err => {
+                            console.log(err)
                         }
-                    },
-                    error: err => {
-                        console.log(err)
                     }
-                }
-            )
-        } 
+                )
+        }
     }
 
     onCancelModal() {
         this.showTable = true;
         this.showAddForm = false;
-        this.initialState = {
-            ...this.initialState,
-            full_name: '',
-            email_id: '',
-            address: '',
-            contact_no: '',
-            dob: '',
-            shift_id: '',
-            role_id: '',
-            department_id: '',
-            errors: {
-                full_name: '',
-                email_id: '',
-                address: '',
-                contact_no: '',
-                dob: '',
-                shift_id: '',
-                role_id: '',
-                department_id: '',
-            }
-        }
+        this.clearForm();
         this.initializeFormValidation();
         this.getAll();
     }
@@ -239,6 +245,16 @@ export class EmployeesComponent implements OnInit {
         this.shiftService.getShiftData().subscribe(
             data => {
                 this.shiftOptions = data;
+            }
+        );
+        this.roleService.getRoleData().subscribe(
+            data => {
+                this.roleOptions = data;
+            }
+        );
+        this.departmentService.getDepartmentData().subscribe(
+            data => {
+                this.departmentOptions = data;
             }
         );
 

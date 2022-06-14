@@ -10,6 +10,8 @@ var departments = require('./routes/department/departmentRouter');
 var workingDays = require('./routes/workingDay/workingDayRouter');
 var attendance = require('./routes/attendance/attendanceRouter');
 var employee = require('./routes/employee/employeeRouter');
+var auth = require('./routes/auth/authRouter');
+var role = require('./routes/role/roleRouter');
 
 app.use(cors());
 
@@ -21,6 +23,8 @@ app.use('/', departments);
 app.use('/', workingDays);
 app.use('/', attendance);
 app.use('/', employee);
+app.use('/', auth);
+app.use('/', role);
 
 /* app.post("/getRealTimeData", (req, res) => {
     let userId = req.body.userId;

@@ -28,7 +28,7 @@ exports.send = (res, fullName, email, password) => {
   <br/>
 
   Email : ${email} , Password: ${password}
-  Thank you. <br/><br/> Regards, <br/>HR Departmanet, <br/>CTech
+  Thank you. <br/><br/> Regards, <br/>HR Department, <br/>CTech
   </div>`;
   
   // send mail with defined transport object

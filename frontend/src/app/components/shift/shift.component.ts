@@ -28,12 +28,7 @@ export class ShiftComponent implements OnInit {
     }
 
     shifts: any = {};
-    shiftOptions: any[] = [
-        {id: 'Regular', value: 'Regular'},
-        {id: 'Morning', value: 'Morning'},
-        {id: 'Evening', value: 'Evening'},
-        {id: 'Night', value: 'Night'},
-    ];
+    shiftOptions: any[] = [];
 
     startWeekDayOptions: any[] = [
         {id: 'Sunday', value: 'Sunday'},
@@ -152,5 +147,12 @@ export class ShiftComponent implements OnInit {
                 }
             }
         )
+
+        this.shiftService.getShiftData().subscribe(
+            data => {
+                this.shiftOptions = data;
+            }
+        );
+
     }
 }

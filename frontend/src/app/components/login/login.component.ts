@@ -12,9 +12,15 @@ export class LoginComponent implements OnInit {
 
   router: Router;
   authService: AuthService;
-  constructor(@Inject(Router) router: Router, @Inject(AuthService) authService: AuthService) {
+  isLoggedIn = false;
+  isLoginFailed = false;
+  roles: string[] = [];
+  tokenStorageService: TokenStorageService;
+  constructor(@Inject(Router) router: Router, @Inject(AuthService) authService: AuthService, 
+    @Inject(TokenStorageService) tokenStorageService: TokenStorageService) {
     this.router = router;
     this.authService = authService;
+    this.tokenStorageService = tokenStorageService;
   }
 
   @ViewChild('password') password: any;
@@ -47,15 +53,20 @@ export class LoginComponent implements OnInit {
   onSubmit(event, obj) {
     event.preventDefault();
     if (this.onHandleSubmit(event)) {
-      console.log(obj)
       this.authService.login(obj)
         .subscribe(
           {
             next: data => {
-              console.log(data);
+              this.tokenStorageService.saveToken(data.accessToken);
+              this.tokenStorageService.saveUser(data);
+              this.isLoginFailed = false;
+              this.isLoggedIn = true;
+              this.roles = this.tokenStorageService.getUser().roles;
+              this.router.navigateByUrl("/home");
             },
             error: err => {
-              console.log(err)
+              this.tokenStorageService.signOut();
+              alert(err.error.message)
             }
           }
         );
