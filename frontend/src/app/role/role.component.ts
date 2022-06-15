@@ -40,7 +40,7 @@ export class RolesComponent implements OnInit {
     paginationConfig = {
         data: [],
         currentPage: 1,
-        recordPerPage: 2,
+        recordPerPage: 5,
         totalRecordsCount: 0,
     }
 

@@ -20,6 +20,7 @@ export class TableComponent implements OnInit, OnChanges {
     @Output() onDisplayModalData = new EventEmitter<string>();
     @Output() onSaveHandler = new EventEmitter<{event: any, obj: any}>();
     @Output() onCancelModalHandler = new EventEmitter<string>();
+    @Output() onCheckboxClick = new EventEmitter<{event: any, id: any}>();
 
     tableColumns: string = '';
     tableDataColumns: string = '';
@@ -33,6 +34,7 @@ export class TableComponent implements OnInit, OnChanges {
     onToggle(id) {
         //$('#showModal').modal('show');
         this.modal?.show();
+        console.log(id)
         this.onDisplayModalData.emit(id);
     }
 
@@ -42,6 +44,10 @@ export class TableComponent implements OnInit, OnChanges {
 
     onCancelModal(){
         this.onCancelModalHandler.emit();
+    }
+
+    onCheckboxClickHandler(event, id){
+        this.onCheckboxClick.emit({event, id});
     }
 
     getTableData(tableData: any[]) : any[] {

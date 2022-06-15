@@ -27,6 +27,7 @@ exports.signin = function (req, res) {
         res.status(200).send({
           id: employee.id,
           email: employee.email_id,
+          full_name: employee.full_name,
           roles: authorities,
           accessToken: token,
         });

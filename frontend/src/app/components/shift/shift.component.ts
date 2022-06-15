@@ -2,6 +2,8 @@ import { Component, OnInit, Input, ViewChild, ElementRef, Inject } from "@angula
 import { formatDate } from "@angular/common";
 import { formValidator } from "./../../helpers/form-validator";
 import { ShiftService } from './shift.service'
+import { Subscription } from "rxjs";
+import * as $ from 'jquery';
 
 @Component({
     selector: 'app-shift',
@@ -9,7 +11,7 @@ import { ShiftService } from './shift.service'
     providers: [ShiftService]
 })
 export class ShiftComponent implements OnInit {
-    
+
     showTable: boolean = true;
     showAddForm: boolean = false;
     fields: any;
@@ -17,22 +19,28 @@ export class ShiftComponent implements OnInit {
     onHandleSubmit: any;
     onHandleChange: any;
     onHandleBlur: any;
+    subscribeData: Subscription;
 
     @Input() isLoggedIn: Boolean;
 
     //@ViewChild('name') name: ElementRef;
 
-    shiftService: ShiftService;
-    constructor(@Inject(ShiftService) shiftService: ShiftService){
-        this.shiftService = shiftService;
+    service: ShiftService;
+    constructor(@Inject(ShiftService) service: ShiftService) {
+        this.service = service;
     }
 
     shifts: any = {};
-    shiftOptions: any[] = [];
+    shiftOptions: any[] = [
+        { id: 'Regular', value: 'Regular' },
+        { id: 'Morning', value: 'Morning' },
+        { id: 'Evening', value: 'Evening' },
+        { id: 'Night', value: 'Night' },
+    ];
 
-    startWeekDayOptions: any[] = [
-        {id: 'Sunday', value: 'Sunday'},
-        {id: 'Monday', value: 'Monday'},
+    start_week_dayOptions: any[] = [
+        { id: 'Sunday', value: 'Sunday' },
+        { id: 'Monday', value: 'Monday' },
     ];
 
     tableHeaders = {
@@ -49,110 +57,173 @@ export class ShiftComponent implements OnInit {
     paginationConfig = {
         data: [],
         currentPage: 1,
-        recordPerPage: 3,
+        recordPerPage: 5,
         totalRecordsCount: 0,
     }
 
     tableData: any = [];
 
     initialState = {
-        mode: "I",
-        shiftName: "",
-        startWeekDay: "",
-        allowOverTime: "",
-        startOverTime: "",
+        shift_id: "",
+        shift_name: "",
+        start_week_day: "",
+        allow_overtime: "",
+        start_overtime: "",
         errors: {
-            shiftName: "",
-            startWeekDay: "",
-            allowOverTime: "",
-            startOverTime: "",
+            shift_name: "",
+            start_week_day: "",
+            allow_overtime: "",
+            start_overtime: "",
         }
     };
 
-    showForm(){
-        this.showTable = false;
-        this.showAddForm = true;
-    }
-
-    saveInfo(event, obj){
-        event.preventDefault();
-        if (this.onHandleSubmit(event)) {
-            console.log("fields", obj)
-            /* this.shiftService.postDataFromService(obj)
-            .subscribe(
-                {
-                    next: data => {
-                        console.log(data);
-                    },
-                    error: err => {
-                        console.log(err)
-                    }
-                }
-            ) */
-            //obj.resetForm();
-            //this.name.nativeElement.focus();
-        }
-    }
-
-    onCancel(){
-        this.showTable = true;
-        this.showAddForm = false;
-        this.shiftService.getDataFromService()
-        .subscribe(            
-            {
-                next: data => {
-                    console.log(data);
-                    this.tableData = data;
-                    this.paginationConfig = {
-                        ...this.paginationConfig,
-                        totalRecordsCount: data.length
-                    }
-                },
-                error: err => {
-                    console.log(err)
-                },
-                complete: () => {
-                    console.log("completed!")
-                }
-            }
-        )
-    }
-
-    ngOnInit(): void {
+    initializeFormValidation() {
         const { onHandleChange, onHandleSubmit, onHandleBlur, fields } = formValidator(this.initialState);
-
         this.onHandleSubmit = onHandleSubmit;
         this.onHandleBlur = onHandleBlur;
         this.onHandleChange = onHandleChange;
         this.fields = fields;
         this.errors = fields.errors;
-        
-        // call apiHandler to fetch data
+    }
 
-        this.shiftService.getDataFromService()
-        .subscribe(            
-            {
-                next: data => {
-                    this.tableData = data;
-                    this.paginationConfig = {
-                        ...this.paginationConfig,
-                        totalRecordsCount: data.length
+    showForm() {
+        this.showTable = false;
+        this.showAddForm = true;
+        this.shifts = {};
+    }
+
+    clearForm() {
+        this.initialState = {
+            ...this.initialState,
+            shift_id: "",
+            shift_name: "",
+            start_week_day: "",
+            allow_overtime: "",
+            start_overtime: "",
+            errors: {
+                shift_name: "",
+                start_week_day: "",
+                allow_overtime: "",
+                start_overtime: "",
+            }
+        }
+    }
+
+    saveInfo(event, obj) {
+        event.preventDefault();
+        if (this.onHandleSubmit(event)) {
+            this.subscribeData = this.service.postDataFromService(obj.value)
+                .subscribe(
+                    {
+                        next: data => {
+                            this.clearForm();
+                            this.initializeFormValidation();
+                        },
+                        error: err => {
+                            console.log(err)
+                        }
                     }
-                },
-                error: err => {
-                    console.log(err)
-                },
-                complete: () => {
-                    console.log("completed!")
+                )
+            obj.resetForm();
+        }
+    }
+
+    editInfo(modalEvent) {
+        let { event } = modalEvent;
+        //console.log(event.target.elements['shift_id']);
+        let formObject = {
+            id: event.target.elements['shift_id'].value,
+            shift_name: event.target.elements['shift_name'].value,
+            start_week_day: event.target.elements['start_week_day'].value,
+            start_overtime: event.target.elements['start_overtime'].value,
+        }
+        if (this.onHandleSubmit(event)) {
+            //console.log(obj);
+            this.subscribeData = this.service.editDataFromService(formObject)
+                .subscribe(
+                    {
+                        next: data => {
+                            console.log(data);
+                            if (data.success) {
+                                $('#showModal').modal('hide');
+                                this.getAll();
+                            }
+                        },
+                        error: err => {
+                            console.log(err)
+                        }
+                    }
+                )
+        }
+    }
+
+
+    onCancelModal() {
+        this.showTable = true;
+        this.showAddForm = false;
+        this.clearForm();
+        this.initializeFormValidation();
+        this.getAll();
+    }
+
+    onDisplayModalData(id) {
+        this.subscribeData = this.service.getDataByIdFromService(id)
+            .subscribe(
+                {
+                    next: data => {
+                        this.shifts = data;
+                        console.log(this.shifts)
+                        this.initialState = {
+                            ...this.initialState,
+                            shift_id: data.id,
+                            shift_name: data.shift_name,
+                            start_week_day: data.start_week_day,
+                            start_overtime: data.start_overtime,
+                        }
+                        this.initializeFormValidation();
+                    },
+                    error: err => {
+                        console.log(err)
+                    }
                 }
-            }
-        )
+            )
+    }
 
-        this.shiftService.getShiftData().subscribe(
-            data => {
-                this.shiftOptions = data;
+    onCheckboxClick({event, id}) {
+        this.service.editAllowOvertimeDataFromService({id, allow_overtime: event.target.checked}).subscribe({
+            next: data => {
+                console.log(data)
             }
-        );
+        })
+    }
 
+    getAll(): void {
+        this.subscribeData = this.service.getDataFromService()
+            .subscribe(
+                {
+                    next: data => {
+                        this.tableData = data;
+                        this.paginationConfig = {
+                            ...this.paginationConfig,
+                            totalRecordsCount: data.length
+                        }
+                    },
+                    error: err => {
+                        console.log(err)
+                    },
+                    complete: () => {
+                        console.log("completed!")
+                    }
+                }
+            )
+    }
+
+    ngOnInit(): void {
+        this.initializeFormValidation();
+        this.getAll();
+    }
+
+    ngOnDestroy(): void {
+        this.subscribeData.unsubscribe();
     }
 }

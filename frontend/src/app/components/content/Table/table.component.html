@@ -38,7 +38,7 @@
                         {{item[key]}}
                     </td>
                     <td *ngIf="isBoolean(item[key]) == 'boolean'">
-                        <input type="checkbox" [checked]="item[key] == 'true' ? true : false">
+                        <input type="checkbox" [checked]="item[key] == 'true' ? true : false" (click)="onCheckboxClickHandler($event, item.id)">
                     </td>
                     <td *ngIf="key === 'action'" class="text-center">
                         <button

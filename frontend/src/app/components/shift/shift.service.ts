@@ -39,9 +39,27 @@ export class ShiftService {
       .pipe(map((data) => data));
   }
 
+  getDataByIdFromService(id: any): Observable<any> {
+    return this.http
+      .get(`http://localhost:3000/api/shifts/${id}`, httpOptions)
+      .pipe(map((data) => data));
+  }
+
   postDataFromService(data): Observable<any> {
     return this.http
       .post("http://localhost:3000/api/shifts/", data, httpOptions)
+      .pipe(map((data) => data));
+  }
+
+  editDataFromService(data): Observable<any> {
+    return this.http
+      .put("http://localhost:3000/api/shifts/", data, httpOptions)
+      .pipe(map((data) => data));
+  }
+
+  editAllowOvertimeDataFromService(data): Observable<any> {
+    return this.http
+      .put("http://localhost:3000/api/shifts/allowOvertime/", data, httpOptions)
       .pipe(map((data) => data));
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Inject, ViewChild, ElementRef } from "@angula
 import { formValidator } from "./../../helpers/form-validator";
 import { WorkingDayService } from './working-day.service'
 import * as $ from "jquery";
+import { Subscription } from "rxjs";
 
 @Component({
     selector: 'app-working-day',
@@ -17,24 +18,25 @@ export class WorkingDayComponent implements OnInit {
     onHandleSubmit: any;
     onHandleChange: any;
     onHandleBlur: any;
+    subscribeData: Subscription;
 
     @Input() isLoggedIn: Boolean;
     @ViewChild('wname') wname: ElementRef;
-    
-    workingDayService: WorkingDayService;
-    constructor(@Inject(WorkingDayService) workingDayService: WorkingDayService){
-        this.workingDayService = workingDayService;
+
+    service: WorkingDayService;
+    constructor(@Inject(WorkingDayService) service: WorkingDayService) {
+        this.service = service;
     }
 
-    workingDays: any = {};
-    
-    workingDayOptions: any[] = [
-        {id: 'Sunday', value: 'Sunday'},
-        {id: 'Monday', value: 'Monday'},
-        {id: 'Tuesday', value: 'Tuesday'},
-        {id: 'Wednesday', value: 'Wednesday'},
-        {id: 'Thursday', value: 'Thursday'},
-        {id: 'Friday', value: 'Friday'},
+    working_days: any = {};
+
+    working_dayOptions: any[] = [
+        { id: 'Sunday', value: 'Sunday' },
+        { id: 'Monday', value: 'Monday' },
+        { id: 'Tuesday', value: 'Tuesday' },
+        { id: 'Wednesday', value: 'Wednesday' },
+        { id: 'Thursday', value: 'Thursday' },
+        { id: 'Friday', value: 'Friday' },
     ];
 
     tableHeaders = {
@@ -58,148 +60,154 @@ export class WorkingDayComponent implements OnInit {
 
     initialState = {
         mode: "I",
-        workingDay: "",
-        startTime: "",
-        endTime: "",
+        working_day_id: "",
+        working_day: "",
+        start_time: "",
+        end_time: "",
         errors: {
-            workingDay: "",
-            startTime: "",
-            endTime: "",
+            working_day: "",
+            start_time: "",
+            end_time: "",
         }
     };
 
-    showForm(){
+    initializeFormValidation() {
+        const { onHandleChange, onHandleSubmit, onHandleBlur, fields } = formValidator(this.initialState);
+        this.onHandleSubmit = onHandleSubmit;
+        this.onHandleBlur = onHandleBlur;
+        this.onHandleChange = onHandleChange;
+        this.fields = fields;
+        this.errors = fields.errors;
+    }
+
+    showForm() {
         this.showTable = false;
         this.showAddForm = true;
+        this.working_days = {};
     }
 
-    editInfo() {
-        $('#showModal').modal('hide');
+    clearForm() {
+        this.initialState = {
+            ...this.initialState,
+            working_day_id: "",
+            working_day: "",
+            start_time: "",
+            end_time: "",
+            errors: {
+                working_day: "",
+                start_time: "",
+                end_time: "",
+            }
+        }
     }
 
-    saveInfo(event, obj){
+    saveInfo(event, obj) {
+        console.log(obj.value)
         event.preventDefault();
         if (this.onHandleSubmit(event)) {
-            console.log("fields", obj.value)
-            this.workingDayService.postDataFromService(obj.value)
+            this.subscribeData = this.service.postDataFromService(obj.value)
+                .subscribe(
+                    {
+                        next: data => {
+                            this.clearForm();
+                            this.initializeFormValidation();
+                        },
+                        error: err => {
+                            console.log(err)
+                        }
+                    }
+                )
+            obj.resetForm();
+        }
+    }
+
+    editInfo(modalEvent) {
+        let { event } = modalEvent;
+        let formObject = {
+            id: event.target.elements['working_day_id'].value,
+            working_day: event.target.elements['working_day'].value,
+            start_time: event.target.elements['start_time'].value,
+            end_time: event.target.elements['end_time'].value,
+        }
+        if (this.onHandleSubmit(event)) {
+            //console.log(obj);
+            this.subscribeData = this.service.editDataFromService(formObject)
+                .subscribe(
+                    {
+                        next: data => {
+                            console.log(data);
+                            if (data.success) {
+                                $('#showModal').modal('hide');
+                                this.getAll();
+                            }
+                        },
+                        error: err => {
+                            console.log(err)
+                        }
+                    }
+                )
+        }
+    }
+
+    onCancelModal() {
+        this.showTable = true;
+        this.showAddForm = false;
+        this.clearForm();
+        this.initializeFormValidation();
+        this.getAll();
+    }
+
+    onDisplayModalData(id) {
+        console.log(id)
+        this.subscribeData = this.service.getDataByIdFromService(id)
             .subscribe(
                 {
                     next: data => {
-                        console.log(data);
+                        this.working_days = data;
+                        this.initialState = {
+                            ...this.initialState,
+                            working_day_id: data.id,
+                            working_day: data.working_day,
+                            start_time: data.start_time,
+                            end_time: data.end_time,
+                        }
+                        this.initializeFormValidation();
                     },
                     error: err => {
                         console.log(err)
                     }
                 }
             )
-            obj.resetForm();
-            this.wname.nativeElement.focus();
-        }
     }
 
-    onCancelModal(){
-        this.showTable = true;
-        this.showAddForm = false;
-        this.workingDayService.getDataFromService()
-        .subscribe(            
-            {
-                next: data => {
-                    this.tableData = data;
-                    this.paginationConfig = {
-                        ...this.paginationConfig,
-                        totalRecordsCount: data.length
+    getAll(): void {
+        this.subscribeData = this.service.getDataFromService()
+            .subscribe(
+                {
+                    next: data => {
+                        console.log(data)
+                        this.tableData = data;
+                        this.paginationConfig = {
+                            ...this.paginationConfig,
+                            totalRecordsCount: data.length
+                        }
+                    },
+                    error: err => {
+                        console.log(err)
+                    },
+                    complete: () => {
+                        console.log("completed!")
                     }
-                },
-                error: err => {
-                    console.log(err)
-                },
-                complete: () => {
-                    console.log("completed!")
                 }
-            }
-        )
+            )
     }
 
     ngOnInit(): void {
+        this.initializeFormValidation();
+        this.getAll();
+    }
 
-        const { onHandleChange, onHandleSubmit, onHandleBlur, fields } = formValidator(this.initialState);
-
-        this.onHandleSubmit = onHandleSubmit;
-        this.onHandleBlur = onHandleBlur;
-        this.onHandleChange = onHandleChange;
-        this.fields = fields;
-        this.errors = fields.errors;
-
-        // call apiHandler to fetch data
-
-        this.workingDayService.getDataFromService()
-        .subscribe(            
-            {
-                next: data => {
-                    this.tableData = data;
-                    this.paginationConfig = {
-                        ...this.paginationConfig,
-                        totalRecordsCount: data.length
-                    }
-                },
-                error: err => {
-                    console.log(err)
-                },
-                complete: () => {
-                    console.log("completed!")
-                }
-            }
-        )
-
-        /* this.tableData.push(
-            {
-                id: 1,
-                name: "Deep Shrestha",
-                city: "Kumaripati, Lalitpur",
-                email: "deepshrestha83@gmail.com",
-                telephone_no: "9851181046",
-                created_at: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss a', 'en-US')
-            },
-            {
-                id: 2,
-                name: "Deepak Shrestha",
-                city: "Kupondole, Lalitpur",
-                email: "deepak.shrestha@gmail.com",
-                telephone_no: "984123212",
-                created_at: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss a', 'en-US')
-            },
-            {
-                id: 3,
-                name: "Pranaya Bahadur Raghubanshi",
-                city: "Kupondole, Lalitpur",
-                email: "pranaya.raghubanshi@gmail.com",
-                telephone_no: "9841323423",
-                created_at: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss a', 'en-US')
-            },
-            {
-                id: 4,
-                name: "Dolma Gurung",
-                city: "Kumaripati, Lalitpur",
-                email: "dolma.gurung@gmail.com",
-                telephone_no: "9851181046",
-                created_at: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss a', 'en-US')
-            },
-            {
-                id: 5,
-                name: "Dawa Sherpa",
-                city: "Kupondole, Lalitpur",
-                email: "dawa.sherpa@gmail.com",
-                telephone_no: "9849056935",
-                created_at: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss a', 'en-US')
-            },
-            {
-                id: 6,
-                name: "Binayak Dhungel",
-                city: "Kupondole, Lalitpur",
-                email: "binayak.dhunel@gmail.com",
-                telephone_no: "9861245267",
-                created_at: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss a', 'en-US')
-            }
-        ) */
+    ngOnDestroy(): void {
+        this.subscribeData.unsubscribe();
     }
 }

@@ -48,7 +48,7 @@ export class DepartmentComponent implements OnInit, OnDestroy {
     paginationConfig = {
         data: [],
         currentPage: 1,
-        recordPerPage: 2,
+        recordPerPage: 5,
         totalRecordsCount: 0,
     }
 

@@ -1,128 +1,220 @@
-<div *ngIf="showTable; then table; else form;"></div>
+<div *ngIf="showTable; then table; else form"></div>
 
 <ng-template #table>
-    <app-home>
-        <app-table type="add" (onAddHandler)="showForm()" [tableHeaders]="tableHeaders" [tableData]="tableData" [paginationConfig]="paginationConfig" modalTitle="Edit"></app-table>
-        <!-- <app-table type="select" [options]="options" [tableHeaders]="tableHeaders" [tableData]="tableData" [paginationConfig]="paginationConfig" modalTitle="Edit"></app-table> -->
-    </app-home>
+  <app-home>
+    <app-table
+      type="add"
+      (onAddHandler)="showForm()"
+      [tableHeaders]="tableHeaders"
+      [tableData]="tableData"
+      [paginationConfig]="paginationConfig"
+      modalTitle="Edit"
+      [modalBody]="modalBody"
+      (onSaveHandler)="editInfo($event, this)"
+      (onDisplayModalData)="onDisplayModalData($event)"
+      (onCheckboxClick)="onCheckboxClick($event)"
+      (onCancelModalHandler)="onCancelModal()"
+    >
+    </app-table>
+  </app-home>
+</ng-template>
+
+<ng-template #modalBody>
+  <div class="input-group">
+    <input type="hidden" name="shift_id" [(ngModel)]="shifts.id" />
+    <div class="input-group">
+      <label class="text-sm">Shift Name</label>
+      <select
+        class="inputText w-75"
+        name="shift_name"
+        [(ngModel)]="shifts.shift_name"
+        #shift_name="ngModel"
+        (change)="onHandleChange($event)"
+        (blur)="onHandleBlur($event)"
+      >
+        <option [value]="" selected disabled="disabled">Shift Name</option>
+        <option *ngFor="let option of shiftOptions" [value]="option.id">
+          {{ option.value }}
+        </option>
+      </select>
+      <div class="modal-text-danger">
+        {{ errors.shift_name }}
+      </div>
+    </div>
+    <div class="input-group">
+      <label class="text-sm">Start Week Day</label>
+      <select
+        class="inputText w-75"
+        name="start_week_day"
+        [(ngModel)]="shifts.start_week_day"
+        #start_week_day="ngModel"
+        (change)="onHandleChange($event)"
+        (blur)="onHandleBlur($event)"
+      >
+        <option [value]="" selected disabled="disabled">Start Week Day</option>
+        <option
+          *ngFor="let option of start_week_dayOptions"
+          [value]="option.id"
+        >
+          {{ option.value }}
+        </option>
+      </select>
+      <div class="modal-text-danger">
+        {{ errors.start_week_day }}
+      </div>
+    </div>
+    <!-- <div class="form-group">
+      <label class="text-sm">Allow Over Time</label>
+      <input
+        type="checkbox"
+        class=""
+        name="allow_overtime"
+        [(ngModel)]="shifts.allow_overtime"
+        #allow_overtime="ngModel"
+        placeholder="Allow Over Time"
+        (change)="onHandleChange($event)"
+        (blur)="onHandleBlur($event)"
+      />
+      <div class="modal-text-danger">
+        {{ errors.allow_overtime }}
+      </div>
+    </div> -->
+    <div class="input-group">
+      <label class="text-sm">Start Over Time</label>
+      <input
+        type="number"
+        class="inputText"
+        step="1"
+        min="0"
+        max="3"
+        name="start_overtime"
+        [(ngModel)]="shifts.start_overtime"
+        #start_overtime="ngModel"
+        placeholder="Start Over Time"
+        (keyup)="onHandleChange($event)"
+        (blur)="onHandleBlur($event)"
+      />
+      <div class="modal-text-danger">
+        {{ errors.start_overtime }}
+      </div>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #form>
-    <app-home>
-        <app-breadcrumb></app-breadcrumb>
-            <div class="form">
-                <div class="form-bar"><h5 class="form-title"><i class="fa fa-plus"></i>&nbsp;Add Shift</h5></div>
-                <div class="form-header">
-                    <div class="card-body">
-                        <form #shiftForm="ngForm" (ngSubmit)="saveInfo($event, shiftForm);" autocomplete="off">
-                            <!-- <div class="input-group row">
-                                <div class="col-md-6 offset-md-3">
-                                <input type="text" 
-                                       class="form-control" 
-                                       name="name" 
-                                       #name
-                                       [ngModel]="shifts.name" 
-                                       placeholder="Name">
-                                    <div class="modal-text-danger">
-                                        {{errors.name}}
-                                    </div>
-                                </div>
-                                <div class="col-md-3"></div>
-                            </div>
-                            <div class="input-group row">
-                                <div class="col-md-6 col-md-offset-3">
-                                <input type="text" 
-                                    class="form-control" 
-                                    name="shiftName" 
-                                    [ngModel]="shifts.shiftName" 
-                                    #shiftName="ngModel"
-                                    placeholder="Shift Name"
-                                    (keyup)="onHandleChange($event)"
-                                    (blur)="onHandleBlur($event)">
-                                <div class="modal-text-danger">
-                                    {{errors.shiftName}}
-                                </div>
-                                </div>
-                                <div class="col-md-3"></div>
-                            </div> -->
-                            <div class="input-group">
-                                <label class="text-sm">Shift Name</label>
-                                <select class="inputText w-75" 
-                                        name="shiftName" 
-                                        [ngModel]="shifts.shiftName" 
-                                        #shiftName="ngModel"
-                                        (change)="onHandleChange($event)"
-                                        (blur)="onHandleBlur($event)">
-                                    <option [ngValue]="" selected disabled="disabled">
-                                        Shift Name
-                                    </option>
-                                    <option *ngFor="let option of shiftOptions" [ngValue]="option.id">
-                                    {{option.value}}
-                                    </option>
-                                </select>
-                                <div class="modal-text-danger">
-                                    {{errors.shiftName}}
-                                </div>
-                            </div>
-                            <div class="input-group">
-                                <label class="text-sm">Start Week Day</label>
-                                <select class="inputText w-75" 
-                                        name="startWeekDay" 
-                                        [ngModel]="shifts.startWeekDay" 
-                                        #startWeekDay="ngModel"
-                                        (change)="onHandleChange($event)"
-                                        (blur)="onHandleBlur($event)">
-                                    <option [ngValue]="" selected disabled="disabled">
-                                        Start Week Day
-                                    </option>
-                                    <option *ngFor="let option of startWeekDayOptions" [ngValue]="option.id">
-                                    {{option.value}}
-                                    </option>
-                                </select>
-                                <div class="modal-text-danger">
-                                    {{errors.startWeekDay}}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="text-sm">Start Week Day</label>
-                                <input type="checkbox" 
-                                       class="" 
-                                       name="allowOverTime"
-                                       [ngModel]="shifts.allowOverTime"
-                                       #allowOverTime="ngModel"
-                                       placeholder="Allow Over Time"
-                                       (change)="onHandleChange($event)"
-                                       (blur)="onHandleBlur($event)">
-                                <div class="modal-text-danger">
-                                    {{errors.allowOverTime}}
-                                </div>
-                            </div>
-                            <div class="input-group">
-                                <label class="text-sm">Start Over Time</label>
-                                <input type="number" 
-                                       class="inputText" 
-                                       step="1"
-                                       min="0"
-                                       max="3"
-                                       name="startOverTime"
-                                       [ngModel]="shifts.startOverTime"
-                                       #startOverTime="ngModel"
-                                       placeholder="Start Over Time"
-                                       (keyup)="onHandleChange($event)"
-                                       (blur)="onHandleBlur($event)">
-                                <div class="modal-text-danger">
-                                    {{errors.startOverTime}}
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-center">
-                                <div class="btn-group">
-                                    <button class="btn btn-primary"><span><i class="fa fa-save"></i></span>&nbsp;Save</button>
-                                </div>    
-                                <button type="button" class="btn btn-danger ml-2" (click)="onCancel()"><span><i class="fa fa-ban"></i></span>&nbsp;Cancel</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+  <app-home>
+    <app-breadcrumb></app-breadcrumb>
+    <div class="form">
+      <div class="form-bar">
+        <h5 class="form-title"><i class="fa fa-plus"></i>&nbsp;Add Shift</h5>
+      </div>
+      <div class="form-header">
+        <div class="card-body">
+          <form
+            #shiftForm="ngForm"
+            (ngSubmit)="saveInfo($event, shiftForm)"
+            autocomplete="off"
+          >
+            <div class="input-group">
+              <label class="text-sm">Shift Name</label>
+              <select
+                class="inputText w-75"
+                name="shift_name"
+                [ngModel]="shifts.shift_name"
+                #shift_name="ngModel"
+                (change)="onHandleChange($event)"
+                (blur)="onHandleBlur($event)"
+              >
+                <option [value]="" selected disabled="disabled">
+                  Shift Name
+                </option>
+                <option
+                  *ngFor="let option of shiftOptions"
+                  [value]="option.id"
+                >
+                  {{ option.value }}
+                </option>
+              </select>
+              <div class="modal-text-danger">
+                {{ errors.shift_name }}
+              </div>
             </div>
-    </app-home>
+            <div class="input-group">
+              <label class="text-sm">Start Week Day</label>
+              <select
+                class="inputText w-75"
+                name="start_week_day"
+                [ngModel]="shifts.start_week_day"
+                #start_week_day="ngModel"
+                (change)="onHandleChange($event)"
+                (blur)="onHandleBlur($event)"
+              >
+                <option [value]="" selected disabled="disabled">
+                  Start Week Day
+                </option>
+                <option
+                  *ngFor="let option of start_week_dayOptions"
+                  [value]="option.id"
+                >
+                  {{ option.value }}
+                </option>
+              </select>
+              <div class="modal-text-danger">
+                {{ errors.start_week_day }}
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="text-sm">Start Week Day</label>
+              <input
+                type="checkbox"
+                class=""
+                name="allow_overtime"
+                [ngModel]="shifts.allow_overtime"
+                #allow_overtime="ngModel"
+                placeholder="Allow Over Time"
+                (change)="onHandleChange($event)"
+                (blur)="onHandleBlur($event)"
+              />
+              <div class="modal-text-danger">
+                {{ errors.allow_overtime }}
+              </div>
+            </div>
+            <div class="input-group">
+              <label class="text-sm">Start Over Time</label>
+              <input
+                type="number"
+                class="inputText"
+                step="1"
+                min="0"
+                max="3"
+                name="start_overtime"
+                [ngModel]="shifts.start_overtime"
+                #start_overtime="ngModel"
+                placeholder="Start Over Time"
+                (keyup)="onHandleChange($event)"
+                (blur)="onHandleBlur($event)"
+              />
+              <div class="modal-text-danger">
+                {{ errors.start_overtime }}
+              </div>
+            </div>
+            <div class="d-flex justify-content-center">
+              <div class="btn-group">
+                <button class="btn btn-primary">
+                  <span><i class="fa fa-save"></i></span>&nbsp;Save
+                </button>
+              </div>
+              <button
+                type="button"
+                class="btn btn-danger ml-2"
+                (click)="onCancel()"
+              >
+                <span><i class="fa fa-ban"></i></span>&nbsp;Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </app-home>
 </ng-template>

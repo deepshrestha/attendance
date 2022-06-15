@@ -13,6 +13,7 @@ export class SidebarComponent implements OnInit {
   activatedRoute: ActivatedRoute;
   tokenStorageService: TokenStorageService;
   router: Router;
+  userFullName: String;
   constructor(@Inject(ActivatedRoute) activatedRoute: ActivatedRoute,
     @Inject(TokenStorageService) tokenStorageService: TokenStorageService,
     @Inject(Router) router: Router) {
@@ -24,6 +25,7 @@ export class SidebarComponent implements OnInit {
   ngOnInit(): void {
     //console.log(this.activatedRoute.snapshot);
     this.slug = this.activatedRoute.snapshot.routeConfig?.path;
+    this.userFullName = this.tokenStorageService.getUser()["full_name"];
   }
 
   title = "CIBT Attendance"
