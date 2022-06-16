@@ -200,6 +200,8 @@ label {
 }
 .form .input-group {
     margin: 1rem 0;
+}
+.modal-body .input-group:not(.date) {
     display: block;
 }
 /* select {
@@ -913,7 +915,7 @@ li.select2-results__option.select2-results__option--selectable.select2-results__
     border: unset;
 }
 input.form-control.datetimepicker-input {
-    width: 50%;
+    width: 48%;
     height: 32px;
     border-top-left-radius: 3px !important;
     border-bottom-left-radius: 3px !important;

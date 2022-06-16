@@ -13,10 +13,8 @@ import "jquery-ui-dist/jquery-ui.min"
 
 // Datetimepicker
 global.moment = require('moment');
-require('tempusdominus-bootstrap-4/build/js/tempusdominus-bootstrap-4.min');
-require('tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css');
-import 'fullcalendar';
-import 'moment-timezone';
+import 'tempusdominus-bootstrap-4/build/js/tempusdominus-bootstrap-4.min';
+import 'tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css';
 // Datetimepicker
 
 import 'daterangepicker/daterangepicker.js';
