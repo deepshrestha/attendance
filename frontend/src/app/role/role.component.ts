@@ -73,7 +73,7 @@ export class RolesComponent implements OnInit {
         this.roles = {};
     }
 
-    clearForm() {
+    reInitializeState() {
         this.initialState = {
             ...this.initialState,
             role_name: '',
@@ -93,7 +93,7 @@ export class RolesComponent implements OnInit {
                 .subscribe(
                     {
                         next: data => {
-                            this.clearForm();
+                            this.reInitializeState();
                             this.initializeFormValidation();
                         },
                         error: err => {
@@ -137,7 +137,7 @@ export class RolesComponent implements OnInit {
     onCancelModal() {
         this.showTable = true;
         this.showAddForm = false;
-        this.clearForm();
+        this.reInitializeState();
         this.initializeFormValidation();
         this.getAll();
     }

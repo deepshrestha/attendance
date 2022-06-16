@@ -109,7 +109,7 @@ export class EmployeesComponent implements OnInit {
         this.employees = {};
     }
 
-    clearForm() {
+    reInitializeState() {
         this.initialState = {
             ...this.initialState,
             full_name: '',
@@ -140,7 +140,7 @@ export class EmployeesComponent implements OnInit {
                 .subscribe(
                     {
                         next: data => {
-                            this.clearForm();
+                            this.reInitializeState();
                             this.initializeFormValidation();
                         },
                         error: err => {
@@ -186,7 +186,7 @@ export class EmployeesComponent implements OnInit {
     onCancelModal() {
         this.showTable = true;
         this.showAddForm = false;
-        this.clearForm();
+        this.reInitializeState();
         this.initializeFormValidation();
         this.getAll();
     }

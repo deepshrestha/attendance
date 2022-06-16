@@ -33,7 +33,7 @@
         <form #departmentForm="ngForm" (ngSubmit)="editInfo($event, departmentForm);" autocomplete="off"> -->
             <div class="input-group">
                 <input type="hidden" name="department_id" [(ngModel)]="departments.id" />
-                <label class="text-sm">Department Name</label>
+                <label>Department Name</label>
                 <input type="text" 
                     autofocus
                     class="inputText w-75" 
@@ -71,7 +71,7 @@
                     <div class="card-body">
                         <form #departmentForm="ngForm" (ngSubmit)="saveInfo($event, departmentForm);" autocomplete="off">
                             <div class="input-group">
-                                <label class="text-sm">Department Name</label>
+                                <label>Department Name</label>
                                 <input type="text" 
                                        autofocus
                                        class="inputText w-75" 

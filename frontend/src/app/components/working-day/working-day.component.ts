@@ -86,7 +86,7 @@ export class WorkingDayComponent implements OnInit {
         this.working_days = {};
     }
 
-    clearForm() {
+    reInitializeState() {
         this.initialState = {
             ...this.initialState,
             working_day_id: "",
@@ -109,7 +109,7 @@ export class WorkingDayComponent implements OnInit {
                 .subscribe(
                     {
                         next: data => {
-                            this.clearForm();
+                            this.reInitializeState();
                             this.initializeFormValidation();
                         },
                         error: err => {
@@ -152,7 +152,7 @@ export class WorkingDayComponent implements OnInit {
     onCancelModal() {
         this.showTable = true;
         this.showAddForm = false;
-        this.clearForm();
+        this.reInitializeState();
         this.initializeFormValidation();
         this.getAll();
     }

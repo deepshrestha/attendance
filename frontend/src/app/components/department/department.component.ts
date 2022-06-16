@@ -80,7 +80,7 @@ export class DepartmentComponent implements OnInit, OnDestroy {
         this.departments = {};
     }
 
-    clearForm() {
+    reInitializeState() {
         this.initialState = {
             ...this.initialState,
             department_name: '',
@@ -120,18 +120,18 @@ export class DepartmentComponent implements OnInit, OnDestroy {
         console.log(obj)
         event.preventDefault();
         if (this.onHandleSubmit(event)) {
-            console.log("fields", obj.value);
-            /* this.subscribeData = this.departmentService.postDataFromService(obj.value)
+            this.subscribeData = this.departmentService.postDataFromService(obj.value)
             .subscribe(
                 {
                     next: data => {
-                        console.log(data);
+                        this.reInitializeState();
+                        this.initializeFormValidation();
                     },
                     error: err => {
                         console.log(err)
                     }
                 }
-            ) */
+            )
             obj.resetForm();
             this.dname.nativeElement.focus();
         }   
@@ -140,7 +140,7 @@ export class DepartmentComponent implements OnInit, OnDestroy {
     onCancelModal(){
         this.showTable = true;
         this.showAddForm = false;
-        this.clearForm();
+        this.reInitializeState();
         this.initializeFormValidation();
         this.getAll();
     }

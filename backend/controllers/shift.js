@@ -100,7 +100,7 @@ exports.updateShiftData = function (req, res) {
         //console.log(data);
         res.json({
           success: true,
-          message: "Overtime field Updated successfully",
+          message: "Overtime field updated successfully",
         });
       })
       .catch((err) => {

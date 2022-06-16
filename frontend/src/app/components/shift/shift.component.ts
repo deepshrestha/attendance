@@ -92,7 +92,7 @@ export class ShiftComponent implements OnInit {
         this.shifts = {};
     }
 
-    clearForm() {
+    reInitializeState() {
         this.initialState = {
             ...this.initialState,
             shift_id: "",
@@ -116,7 +116,7 @@ export class ShiftComponent implements OnInit {
                 .subscribe(
                     {
                         next: data => {
-                            this.clearForm();
+                            this.reInitializeState();
                             this.initializeFormValidation();
                         },
                         error: err => {
@@ -156,12 +156,11 @@ export class ShiftComponent implements OnInit {
                 )
         }
     }
-
-
+    
     onCancelModal() {
         this.showTable = true;
         this.showAddForm = false;
-        this.clearForm();
+        this.reInitializeState();
         this.initializeFormValidation();
         this.getAll();
     }
