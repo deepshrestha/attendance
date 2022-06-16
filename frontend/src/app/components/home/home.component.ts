@@ -19,6 +19,16 @@ export class HomeComponent implements AfterViewInit {
             $('#endTimePicker').datetimepicker({
                 format: 'LT'
             })
+
+            $('#leaveRequestDateRangePicker').daterangepicker({
+                // autoUpdateInput: false,
+            });
+
+            // $('#leaveRequestDateRangePicker').on('apply.daterangepicker', function(ev, picker) {
+            //     $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+            // });
+
         })
+
     }
 }

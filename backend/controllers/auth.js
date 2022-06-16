@@ -5,9 +5,9 @@ var db = require("../db").db;
 const config = require("../auth");
 
 exports.signin = function (req, res) {
-  var query = `select * from employees 
-                join roles on employees.role_id = roles.id
-                where employees.email_id = '${req.body.email}' `;
+  var query = `select e.*, roles.role_name from employees e
+                join roles on e.role_id = roles.id
+                where e.email_id = '${req.body.email}' `;
 
   var result = db.queryHandler(query);
   

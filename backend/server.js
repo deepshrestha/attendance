@@ -12,6 +12,9 @@ var attendance = require('./routes/attendance/attendanceRouter');
 var employee = require('./routes/employee/employeeRouter');
 var auth = require('./routes/auth/authRouter');
 var role = require('./routes/role/roleRouter');
+var leaveMaster = require('./routes/leaves/leaveMasterRouter');
+var leaveStatus = require('./routes/leaves/leaveStatusRouter');
+var leaveRequest = require('./routes/leaves/leaveRequestRouter');
 
 app.use(cors());
 
@@ -25,6 +28,9 @@ app.use('/', attendance);
 app.use('/', employee);
 app.use('/', auth);
 app.use('/', role);
+app.use('/', leaveMaster);
+app.use('/', leaveStatus);
+app.use('/', leaveRequest);
 
 /* app.post("/getRealTimeData", (req, res) => {
     let userId = req.body.userId;

@@ -19,6 +19,9 @@ import 'fullcalendar';
 import 'moment-timezone';
 // Datetimepicker
 
+import 'daterangepicker/daterangepicker.js';
+import 'daterangepicker/daterangepicker.css';
+
 import "/public/dist/app.css";    // custom css
 
 @Component({

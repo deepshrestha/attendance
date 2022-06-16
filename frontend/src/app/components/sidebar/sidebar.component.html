@@ -124,6 +124,27 @@
           </li>
           <li class="nav-item has-treeview" routerLinkActive="menu-open">
             <a href="#" class="nav-link active">
+              <i class="nav-icon fa fa-users"></i>
+              <p>
+                Leave Management
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a
+                  [routerLink]="['/leave-request']"
+                  routerLinkActive="active"
+                  class="nav-link"
+                >
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>List Requests</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item has-treeview" routerLinkActive="menu-open">
+            <a href="#" class="nav-link active">
               <i class="nav-icon fas fa-cogs"></i>
               <p>
                 Master Settings
@@ -169,6 +190,26 @@
                 >
                   <i class="far fa-circle nav-icon"></i>
                   <p>Shifts</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  [routerLink]="['/leaves']"
+                  routerLinkActive="active"
+                  class="nav-link"
+                >
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Leaves</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  [routerLink]="['/leave-status']"
+                  routerLinkActive="active"
+                  class="nav-link"
+                >
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Leave Status</p>
                 </a>
               </li>
             </ul>

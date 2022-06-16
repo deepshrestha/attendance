@@ -1,16 +1,16 @@
 import { Component, OnInit, Input, Inject, ViewChild, ElementRef, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { formValidator } from "./../../helpers/form-validator";
-import { DepartmentService } from './department.service';
+import { LeaveMasterService } from './leave-master.service';
 import * as $ from "jquery";
 import { TokenStorageService } from "../../services/token-storage/token-storage.service";
 
 @Component({
-    selector: 'app-department',
-    template: require('./department.component.html'),
-    providers: [DepartmentService]
+    selector: 'app-leave-master',
+    template: require('./leave-master.component.html'),
+    providers: [LeaveMasterService]
 })
-export class DepartmentComponent implements OnInit, OnDestroy {
+export class LeaveMasterComponent implements OnInit, OnDestroy {
     
     showTable: boolean = true;
     showAddForm: boolean = false;
@@ -22,7 +22,7 @@ export class DepartmentComponent implements OnInit, OnDestroy {
     subscribeData: Subscription;
 
     @Input() isLoggedIn: Boolean;
-    @ViewChild('dname') dname: ElementRef;
+    @ViewChild('lname') lname: ElementRef;
     @ViewChild('modalBody') modalBody: ElementRef;
 
     options: any[] = [
@@ -30,23 +30,23 @@ export class DepartmentComponent implements OnInit, OnDestroy {
         {id: true, value: 'Option 2'}
     ];
 
-    departmentService: DepartmentService;
+    leaveMasterService: LeaveMasterService;
     tokenStorageService: TokenStorageService;
-    constructor(@Inject(DepartmentService) departmentService: DepartmentService, 
+    constructor(@Inject(LeaveMasterService) leaveMasterService: LeaveMasterService, 
         @Inject(TokenStorageService) tokenStorageService: TokenStorageService){
-        this.departmentService = departmentService;
+        this.leaveMasterService = leaveMasterService;
         this.tokenStorageService = tokenStorageService;
     }
 
-    departments: any = {};
+    leaves: any = {};
 
     tableHeaders = {
         sn: "#",
-        department_name: "Department Name",
+        name: "Leave Name",
         created_at: "Created At",
         created_by: "Created By",
         action: "Action",
-        searchFilter: ["department_name", "created_by"]
+        searchFilter: ["name", "created_by"]
     };
 
     paginationConfig = {
@@ -59,10 +59,10 @@ export class DepartmentComponent implements OnInit, OnDestroy {
     tableData: any = [];
 
     initialState = {
-        department_id: "",
-        department_name: "",
+        leave_id: "",
+        name: "",
         errors: {
-            department_name: "",
+            name: "",
         }
     };
 
@@ -76,33 +76,31 @@ export class DepartmentComponent implements OnInit, OnDestroy {
         this.errors = fields.errors;
     }
 
-    //RxBneS%5wH6M
-
     showForm(){
         this.showTable = false;
         this.showAddForm = true;
-        this.departments = {};
+        this.leaves = {};
     }
 
     reInitializeState() {
         this.initialState = {
             ...this.initialState,
-            department_name: '',
+            name: '',
             errors: {
-                department_name: ''
+                name: ''
             }
         }
     }
     editInfo(modalEvent) {
         let { event } = modalEvent;
         let formObject = {
-            id: event.target.elements['department_id'].value,
-            department_name: event.target.elements['department_name'].value
+            id: event.target.elements['leave_id'].value,
+            name: event.target.elements['name'].value
         }
         if (this.onHandleSubmit(event)) {
             //console.log(obj);
             console.log("fields", formObject)
-            this.subscribeData = this.departmentService.editDataFromService(formObject)
+            this.subscribeData = this.leaveMasterService.editDataFromService(formObject)
             .subscribe(
                 {
                     next: data => {
@@ -121,10 +119,10 @@ export class DepartmentComponent implements OnInit, OnDestroy {
     }
 
     saveInfo(event: any, obj: any){
+        obj.value.created_by = this.tokenStorageService.getUser()["id"];
         event.preventDefault();
         if (this.onHandleSubmit(event)) {
-            obj.value.created_by = this.tokenStorageService.getUser()["id"];
-            this.subscribeData = this.departmentService.postDataFromService(obj.value)
+            this.subscribeData = this.leaveMasterService.postDataFromService(obj.value)
             .subscribe(
                 {
                     next: data => {
@@ -137,7 +135,7 @@ export class DepartmentComponent implements OnInit, OnDestroy {
                 }
             )
             obj.resetForm();
-            this.dname.nativeElement.focus();
+            this.lname.nativeElement.focus();
         }   
     }
 
@@ -151,16 +149,16 @@ export class DepartmentComponent implements OnInit, OnDestroy {
 
     onDisplayModalData(id){
         console.log(id)
-        this.subscribeData = this.departmentService.getDataByIdFromService(id)
+        this.subscribeData = this.leaveMasterService.getDataByIdFromService(id)
         .subscribe(            
             {
                 next: data => {
                     console.log(data);
-                    this.departments = data;
+                    this.leaves = data;
                     this.initialState = {
                         ...this.initialState,
-                        department_id: data.id,
-                        department_name: data.department_name
+                        leave_id: data.id,
+                        name: data.name
                     }
                     this.initializeFormValidation();
                 },
@@ -172,10 +170,11 @@ export class DepartmentComponent implements OnInit, OnDestroy {
     }
 
     getAll(): void {
-        this.subscribeData = this.departmentService.getDataFromService()
+        this.subscribeData = this.leaveMasterService.getDataFromService()
         .subscribe(            
             {
                 next: data => {
+                    console.log(data)
                     this.tableData = data;
                     this.paginationConfig = {
                         ...this.paginationConfig,

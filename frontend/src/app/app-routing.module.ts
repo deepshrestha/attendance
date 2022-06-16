@@ -22,6 +22,9 @@ import { DepartmentComponent } from "./components/department/department.componen
 import { WorkingDayComponent } from "./components/working-day/working-day.component";
 import { ShiftComponent } from "./components/shift/shift.component";
 import { RolesComponent } from "./role/role.component";
+import { LeaveMasterComponent } from "./components/leave-master/leave-master.component";
+import { LeaveStatusComponent } from "./components/leave-status/leave-status.component";
+import { LeaveRequestComponent } from "./components/leave-request/leave-request.component";
 //import { SettingsComponent } from "./components/settings/settings.component";
 
 const routes: Routes = [
@@ -65,6 +68,24 @@ const routes: Routes = [
     data: { role: "ROLE_ADMIN",  breadcrumb: 'Roles' }
   },
   {
+    path: "leaves",
+    component: LeaveMasterComponent,
+    canActivate: [AuthGuard],
+    data: { role: "ROLE_ADMIN",  breadcrumb: 'Leaves' }
+  },
+  {
+    path: "leave-status",
+    component: LeaveStatusComponent,
+    canActivate: [AuthGuard],
+    data: { role: "ROLE_ADMIN",  breadcrumb: 'Leave Status' }
+  },
+  {
+    path: "leave-request",
+    component: LeaveRequestComponent,
+    // canActivate: [AuthGuard],
+    data: { role: "ROLE_ADMIN",  breadcrumb: 'Leave Requests' }
+  },
+  {
     path: "subscribers",
     component: SubscriberListComponent,
     canActivate: [AuthGuard],
@@ -106,5 +127,8 @@ export const appRoutingComponents = [
   DepartmentComponent,
   WorkingDayComponent,
   ShiftComponent,
-  RolesComponent
+  RolesComponent,
+  LeaveMasterComponent,
+  LeaveStatusComponent,
+  LeaveRequestComponent
 ]
