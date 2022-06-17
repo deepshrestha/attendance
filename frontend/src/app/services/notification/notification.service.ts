@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 })
 export class Notification {
     
-  showMessage(message: string) {
+  showMessage(status: any, message: string) {
     const Toast = Swal.mixin({
       toast: true,
       position: "top-end",
@@ -20,7 +20,7 @@ export class Notification {
     });
 
     Toast.fire({
-      icon: "success",
+      icon: status,
       title: message,
     });
   }

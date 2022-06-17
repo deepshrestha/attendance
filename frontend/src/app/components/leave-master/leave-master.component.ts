@@ -112,7 +112,7 @@ export class LeaveMasterComponent implements OnInit, OnDestroy {
                     next: data => {
                         //console.log(data);
                         if(data.success) {
-                            this.notification.showMessage(data.message);
+                            this.notification.showMessage("success", data.message);
                             $('#showModal').modal('hide');
                             this.getAll();
                         }
