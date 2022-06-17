@@ -2,7 +2,7 @@
 
 <ng-template #table>
   <app-home>
-    <app-table
+    <!-- <app-table
       type="add"
       (onAddHandler)="showForm()"
       [tableHeaders]="tableHeaders"
@@ -14,19 +14,24 @@
       (onDisplayModalData)="onDisplayModalData($event)"
       (onCancelModalHandler)="onCancelModal()"
     >
+    </app-table> -->
+    <app-table
+      type="select"
+      [options]="options"
+      (onAddHandler)="showForm()"
+      [tableHeaders]="tableHeaders"
+      [tableData]="tableData"
+      [paginationConfig]="paginationConfig"
+      modalTitle="Edit"
+      [modalBody]="modalBody"
+      (onSaveHandler)="editInfo($event, this)"
+      (onDisplayModalData)="onDisplayModalData($event)"
+      (onCancelModalHandler)="onCancelModal()"
+      (onApproveRequestClick)="onApproveRequestClick($event)"
+      (onRejectRequestClick)="onRejectRequestClick($event)"
+      (onFilterOptionChange)="onFilterOptionChange($event)"
+    >
     </app-table>
-    <!-- <app-table type="select" 
-                [options]="options"
-                (onAddHandler)="showForm()" 
-                [tableHeaders]="tableHeaders" 
-                [tableData]="tableData" 
-                [paginationConfig]="paginationConfig" 
-                modalTitle="Edit" 
-                [modalBody]="modalBody" 
-                (onSaveHandler)="editInfo($event, this)" 
-                (onDisplayModalData)="onDisplayModalData($event)"
-                (onCancelModalHandler)="onCancelModal()" >
-        </app-table> -->
   </app-home>
 </ng-template>
 

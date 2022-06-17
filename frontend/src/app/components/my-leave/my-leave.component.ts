@@ -62,6 +62,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
         end_date: "End Date",
         requested_to: "Requested To",
         requested_at: "Requested Date",
+        remarks: "Remarks",
         action: "Action",
         searchFilter: ["leave_type", "created_by"]
     };
@@ -82,6 +83,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
         leave_request_date: "",
         requested_to: "",
         requested_at: "",
+        remarks: "",
         errors: {
             leave_master_id: "",
             requested_by: "",
@@ -116,6 +118,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
             leave_request_date: "",
             requested_to: "",
             requested_at: "",
+            remarks: "",
             errors: {
                 leave_master_id: "",
                 requested_by: "",
@@ -138,6 +141,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
             start_date: startDateVal,
             end_date: endDateVal,
             requested_to: requestedToVal,
+            remarks: event.target.elements['remarks'].value
         }
         if (this.onHandleSubmit(event)) {
             //console.log(obj);
@@ -163,12 +167,19 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
 
     saveInfo(event: any, obj: any) {
         event.preventDefault();
+        if (obj.value["requested_to[]"] !== undefined) {
+            let requestedToListString = ''
+            obj.value["requested_to[]"].forEach((element, index) => {
+                requestedToListString = `${requestedToListString}${index > 0 ? ',' : ''}${element}`;
+            });
+            obj.value.requested_to = requestedToListString;
+        }
+
         if (this.onHandleSubmit(event)) {
             obj.value.requested_by = this.tokenStorageService.getUser()["id"];
             let requestedDateRange = obj.value.leave_request_date;
             obj.value.start_date = formatDate(requestedDateRange.split('-')[0].trim(), 'yyyy-MM-dd', 'en-US');
             obj.value.end_date = formatDate(requestedDateRange.split('-')[1].trim(), 'yyyy-MM-dd', 'en-US');
-            if (obj.value.requested_to === undefined) obj.value.requested_to = 1;
             this.subscribeData = this.myLeaveService.postDataFromService(obj.value)
                 .subscribe(
                     {
@@ -207,9 +218,10 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
                             leave_request_id: data.id,
                             leave_master_id: data.leave_master_id,
                             requested_by: data.requested_by,
-                            leave_request_date : data.start_date + " - " + data.end_date,
+                            leave_request_date: data.start_date + " - " + data.end_date,
                             // start_date: data.start_date,
                             // end_date: data.end_date,
+                            remarks: data.remarks,
                             requested_to: data.requested_to,
                             requested_at: data.requested_at,
                         }
@@ -257,6 +269,8 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
                 this.approversOptions = data;
             }
         )
+
+
     }
 
     ngOnDestroy(): void {

@@ -25,6 +25,9 @@ import 'sweetalert2/dist/sweetalert2.css';
 
 import "/public/dist/app.css";    // custom css
 
+import 'select2/dist/js/select2.min.js';
+import 'select2/dist/css/select2.min.css';
+
 @Component({
     selector: 'app-root',
     template: require('./app.component.html'),

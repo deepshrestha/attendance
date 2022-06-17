@@ -27,9 +27,11 @@ export class LeaveRequestService {
       .pipe(map((data) => data));
   }
 
-  getDataFromService(): Observable<any> {
+  getDataFromService(leave_status_id): Observable<any> {
     return this.http
-      .get("http://localhost:3000/api/leave-requests/", httpOptions)
+      .get(`http://localhost:3000/api/leave-requests/approver/
+        ${this.tokenStorageService.getUser()["id"]}
+        ?leave_status_id=${leave_status_id}`, httpOptions)
       .pipe(map((data) => data));
   }
 
@@ -42,6 +44,12 @@ export class LeaveRequestService {
   editDataFromService(data): Observable<any> {
     return this.http
       .put("http://localhost:3000/api/leave-requests/", data, httpOptions)
+      .pipe(map((data) => data));
+  }
+
+  processLeaveRequestFromService(data): Observable<any> {
+    return this.http
+      .post("http://localhost:3000/api/leave-requests/process", data, httpOptions)
       .pipe(map((data) => data));
   }
 

@@ -30,6 +30,18 @@ export class LeaveStatusService {
       .pipe(map((data) => data));
   }
 
+  getLeaveStatusData(): Observable<any[]> {
+    return this.http
+      .get<any[]>(`http://localhost:3000/api/leave-status`, httpOptions)
+      .pipe(map((data) => {
+        const leaveStatuses = [{id: 0, value: "Pending", selected: true}];
+        data.forEach(element => {
+          leaveStatuses.push({id: element.id, value: element.name, selected: false});
+        });
+        return leaveStatuses;
+      }));
+  }
+
   postDataFromService(data): Observable<any> {
     return this.http
       .post("http://localhost:3000/api/leave-status/", data, httpOptions)

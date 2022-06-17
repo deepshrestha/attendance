@@ -29,7 +29,7 @@ export class MyLeaveService {
 
   getDataFromService(): Observable<any> {
     return this.http
-      .get("http://localhost:3000/api/leave-requests/", httpOptions)
+      .get(`http://localhost:3000/api/leave-requests/requestor/${this.tokenStorageService.getUser()["id"]}`, httpOptions)
       .pipe(map((data) => data));
   }
 

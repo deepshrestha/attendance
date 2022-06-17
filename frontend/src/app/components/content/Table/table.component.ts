@@ -21,6 +21,9 @@ export class TableComponent implements OnInit, OnChanges {
     @Output() onSaveHandler = new EventEmitter<{event: any, obj: any}>();
     @Output() onCancelModalHandler = new EventEmitter<string>();
     @Output() onCheckboxClick = new EventEmitter<{event: any, id: any}>();
+    @Output() onApproveRequestClick = new EventEmitter<{id: any}>();
+    @Output() onRejectRequestClick = new EventEmitter<{id: any}>();
+    @Output() onFilterOptionChange = new EventEmitter<{id: any}>();
 
     tableColumns: string = '';
     tableDataColumns: string = '';
@@ -48,6 +51,18 @@ export class TableComponent implements OnInit, OnChanges {
 
     onCheckboxClickHandler(event, id){
         this.onCheckboxClick.emit({event, id});
+    }
+
+    onApproveRequestHandler(id){
+        this.onApproveRequestClick.emit(id);
+    }
+
+    onRejectRequestHandler(id){
+        this.onRejectRequestClick.emit(id);
+    }
+
+    onFilterOptionChangeHandler(event){
+        this.onFilterOptionChange.emit(event.target.value);
     }
 
     getTableData(tableData: any[]) : any[] {
@@ -130,7 +145,7 @@ export class TableComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         //if(changes.tableData){
             console.log(changes)
-            this.getTableData(changes.tableData.currentValue);
+            this.getTableData(changes.tableData?.currentValue);
         //}
     }
     

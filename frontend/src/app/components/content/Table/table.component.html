@@ -3,9 +3,9 @@
     <button class="btn btn-primary" (click)="showForm()"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add</button>
 </div>
 <div *ngIf="type === 'select'" class="float-left" style="position: absolute;">
-    <select class="form-control">
+    <select class="form-control" (change)="onFilterOptionChangeHandler($event)">
         <option>---select---</option>
-        <option *ngFor="let option of options" [ngValue]="option.id">
+        <option *ngFor="let option of options" [value]="option.id" [selected]="option.selected">
             {{option.value}}
           </option>
     </select>
@@ -50,6 +50,24 @@
                         >
                         <li class="fa fa-edit" aria-hidden="true"></li>
                         Edit
+                        </button>
+                    </td>
+                    <td *ngIf="key === 'leaveRequestAction' && item['status_name'] == 'Pending'" class="text-center">
+                        <button
+                            id="showModalButton"
+                            class="btn btn-success"
+                            (click)="onApproveRequestHandler(item.id)"
+                        >
+                        <li class="fa fa-edit" aria-hidden="true"></li>
+                        Approve
+                        </button>
+                        <button
+                            id="showModalButton"
+                            class="btn btn-danger"
+                            (click)="onRejectRequestHandler(item.id)"
+                        >
+                        <li class="fa fa-edit" aria-hidden="true"></li>
+                        Reject
                         </button>
                     </td>
                 </ng-container>

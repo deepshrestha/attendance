@@ -28,6 +28,10 @@ export class HomeComponent implements AfterViewInit {
             //     $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
             // });
 
+            $(`select[name='requested_to']`).select2({
+                placeholder: "Select approver/s",
+                allowClear: true
+            });
         })
 
     }

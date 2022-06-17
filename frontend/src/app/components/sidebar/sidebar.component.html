@@ -141,7 +141,7 @@
                   <p>My Leave</p>
                 </a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" *ngIf="hasApproverRole">
                 <a
                   [routerLink]="['/leave-request']"
                   routerLinkActive="active"

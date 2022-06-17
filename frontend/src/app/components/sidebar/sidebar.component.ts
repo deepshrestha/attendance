@@ -14,6 +14,8 @@ export class SidebarComponent implements OnInit {
   tokenStorageService: TokenStorageService;
   router: Router;
   userFullName: String;
+  hasApproverRole: boolean;
+  
   constructor(@Inject(ActivatedRoute) activatedRoute: ActivatedRoute,
     @Inject(TokenStorageService) tokenStorageService: TokenStorageService,
     @Inject(Router) router: Router) {
@@ -26,6 +28,7 @@ export class SidebarComponent implements OnInit {
     //console.log(this.activatedRoute.snapshot);
     this.slug = this.activatedRoute.snapshot.routeConfig?.path;
     this.userFullName = this.tokenStorageService.getUser()["full_name"];
+    this.hasApproverRole = this.tokenStorageService.getUser()["has_approver_role"];
   }
 
   title = "CIBT Attendance"
