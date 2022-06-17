@@ -20,6 +20,9 @@ import 'tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css';
 import 'daterangepicker/daterangepicker.js';
 import 'daterangepicker/daterangepicker.css';
 
+import 'sweetalert2/dist/sweetalert2.all.min';
+import 'sweetalert2/dist/sweetalert2.css';
+
 import "/public/dist/app.css";    // custom css
 
 @Component({

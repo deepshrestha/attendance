@@ -2,8 +2,9 @@ import { Component, OnInit, Input, Inject, ViewChild, ElementRef, OnDestroy } fr
 import { Subscription } from "rxjs";
 import { formValidator } from "./../../helpers/form-validator";
 import { DepartmentService } from './department.service';
-import * as $ from "jquery";
 import { TokenStorageService } from "../../services/token-storage/token-storage.service";
+import { Notification } from "./../../services/notification/notification.service";
+import * as $ from "jquery";
 
 @Component({
     selector: 'app-department',
@@ -32,10 +33,15 @@ export class DepartmentComponent implements OnInit, OnDestroy {
 
     departmentService: DepartmentService;
     tokenStorageService: TokenStorageService;
-    constructor(@Inject(DepartmentService) departmentService: DepartmentService, 
-        @Inject(TokenStorageService) tokenStorageService: TokenStorageService){
+    notification: Notification;
+    constructor(
+        @Inject(DepartmentService) departmentService: DepartmentService, 
+        @Inject(TokenStorageService) tokenStorageService: TokenStorageService,
+        @Inject(Notification) notification: Notification
+    ){
         this.departmentService = departmentService;
         this.tokenStorageService = tokenStorageService;
+        this.notification = notification;
     }
 
     departments: any = {};
@@ -106,8 +112,9 @@ export class DepartmentComponent implements OnInit, OnDestroy {
             .subscribe(
                 {
                     next: data => {
-                        console.log(data);
+                        //console.log(data);
                         if(data.success) {
+                            this.notification.showMessage(data.message);
                             $('#showModal').modal('hide');
                             this.getAll();
                         }

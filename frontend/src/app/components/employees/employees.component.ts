@@ -3,9 +3,9 @@ import { Observable, Subscription } from "rxjs";
 import { ShiftService } from "../shift/shift.service";
 import { formValidator } from "./../../helpers/form-validator";
 import { EmployeeService } from "./employee.service";
-import * as $ from "jquery";
-import { RoleService } from "../../role/role.service";
+import { RoleService } from "../role/role.service";
 import { DepartmentService } from "../department/department.service";
+import * as $ from "jquery";
 
 @Component({
     selector: "app-employees",

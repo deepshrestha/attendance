@@ -1,8 +1,9 @@
 import { Component, OnInit, Input, Inject, ViewChild, ElementRef } from "@angular/core";
 import { formValidator } from "./../../helpers/form-validator";
 import { WorkingDayService } from './working-day.service'
-import * as $ from "jquery";
 import { Subscription } from "rxjs";
+import { Notification } from "./../../services/notification/notification.service";
+import * as $ from "jquery";
 
 @Component({
     selector: 'app-working-day',
@@ -24,8 +25,13 @@ export class WorkingDayComponent implements OnInit {
     @ViewChild('wname') wname: ElementRef;
 
     service: WorkingDayService;
-    constructor(@Inject(WorkingDayService) service: WorkingDayService) {
+    notification: Notification;
+    constructor(
+        @Inject(WorkingDayService) service: WorkingDayService,
+        @Inject(Notification) notification: Notification
+    ) {
         this.service = service;
+        this.notification = notification;
     }
 
     working_days: any = {};
@@ -135,8 +141,9 @@ export class WorkingDayComponent implements OnInit {
                 .subscribe(
                     {
                         next: data => {
-                            console.log(data);
+                            //console.log(data);
                             if (data.success) {
+                                this.notification.showMessage(data.message);
                                 $('#showModal').modal('hide');
                                 this.getAll();
                             }

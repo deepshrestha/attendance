@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, Inject, ViewChild, ElementRef, OnDestroy } from "@angular/core";
+import { formatDate } from "@angular/common";
 import { Subscription } from "rxjs";
 import { formValidator } from "../../helpers/form-validator";
 import { LeaveRequestService } from './leave-request.service';
-import * as $ from "jquery";
 import { TokenStorageService } from "../../services/token-storage/token-storage.service";
 import { LeaveMasterService } from "../leave-master/leave-master.service";
-import { formatDate } from "@angular/common";
+import { Notification } from "./../../services/notification/notification.service";
+import * as $ from "jquery";
 
 @Component({
     selector: 'app-leave-request',
@@ -35,13 +36,17 @@ export class LeaveRequestComponent implements OnInit, OnDestroy {
     leaveRequestService: LeaveRequestService;
     tokenStorageService: TokenStorageService;
     leaveMasterService: LeaveMasterService;
-    constructor(@Inject(LeaveRequestService) leaveRequestService: LeaveRequestService,
+    notification: Notification;
+    constructor(
+        @Inject(LeaveRequestService) leaveRequestService: LeaveRequestService,
         @Inject(TokenStorageService) tokenStorageService: TokenStorageService,
-        @Inject(LeaveMasterService) leaveMasterService: LeaveMasterService
+        @Inject(LeaveMasterService) leaveMasterService: LeaveMasterService,
+        @Inject(Notification) notification: Notification
     ) {
         this.leaveRequestService = leaveRequestService;
         this.tokenStorageService = tokenStorageService;
         this.leaveMasterService = leaveMasterService;
+        this.notification = notification;
     }
 
     leave_requests: any = {};
@@ -141,8 +146,9 @@ export class LeaveRequestComponent implements OnInit, OnDestroy {
                 .subscribe(
                     {
                         next: data => {
-                            console.log(data);
+                            //console.log(data);
                             if (data.success) {
+                                this.notification.showMessage(data.message);
                                 $('#showModal').modal('hide');
                                 this.getAll();
                             }

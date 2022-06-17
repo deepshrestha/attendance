@@ -21,7 +21,7 @@ import { EmployeesComponent } from "./components/employees/employees.component";
 import { DepartmentComponent } from "./components/department/department.component";
 import { WorkingDayComponent } from "./components/working-day/working-day.component";
 import { ShiftComponent } from "./components/shift/shift.component";
-import { RolesComponent } from "./role/role.component";
+import { RolesComponent } from "./components/role/role.component";
 import { LeaveMasterComponent } from "./components/leave-master/leave-master.component";
 import { LeaveStatusComponent } from "./components/leave-status/leave-status.component";
 import { LeaveRequestComponent } from "./components/leave-request/leave-request.component";

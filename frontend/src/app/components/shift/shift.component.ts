@@ -3,6 +3,7 @@ import { formatDate } from "@angular/common";
 import { formValidator } from "./../../helpers/form-validator";
 import { ShiftService } from './shift.service'
 import { Subscription } from "rxjs";
+import { Notification } from "./../../services/notification/notification.service";
 import * as $ from 'jquery';
 
 @Component({
@@ -26,8 +27,13 @@ export class ShiftComponent implements OnInit {
     //@ViewChild('name') name: ElementRef;
 
     service: ShiftService;
-    constructor(@Inject(ShiftService) service: ShiftService) {
+    notification: Notification;
+    constructor(
+        @Inject(ShiftService) service: ShiftService,
+        @Inject(Notification) notification: Notification
+    ) {
         this.service = service;
+        this.notification = notification;
     }
 
     shifts: any = {};
@@ -143,8 +149,9 @@ export class ShiftComponent implements OnInit {
                 .subscribe(
                     {
                         next: data => {
-                            console.log(data);
+                            //console.log(data);
                             if (data.success) {
+                                this.notification.showMessage(data.message);
                                 $('#showModal').modal('hide');
                                 this.getAll();
                             }

@@ -2,8 +2,9 @@ import { Component, OnInit, Input, Inject, ViewChild, ElementRef, OnDestroy } fr
 import { Subscription } from "rxjs";
 import { formValidator } from "./../../helpers/form-validator";
 import { LeaveMasterService } from './leave-master.service';
-import * as $ from "jquery";
 import { TokenStorageService } from "../../services/token-storage/token-storage.service";
+import { Notification } from "./../../services/notification/notification.service";
+import * as $ from "jquery";
 
 @Component({
     selector: 'app-leave-master',
@@ -32,10 +33,15 @@ export class LeaveMasterComponent implements OnInit, OnDestroy {
 
     leaveMasterService: LeaveMasterService;
     tokenStorageService: TokenStorageService;
-    constructor(@Inject(LeaveMasterService) leaveMasterService: LeaveMasterService, 
-        @Inject(TokenStorageService) tokenStorageService: TokenStorageService){
+    notification: Notification;
+    constructor(
+        @Inject(LeaveMasterService) leaveMasterService: LeaveMasterService, 
+        @Inject(TokenStorageService) tokenStorageService: TokenStorageService,
+        @Inject(Notification) notification: Notification
+    ){
         this.leaveMasterService = leaveMasterService;
         this.tokenStorageService = tokenStorageService;
+        this.notification = notification;
     }
 
     leaves: any = {};
@@ -104,8 +110,9 @@ export class LeaveMasterComponent implements OnInit, OnDestroy {
             .subscribe(
                 {
                     next: data => {
-                        console.log(data);
+                        //console.log(data);
                         if(data.success) {
+                            this.notification.showMessage(data.message);
                             $('#showModal').modal('hide');
                             this.getAll();
                         }

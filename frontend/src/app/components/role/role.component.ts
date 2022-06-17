@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
-import { formValidator } from "./../helpers/form-validator";
+import { formValidator } from "../../helpers/form-validator";
 import { RoleService } from "./role.service";
+import { Notification } from "./../../services/notification/notification.service";
 import * as $ from "jquery";
 
 @Component({
@@ -12,8 +13,13 @@ import * as $ from "jquery";
 export class RolesComponent implements OnInit {
 
     service: RoleService;
-    constructor(@Inject(RoleService) service: RoleService) {
+    notification: Notification;
+    constructor(
+        @Inject(RoleService) service: RoleService, 
+        @Inject(Notification) notification: Notification
+    ) {
         this.service = service;
+        this.notification = notification;
     }
 
     showTable: boolean = true;
@@ -120,8 +126,9 @@ export class RolesComponent implements OnInit {
                 .subscribe(
                     {
                         next: data => {
-                            console.log(data);
+                            //console.log(data);
                             if (data.success) {
+                                this.notification.showMessage(data.message);
                                 $('#showModal').modal('hide');
                                 this.getAll();
                             }

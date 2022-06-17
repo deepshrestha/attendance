@@ -2,8 +2,9 @@ import { Component, OnInit, Input, Inject, ViewChild, ElementRef, OnDestroy } fr
 import { Subscription } from "rxjs";
 import { formValidator } from "./../../helpers/form-validator";
 import { LeaveStatusService } from './leave-status.service';
-import * as $ from "jquery";
 import { TokenStorageService } from "../../services/token-storage/token-storage.service";
+import { Notification } from "./../../services/notification/notification.service";
+import * as $ from "jquery";
 
 @Component({
     selector: 'app-leave-status',
@@ -32,10 +33,15 @@ export class LeaveStatusComponent implements OnInit, OnDestroy {
 
     leaveStatusService: LeaveStatusService;
     tokenStorageService: TokenStorageService;
-    constructor(@Inject(LeaveStatusService) leaveStatusService: LeaveStatusService, 
-        @Inject(TokenStorageService) tokenStorageService: TokenStorageService){
+    notification: Notification;
+    constructor(
+        @Inject(LeaveStatusService) leaveStatusService: LeaveStatusService, 
+        @Inject(TokenStorageService) tokenStorageService: TokenStorageService,
+        @Inject(Notification) notification: Notification
+    ){
         this.leaveStatusService = leaveStatusService;
         this.tokenStorageService = tokenStorageService;
+        this.notification = notification;
     }
 
     leave_statuses: any = {};
@@ -104,8 +110,9 @@ export class LeaveStatusComponent implements OnInit, OnDestroy {
             .subscribe(
                 {
                     next: data => {
-                        console.log(data);
+                        //console.log(data);
                         if(data.success) {
+                            this.notification.showMessage(data.message);
                             $('#showModal').modal('hide');
                             this.getAll();
                         }
