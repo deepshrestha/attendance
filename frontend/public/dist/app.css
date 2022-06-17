@@ -515,6 +515,7 @@ ul.pagination {
 p.no-record {
     color: #dc3545;
     font-weight: 400;
+    font-size: 14px;
 }
 .page-link {
     color: #333;

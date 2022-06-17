@@ -133,12 +133,22 @@
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a
+                  [routerLink]="['/my-leave']"
+                  routerLinkActive="active"
+                  class="nav-link"
+                >
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>My Leave</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
                   [routerLink]="['/leave-request']"
                   routerLinkActive="active"
                   class="nav-link"
                 >
                   <i class="far fa-circle nav-icon"></i>
-                  <p>List Requests</p>
+                  <p>Leave Requests</p>
                 </a>
               </li>
             </ul>

@@ -25,6 +25,7 @@ import { RolesComponent } from "./components/role/role.component";
 import { LeaveMasterComponent } from "./components/leave-master/leave-master.component";
 import { LeaveStatusComponent } from "./components/leave-status/leave-status.component";
 import { LeaveRequestComponent } from "./components/leave-request/leave-request.component";
+import { MyLeaveComponent } from "./components/my-leave/my-leave.component";
 //import { SettingsComponent } from "./components/settings/settings.component";
 
 const routes: Routes = [
@@ -80,6 +81,12 @@ const routes: Routes = [
     data: { role: "ROLE_ADMIN",  breadcrumb: 'Leave Status' }
   },
   {
+    path: "my-leave",
+    component: MyLeaveComponent,
+    // canActivate: [AuthGuard],
+    data: { role: "ROLE_ADMIN",  breadcrumb: 'My Leave' }
+  },
+  {
     path: "leave-request",
     component: LeaveRequestComponent,
     // canActivate: [AuthGuard],
@@ -130,5 +137,6 @@ export const appRoutingComponents = [
   RolesComponent,
   LeaveMasterComponent,
   LeaveStatusComponent,
+  MyLeaveComponent,
   LeaveRequestComponent
 ]
