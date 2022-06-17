@@ -10,7 +10,7 @@ exports.signin = function (req, res) {
                 where e.email_id = '${req.body.email}' `;
 
   var result = db.queryHandler(query);
-  
+
   result.then((data) => {
     if (data.length > 0) {
       employee = data[0];
@@ -24,12 +24,18 @@ exports.signin = function (req, res) {
         });
         var loggedInRole = employee.role_name;
         var authorities = [`ROLE_${loggedInRole.toUpperCase()}`];
-        res.status(200).send({
-          id: employee.id,
-          email: employee.email_id,
-          full_name: employee.full_name,
-          roles: authorities,
-          accessToken: token,
+
+        var query1 = `select * from roles where parent_id = ${employee.role_id}`;
+        var result1 = db.queryHandler(query1);
+        result1.then((data1) => {
+          res.status(200).send({
+            id: employee.id,
+            email: employee.email_id,
+            full_name: employee.full_name,
+            roles: authorities,
+            has_approver_role: data1.length > 0,
+            accessToken: token,
+          });
         });
       } else {
         return res.status(401).send({
