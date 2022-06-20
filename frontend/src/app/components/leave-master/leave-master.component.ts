@@ -49,6 +49,7 @@ export class LeaveMasterComponent implements OnInit, OnDestroy {
     tableHeaders = {
         sn: "#",
         name: "Leave Name",
+        leave_days: "Leave Days",
         created_at: "Created At",
         created_by: "Created By",
         action: "Action",
@@ -67,8 +68,10 @@ export class LeaveMasterComponent implements OnInit, OnDestroy {
     initialState = {
         leave_id: "",
         name: "",
+        leave_days: "",
         errors: {
             name: "",
+            leave_days: "",
         }
     };
 
@@ -92,8 +95,10 @@ export class LeaveMasterComponent implements OnInit, OnDestroy {
         this.initialState = {
             ...this.initialState,
             name: '',
+            leave_days: '',
             errors: {
-                name: ''
+                name: '',
+                leave_days: '',
             }
         }
     }

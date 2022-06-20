@@ -59,6 +59,7 @@
       name="requested_to"
       [(ngModel)]="my_leaves.requested_to"
       #requested_to="ngModel"
+      data-placeholder="Select approver/s"
     >
       <option [value]="" selected disabled="disabled">Requested To</option>
       <option *ngFor="let option of approversOptions" [value]="option.id">
@@ -147,6 +148,7 @@
                 name="requested_to"
                 [ngModel]="my_leaves.requested_to"
                 #requested_to="ngModel"
+                data-placeholder="Select approver/s"
               >
                 <option [value]="" selected disabled="disabled">Requested To</option>
                 <option *ngFor="let option of approversOptions" [value]="option.id">

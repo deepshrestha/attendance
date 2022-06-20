@@ -49,6 +49,22 @@
       {{ errors.name }}
     </div>
   </div>
+  <div class="input-group">
+    <label>Leave Days</label>
+    <input
+      type="number"
+      class="inputText w-75"
+      name="leave_days"
+      #leave_days="ngModel"
+      [(ngModel)]="leaves.leave_days"
+      placeholder="Leave Days"
+      (keyup)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    />
+    <div *ngIf="errors.leave_days" class="modal-text-danger">
+      {{ errors.leave_days }}
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #form>
@@ -83,6 +99,22 @@
               />
               <div *ngIf="errors.name" class="modal-text-danger">
                 {{ errors.name }}
+              </div>
+            </div>
+            <div class="input-group">
+              <label>Leave Days</label>
+              <input
+                type="number"
+                class="inputText w-75"
+                name="leave_days"
+                #leave_days="ngModel"
+                [(ngModel)]="leaves.leave_days"
+                placeholder="Leave Days"
+                (keyup)="onHandleChange($event)"
+                (blur)="onHandleBlur($event)"
+              />
+              <div *ngIf="errors.leave_days" class="modal-text-danger">
+                {{ errors.leave_days }}
               </div>
             </div>
             <div class="d-flex justify-content-center">

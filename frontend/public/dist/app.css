@@ -586,7 +586,8 @@ th.table-dob {
 }
 th.table-in_time,
 th.table-out_time,
-th.table-total_hours {
+th.table-total_hours,
+th.table-leave_days {
     width: 10%;
 }
 th.table-action {

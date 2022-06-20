@@ -4,6 +4,7 @@ exports.getById = function(req, res) {
     //console.log(req.params.id)
     var query = `select id,
                         name,
+                        leave_days,
                         fn_dateTimeFormat(created_at) as created_at
                 from leave_master
                 where id = ${req.params.id}`;
@@ -22,6 +23,7 @@ exports.getAll = function(req, res) {
     var query = `select row_number() over(order by l.id) as sn,
                         l.id,
                         name,
+                        leave_days,
                         fn_dateTimeFormat(l.created_at) as created_at,
                         e.full_name as created_by
                 from leave_master l
@@ -40,8 +42,8 @@ exports.getAll = function(req, res) {
 
 exports.insertLeaveMasterData = function(req, res) {
     //console.log(req.body);
-    var query = `insert into leave_master (name, created_at, created_by) 
-                 values ('${req.body.name}', now(), '${req.body.created_by}')`;
+    var query = `insert into leave_master (name, leave_days, created_at, created_by) 
+                 values ('${req.body.name}', '${req.body.leave_days}', now(), '${req.body.created_by}')`;
 
     console.log(query);
     
@@ -59,7 +61,8 @@ exports.insertLeaveMasterData = function(req, res) {
 exports.updateLeaveMasterData = function(req, res) {
     //console.log(req.body);
     var query = `update leave_master 
-                 set name = '${req.body.name}'
+                 set name = '${req.body.name}',
+                     leave_days = '${req.body.leave_days}',
                  where id = '${req.body.id}'`;
 
     console.log(query);
