@@ -31,82 +31,76 @@
 </ng-template>
 
 <ng-template #modalBody>
+  <input type="hidden" name="leave_request_id" [(ngModel)]="my_leaves.id" />
   <div class="input-group">
-    <input type="hidden" name="leave_request_id" [(ngModel)]="my_leaves.id" />
-    <div class="input-group">
-      <label>Leave Type</label>
-      <select
-        class="inputText w-75"
-        name="leave_master_id"
-        [(ngModel)]="my_leaves.leave_master_id"
-        #leave_master_id="ngModel"
-        (change)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)"
-      >
-        <option [value]="" selected disabled="disabled">Leave Type</option>
-        <option *ngFor="let option of leaveTypeOptions" [value]="option.id">
-          {{ option.value }}
-        </option>
-      </select>
-      <div class="modal-text-danger">
-        {{ errors.leave_master_id }}
-      </div>
+    <label>Leave Type</label>
+    <select
+      class="inputText w-75"
+      name="leave_master_id"
+      [(ngModel)]="my_leaves.leave_master_id"
+      #leave_master_id="ngModel"
+      (input)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    >
+      <option [value]="" selected disabled="disabled">Leave Type</option>
+      <option *ngFor="let option of leaveTypeOptions" [value]="option.id">
+        {{ option.value }}
+      </option>
+    </select>
+    <div *ngIf="errors.leave_master_id" class="modal-text-danger">
+      {{ errors.leave_master_id }}
     </div>
-    <div class="input-group" *ngIf="approversOptions.length > 0">
-      <label>Requested To</label>
-      <select
-        multiple="multiple"
-        class="inputText w-75"
-        name="requested_to[]"
-        [(ngModel)]="my_leaves.requested_to"
-        #requested_to="ngModel"
-        (change)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)"
-      >
-        <option [value]="" selected disabled="disabled">Requested To</option>
-        <option *ngFor="let option of approversOptions" [value]="option.id">
-          {{ option.value }}
-        </option>
-      </select>
-      <div class="modal-text-danger">
-        {{ errors.requested_to }}
-      </div>
+  </div>
+  <div class="input-group" *ngIf="approversOptions.length > 0">
+    <label>Requested To</label>
+    <select
+      multiple="multiple"
+      class="inputText select2-modal w-75"
+      name="requested_to"
+      [(ngModel)]="my_leaves.requested_to"
+      #requested_to="ngModel"
+    >
+      <option [value]="" selected disabled="disabled">Requested To</option>
+      <option *ngFor="let option of approversOptions" [value]="option.id">
+        {{ option.value }}
+      </option>
+    </select>
+    <div *ngIf="errors.requested_to" class="modal-text-danger">
+      {{ errors.requested_to }}
     </div>
-
-    <div class="input-group">
-      <label>Date range:</label>
-      <div class="input-group-prepend">
-        <span class="input-group-text">
-          <i class="far fa-calendar-alt"></i>
-        </span>
-      </div>
-      <input
-        type="text"
-        id="leaveRequestDateRangePicker"
-        name="leave_request_date"
-        class="form-control daterangepicker-input float_right"
-        [(ngModel)]="my_leaves.leave_request_date"
-        #leave_request_date="ngModel"
-        data-target="#leaveRequestDateRangePicker"
-        placeholder="Start/End Date"
-        (input)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)"
-        value=""
-      />
+  </div>
+  <div class="input-group">
+    <label>Date range</label>
+    <div class="input-group-prepend">
+      <span class="input-group-text">
+        <i class="far fa-calendar-alt"></i>
+      </span>
     </div>
-    <div class="input-group">
-      <label>Remarks</label>
-      <textarea
-        autofocus
-        class="inputText w-75"
-        name="remarks"
-        #remarks="ngModel"
-        [(ngModel)]="my_leaves.remarks"
-        placeholder="Remarks"
-        (keyup)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)">
-      </textarea>
-    </div>
+    <input
+      type="text"
+      id="daterangepicker"
+      name="leave_request_date"
+      class="form-control daterangepicker-input"
+      [(ngModel)]="my_leaves.leave_request_date"
+      #leave_request_date="ngModel"
+      data-target="#daterangepicker"
+      placeholder="Start/End Date"
+      (keyup)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+      value=""
+    />
+  </div>
+  <div class="input-group">
+    <label>Remarks</label>
+    <textarea
+      class="inputText w-75"
+      name="remarks"
+      #remarks="ngModel"
+      [(ngModel)]="my_leaves.remarks"
+      placeholder="Remarks"
+      (keyup)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)">
+    </textarea>
   </div>
 </ng-template>
 
@@ -119,14 +113,11 @@
       </div>
       <div class="form-header">
         <div class="card-body">
-          <form
-            #leaveForm="ngForm"
-            (ngSubmit)="saveInfo($event, leaveForm)"
-            autocomplete="off"
-          >
+          <form #leaveForm="ngForm" (ngSubmit)="saveInfo($event, leaveForm)" autocomplete="off">
             <div class="input-group">
               <label>Leave Type</label>
               <select
+                id="leave_master_id"
                 class="inputText w-75"
                 name="leave_master_id"
                 [ngModel]="my_leaves.leave_master_id"
@@ -144,7 +135,7 @@
                   {{ option.value }}
                 </option>
               </select>
-              <div class="modal-text-danger">
+              <div *ngIf="errors.leave_master_id" class="modal-text-danger">
                 {{ errors.leave_master_id }}
               </div>
             </div>
@@ -152,29 +143,22 @@
               <label>Requested To</label>
               <select
                 multiple="multiple"
-                class="inputText w-75"
-                name="requested_to[]"
+                class="inputText select2 w-75"
+                name="requested_to"
                 [ngModel]="my_leaves.requested_to"
                 #requested_to="ngModel"
-                (change)="onHandleChange($event)"
-                (blur)="onHandleBlur($event)"
               >
-                <option [value]="" selected disabled="disabled">
-                  Requested To
-                </option>
-                <option
-                  *ngFor="let option of approversOptions"
-                  [value]="option.id"
-                >
+                <option [value]="" selected disabled="disabled">Requested To</option>
+                <option *ngFor="let option of approversOptions" [value]="option.id">
                   {{ option.value }}
                 </option>
               </select>
-              <div class="modal-text-danger">
+              <div *ngIf="errors.requested_to" class="modal-text-danger">
                 {{ errors.requested_to }}
               </div>
             </div>
             <div class="input-group">
-              <label>Date range:</label>
+              <label>Date range</label>
               <div class="input-group-prepend">
                 <span class="input-group-text">
                   <i class="far fa-calendar-alt"></i>
@@ -182,22 +166,21 @@
               </div>
               <input
                 type="text"
-                id="leaveRequestDateRangePicker"
+                id="daterangepicker"
                 name="leave_request_date"
-                class="form-control daterangepicker-input float_right"
+                class="form-control daterangepicker-input"
                 [ngModel]="my_leaves.leave_request_date"
                 #leave_request_date="ngModel"
-                data-target="#leaveRequestDateRangePicker"
+                data-target="#daterangepicker"
                 placeholder="Start/End Date"
-                (input)="onHandleChange($event)"
+                (keyup)="onHandleChange($event)"
                 (blur)="onHandleBlur($event)"
-                value="01/01/2018 - 01/15/2018"
+                [value]="01/01/2018 - 01/15/2018"
               />
             </div>
             <div class="input-group">
               <label>Remarks</label>
               <textarea
-                autofocus
                 class="inputText w-75"
                 name="remarks"
                 #remarks="ngModel"

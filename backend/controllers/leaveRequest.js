@@ -7,7 +7,8 @@ exports.getById = function(req, res) {
                         requested_by, requested_to,
                         fn_dateFormat(start_date) as start_date,
                         fn_dateFormat(end_date) as end_date,
-                        fn_dateTimeFormat(requested_at) as requested_at
+                        fn_dateTimeFormat(requested_at) as requested_at,
+                        remarks
                 from leave_request
                 where id = ${req.params.id}`;
 
@@ -29,7 +30,8 @@ exports.getAll = function(req, res) {
                         e2.full_name as requested_to,
                         fn_dateFormat(lr.start_date) as start_date,
                         fn_dateFormat(lr.end_date) as end_date,
-                        fn_dateTimeFormat(lr.requested_at) as requested_at
+                        fn_dateTimeFormat(lr.requested_at) as requested_at,
+                        lr.remarks
                 from leave_request lr
                 join leave_master lm on lr.leave_master_id = lm.id
                 join employees e1 on lr.requested_by = e1.id
@@ -60,7 +62,7 @@ exports.insertLeaveRequestData = function(req, res) {
 
     result.then(data => {
         console.log("last insert Id: ", data.insertId);
-        res.json(data.insertId);
+        res.json(true);
     })
     .catch(err => {
         console.log(err)
@@ -73,7 +75,8 @@ exports.updateLeaveRequestData = function(req, res) {
                  set leave_master_id = '${req.body.leave_master_id}', 
                  requested_to = '${req.body.requested_to}', 
                  start_date = '${req.body.start_date}', 
-                 end_date = '${req.body.end_date}'
+                 end_date = '${req.body.end_date}',
+                 remarks = '${req.body.remarks}'
                  where id = '${req.body.id}'`;
 
     console.log(query);
@@ -120,7 +123,8 @@ exports.getMyLeaveRequests = function (req, res) {
                         e2.full_name as requested_to,
                         fn_dateFormat(lr.start_date) as start_date,
                         fn_dateFormat(lr.end_date) as end_date,
-                        fn_dateTimeFormat(lr.requested_at) as requested_at
+                        fn_dateTimeFormat(lr.requested_at) as requested_at,
+                        case when lr.remarks = '' then 'N/a' else lr.remarks end as remarks
                 from leave_request lr
                 join leave_master lm on lr.leave_master_id = lm.id
                 join employees e1 on lr.requested_by = e1.id

@@ -27,8 +27,7 @@
       (onSaveHandler)="editInfo($event, this)"
       (onDisplayModalData)="onDisplayModalData($event)"
       (onCancelModalHandler)="onCancelModal()"
-      (onApproveRequestClick)="onApproveRequestClick($event)"
-      (onRejectRequestClick)="onRejectRequestClick($event)"
+      (onActionRequestClick)="onActionRequestClick($event)"
       (onFilterOptionChange)="onFilterOptionChange($event)"
     >
     </app-table>
@@ -81,7 +80,7 @@
       </div>
     </div>
     <div class="input-group">
-      <label>Date range:</label>
+      <label>Date range</label>
       <div class="input-group-prepend">
         <span class="input-group-text">
           <i class="far fa-calendar-alt"></i>
@@ -89,12 +88,12 @@
       </div>
       <input
         type="text"
-        id="leaveRequestDateRangePicker"
+        id="daterangepicker"
         name="leave_request_date"
         class="form-control daterangepicker-input float_right"
         [(ngModel)]="leave_requests.leave_request_date"
         #leave_request_date="ngModel"
-        data-target="#leaveRequestDateRangePicker"
+        data-target="#daterangepicker"
         placeholder="Start/End Date"
         (input)="onHandleChange($event)"
         (blur)="onHandleBlur($event)"
@@ -167,7 +166,7 @@
               </div>
             </div>
             <div class="input-group">
-              <label>Date range:</label>
+              <label>Date range</label>
               <div class="input-group-prepend">
                 <span class="input-group-text">
                   <i class="far fa-calendar-alt"></i>
@@ -175,12 +174,12 @@
               </div>
               <input
                 type="text"
-                id="leaveRequestDateRangePicker"
+                id="daterangepicker"
                 name="leave_request_date"
                 class="form-control daterangepicker-input float_right"
                 [ngModel]="leave_requests.leave_request_date"
                 #leave_request_date="ngModel"
-                data-target="#leaveRequestDateRangePicker"
+                data-target="#daterangepicker"
                 placeholder="Start/End Date"
                 (input)="onHandleChange($event)"
                 (blur)="onHandleBlur($event)"

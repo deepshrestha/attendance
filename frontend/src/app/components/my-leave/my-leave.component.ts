@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Inject, ViewChild, ElementRef, OnDestroy } from "@angular/core";
+import { Component, OnInit, Input, Inject, ViewChild, ElementRef, OnDestroy, AfterViewInit } from "@angular/core";
 import { formatDate } from "@angular/common";
 import { Subscription } from "rxjs";
 import { formValidator } from "../../helpers/form-validator";
@@ -13,7 +13,7 @@ import * as $ from "jquery";
     template: require('./my-leave.component.html'),
     providers: [MyLeaveService]
 })
-export class MyLeaveComponent implements OnInit, OnDestroy {
+export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
 
     showTable: boolean = true;
     showAddForm: boolean = false;
@@ -25,7 +25,6 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
     subscribeData: Subscription;
 
     @Input() isLoggedIn: Boolean;
-    @ViewChild('lname') lname: ElementRef;
     @ViewChild('modalBody') modalBody: ElementRef;
 
     options: any[] = [
@@ -81,7 +80,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
         leave_master_id: "",
         requested_by: "",
         leave_request_date: "",
-        requested_to: "",
+        requested_to: [],
         requested_at: "",
         remarks: "",
         errors: {
@@ -116,7 +115,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
             leave_master_id: "",
             requested_by: "",
             leave_request_date: "",
-            requested_to: "",
+            requested_to: [],
             requested_at: "",
             remarks: "",
             errors: {
@@ -131,10 +130,18 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
     editInfo(modalEvent) {
         let { event } = modalEvent;
         let requestedDateRange = event.target.elements['leave_request_date'].value;
-        let startDateVal = formatDate(requestedDateRange.split('-')[0].trim(), 'yyyy-MM-dd', 'en-US');
-        let endDateVal = formatDate(requestedDateRange.split('-')[1].trim(), 'yyyy-MM-dd', 'en-US');
-        let requestedToVal = event.target.elements['requested_to']?.value;
-        if (!requestedToVal) requestedToVal = 1;
+        let startDateVal = requestedDateRange.split(' - ')[0].trim();
+        let endDateVal = requestedDateRange.split(' - ')[1].trim();
+        //let requestedToVal = $('select[name="requested_to[]"]').val();
+        let requestedToVal = Array.from<HTMLInputElement>(event.target.elements['requested_to'].selectedOptions).map(option => option.value.split(':')[1]).join(',').trim();
+        
+        $('.select2-modal').change( event => {
+            event.preventDefault();
+            if (event.target && event.target.matches("select")) {
+                this.onHandleChange(event)
+            }
+        });
+
         let formObject = {
             id: event.target.elements['leave_request_id'].value,
             leave_master_id: event.target.elements['leave_master_id'].value,
@@ -167,23 +174,38 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
 
     saveInfo(event: any, obj: any) {
         event.preventDefault();
-        if (obj.value["requested_to[]"] !== undefined) {
-            let requestedToListString = ''
-            obj.value["requested_to[]"].forEach((element, index) => {
-                requestedToListString = `${requestedToListString}${index > 0 ? ',' : ''}${element}`;
-            });
-            obj.value.requested_to = requestedToListString;
-        }
 
+        let requestedDateRange = event.target.elements['leave_request_date'].value;
+        let startDateVal = requestedDateRange.split(' - ')[0].trim();
+        let endDateVal = requestedDateRange.split(' - ')[1].trim();
+        let requestedToVal = Array.from<HTMLInputElement>(event.target.elements['requested_to'].selectedOptions).map(option => option.value.split(':')[1]).join(',').trim();
+        
+        $('.select2').change( event => {
+            event.preventDefault();
+            if (event.target && event.target.matches("select")) {
+                this.onHandleChange(event);
+            }
+        });
+        let formObject = {
+            leave_master_id: event.target.elements['leave_master_id'].value,
+            start_date: startDateVal,
+            end_date: endDateVal,
+            requested_to: requestedToVal,
+            remarks: event.target.elements['remarks'].value,
+            requested_by: this.tokenStorageService.getUser()["id"]
+        }
+        
         if (this.onHandleSubmit(event)) {
-            obj.value.requested_by = this.tokenStorageService.getUser()["id"];
-            let requestedDateRange = obj.value.leave_request_date;
-            obj.value.start_date = formatDate(requestedDateRange.split('-')[0].trim(), 'yyyy-MM-dd', 'en-US');
-            obj.value.end_date = formatDate(requestedDateRange.split('-')[1].trim(), 'yyyy-MM-dd', 'en-US');
-            this.subscribeData = this.myLeaveService.postDataFromService(obj.value)
+            console.log(formObject)
+            this.subscribeData = this.myLeaveService.postDataFromService(formObject)
                 .subscribe(
                     {
                         next: data => {
+                            let date = new Date();
+                            date.setDate(date.getDate());
+                            $("#daterangepicker").data('daterangepicker').setStartDate(formatDate(date, 'yyyy-MM-dd', 'en-us'));
+                            $("#daterangepicker").data('daterangepicker').setEndDate(formatDate(date, 'yyyy-MM-dd', 'en-us'));
+                            $('.select2').val(null).trigger('change');
                             this.reInitializeState();
                             this.initializeFormValidation();
                         },
@@ -193,7 +215,6 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
                     }
                 )
             obj.resetForm();
-            // this.lname.nativeElement.focus();
         }
     }
 
@@ -203,15 +224,36 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
         this.reInitializeState();
         this.initializeFormValidation();
         this.getAll();
+        $('#daterangepicker').data('daterangepicker').remove();
     }
 
     onDisplayModalData(id) {
         console.log(id)
+
+        $('.select2-modal').select2({
+            placeholder: "Select approver/s"
+        });
+        
+        $('#daterangepicker').daterangepicker(
+            {
+                opens: "left",
+                autoUpdateInput: true,
+                locale: {
+                    format: "YYYY-MM-DD",
+                    cancelLabel: "Clear"
+                }
+            }
+        );
+
         this.subscribeData = this.myLeaveService.getDataByIdFromService(id)
             .subscribe(
                 {
                     next: data => {
                         console.log(data);
+                        $("#daterangepicker").data('daterangepicker').setStartDate(data.start_date);
+                        $("#daterangepicker").data('daterangepicker').setEndDate(data.end_date);
+                        /* $('.select2-modal').val(['1: 4','2: 5']).trigger('change'); */
+                        $('.select2-modal').val(data.requested_to).trigger('change');
                         this.my_leaves = data;
                         this.initialState = {
                             ...this.initialState,
@@ -225,6 +267,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
                             requested_to: data.requested_to,
                             requested_at: data.requested_at,
                         }
+                        console.log(this.initialState);
                         this.initializeFormValidation();
                     },
                     error: err => {
@@ -269,8 +312,9 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
                 this.approversOptions = data;
             }
         )
+    }
 
-
+    ngAfterViewInit(): void {
     }
 
     ngOnDestroy(): void {

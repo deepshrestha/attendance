@@ -29,13 +29,12 @@ export class LeaveRequestComponent implements OnInit, OnDestroy {
     @ViewChild('lname') lname: ElementRef;
     @ViewChild('modalBody') modalBody: ElementRef;
 
-
-
     leaveRequestService: LeaveRequestService;
     tokenStorageService: TokenStorageService;
     leaveMasterService: LeaveMasterService;
     notification: Notification;
     leaveStatusService: LeaveStatusService;
+
     constructor(
         @Inject(LeaveRequestService) leaveRequestService: LeaveRequestService,
         @Inject(TokenStorageService) tokenStorageService: TokenStorageService,
@@ -51,10 +50,10 @@ export class LeaveRequestComponent implements OnInit, OnDestroy {
     }
 
     leave_requests: any = {};
-
     leaveTypeOptions: any[] = [];
     approversOptions: any[] = [];
     options: any[] = [];
+    tableData: any = [];
 
     tableHeaders = {
         sn: "#",
@@ -64,7 +63,7 @@ export class LeaveRequestComponent implements OnInit, OnDestroy {
         end_date: "End Date",
         requested_to: "Requested To",
         requested_at: "Requested Date",
-        leaveRequestAction: "Action",
+        action_request: "Action",
         searchFilter: ["leave_type", "created_by"]
     };
 
@@ -74,8 +73,6 @@ export class LeaveRequestComponent implements OnInit, OnDestroy {
         recordPerPage: 5,
         totalRecordsCount: 0,
     }
-
-    tableData: any = [];
 
     initialState = {
         leave_request_id: "",
@@ -127,6 +124,7 @@ export class LeaveRequestComponent implements OnInit, OnDestroy {
             }
         }
     }
+
     editInfo(modalEvent) {
         let { event } = modalEvent;
         let requestedDateRange = event.target.elements['leave_request_date'].value;
@@ -224,8 +222,8 @@ export class LeaveRequestComponent implements OnInit, OnDestroy {
             )
     }
 
-    onApproveRequestClick(id) {
-        let data = { leave_request_id: id, status_name: 'Approved', remarks: '' };
+    onActionRequestClick(requestObj: object) {
+        let data = { leave_request_id: requestObj['id'], status_name: requestObj['status_name'], remarks: '' };
         this.leaveRequestService.processLeaveRequestFromService(data).
             subscribe({
                 next: data => {
@@ -237,25 +235,7 @@ export class LeaveRequestComponent implements OnInit, OnDestroy {
                 complete: () => {
                     console.log("completed!")
                 }
-            })
-        console.log("approve", id)
-    }
-
-    onRejectRequestClick(id) {
-        let data = { leave_request_id: id, status_name: 'Rejected', remarks: '' };
-        this.leaveRequestService.processLeaveRequestFromService(data).
-            subscribe({
-                next: data => {
-                    this.getAll();
-                },
-                error: err => {
-                    console.log(err)
-                },
-                complete: () => {
-                    console.log("completed!")
-                }
-            })
-        console.log("approve", id)
+            });
     }
 
     onFilterOptionChange(id) {
@@ -307,7 +287,6 @@ export class LeaveRequestComponent implements OnInit, OnDestroy {
 
         this.leaveStatusService.getLeaveStatusData().subscribe(
             data => {
-                console.log(data)
                 this.options = data;
                 console.log(this.options)
             }

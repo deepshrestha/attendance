@@ -23,10 +23,10 @@ import 'daterangepicker/daterangepicker.css';
 import 'sweetalert2/dist/sweetalert2.all.min';
 import 'sweetalert2/dist/sweetalert2.css';
 
-import "/public/dist/app.css";    // custom css
-
-import 'select2/dist/js/select2.min.js';
+import 'select2/dist/js/select2.min';
 import 'select2/dist/css/select2.min.css';
+
+import "/public/dist/app.css";    // custom css
 
 @Component({
     selector: 'app-root',

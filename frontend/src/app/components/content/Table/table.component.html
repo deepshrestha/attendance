@@ -4,7 +4,6 @@
 </div>
 <div *ngIf="type === 'select'" class="float-left" style="position: absolute;">
     <select class="form-control" (change)="onFilterOptionChangeHandler($event)">
-        <option>---select---</option>
         <option *ngFor="let option of options" [value]="option.id" [selected]="option.selected">
             {{option.value}}
           </option>
@@ -34,7 +33,7 @@
             <!-- <tr *ngFor="let item of tableData"> -->
             <tr *ngFor="let item of paginateData">
                 <ng-container *ngFor="let key of tableHeadersKeyList">
-                    <td *ngIf="isBoolean(item[key]) == 'string' && key !== 'action' && key !== 'searchFilter'">
+                    <td *ngIf="isBoolean(item[key]) == 'string' && key !== 'action' && key !== 'action_request' && key !== 'searchFilter'">
                         {{item[key]}}
                     </td>
                     <td *ngIf="isBoolean(item[key]) == 'boolean'">
@@ -52,22 +51,22 @@
                         Edit
                         </button>
                     </td>
-                    <td *ngIf="key === 'leaveRequestAction' && item['status_name'] == 'Pending'" class="text-center">
+                    <td *ngIf="key === 'action_request' && item['status_name'] == 'Pending'" class="text-center">
                         <button
                             id="showModalButton"
                             class="btn btn-success"
-                            (click)="onApproveRequestHandler(item.id)"
+                            (click)="onActionRequestHandler(item.id, 'Approved')"
+                            title="Approve"
                         >
                         <li class="fa fa-edit" aria-hidden="true"></li>
-                        Approve
                         </button>
                         <button
                             id="showModalButton"
-                            class="btn btn-danger"
-                            (click)="onRejectRequestHandler(item.id)"
+                            class="btn btn-danger m-2"
+                            (click)="onActionRequestHandler(item.id, 'Rejected')"
+                            title="Reject"
                         >
-                        <li class="fa fa-edit" aria-hidden="true"></li>
-                        Reject
+                        <li class="fa fa-ban" aria-hidden="true"></li>
                         </button>
                     </td>
                 </ng-container>

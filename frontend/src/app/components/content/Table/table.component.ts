@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, Inject } from "@angular/core";
 import { Modal } from "bootstrap";
-//import * as $ from "jquery";
+import * as $ from "jquery";
 
 @Component({
     selector: 'app-table',
@@ -21,8 +21,7 @@ export class TableComponent implements OnInit, OnChanges {
     @Output() onSaveHandler = new EventEmitter<{event: any, obj: any}>();
     @Output() onCancelModalHandler = new EventEmitter<string>();
     @Output() onCheckboxClick = new EventEmitter<{event: any, id: any}>();
-    @Output() onApproveRequestClick = new EventEmitter<{id: any}>();
-    @Output() onRejectRequestClick = new EventEmitter<{id: any}>();
+    @Output() onActionRequestClick = new EventEmitter<{id: any}>();
     @Output() onFilterOptionChange = new EventEmitter<{id: any}>();
 
     tableColumns: string = '';
@@ -53,22 +52,27 @@ export class TableComponent implements OnInit, OnChanges {
         this.onCheckboxClick.emit({event, id});
     }
 
-    onApproveRequestHandler(id){
-        this.onApproveRequestClick.emit(id);
-    }
-
-    onRejectRequestHandler(id){
-        this.onRejectRequestClick.emit(id);
+    onActionRequestHandler(id, status_name){
+        let requestObj = {
+            id,
+            status_name
+        }
+        this.onActionRequestClick.emit(requestObj);
     }
 
     onFilterOptionChangeHandler(event){
+        if(event.target.value !== '0') 
+            $('.table-action_request').hide();
+        else 
+            $('.table-action_request').show();
+            
         this.onFilterOptionChange.emit(event.target.value);
     }
 
     getTableData(tableData: any[]) : any[] {
         let indexOfFirstRecord = (this.paginationConfig["currentPage"] - 1) * this.paginationConfig["recordPerPage"];
         let indexOfLastRecord = this.paginationConfig["currentPage"] * this.paginationConfig["recordPerPage"];
-        const data = tableData.slice(
+        const data = tableData?.slice(
             indexOfFirstRecord,
             indexOfLastRecord
         );

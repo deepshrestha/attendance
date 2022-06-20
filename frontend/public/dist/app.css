@@ -3,7 +3,7 @@ body {
         sans-serif; */
     overflow-x: hidden;
     overflow-y: auto;
-    font-size: 12px;
+    font-size: 13px;
 }
 .container {
     max-width: 1280px;
@@ -24,7 +24,8 @@ body {
     margin: 2px auto;
     vertical-align: middle;
     width: calc(100% - 150px) !important;
-    font-size: 12px;
+    height: 32px;
+    font-size: 13px;
     border: 1px solid #ccc !important;
     border-radius: 3px;
 }
@@ -202,10 +203,13 @@ label {
     margin: auto;
 }
 .form .input-group {
-    margin: 1rem 0;
+    margin: 10px 0;
 }
-.modal-body .input-group:not(.date) {
-    display: block;
+.modal-body span.select2  {
+    width: calc(100% - 150px) !important;
+}
+.modal-body .input-group {
+    margin: 7px 0;
 }
 /* select {
     color: #ccc;
@@ -751,7 +755,7 @@ button.select2-selection__choice__remove:hover {
     font-size: 16px;
 }
 .select2-container--default .select2-search--inline .select2-search__field {
-    font-size: 14px;
+    font-size: 13px;
     margin-top: 5px;
     margin-bottom: 10px;
     border: none !important;
@@ -772,10 +776,9 @@ li.select2-results__option.select2-results__option--selectable.select2-results__
     background-color: #003366;
     color: #fff;
     border-color: transparent;
-    padding-left: 0;
-    padding-right: 20px;
-    font-size: 14px;
-    margin-bottom: 5px;
+    padding-right: 10px;
+    font-size: 12px;
+    margin: 1px;
 }
 .select2-container--default
     .select2-selection--multiple
@@ -786,10 +789,10 @@ li.select2-results__option.select2-results__option--selectable.select2-results__
     border: 0;
 }
 .select2-container--default
-    .select2-selection--multiple
-    .select2-selection__choice__remove:hover {
-    color: #fff;
-    background-color: #38a169;
+.select2-selection--multiple
+.select2-selection__choice__remove:hover {
+    color: #fff !important;
+    background-color: #c82333;
 }
 /*---------- Create device group Multiselect Ends ----------*/
 
@@ -924,6 +927,19 @@ input.form-control.datetimepicker-input {
     border-top-left-radius: 3px !important;
     border-bottom-left-radius: 3px !important;
 }
+.form-control.daterangepicker-input {
+    height: 32px !important;
+    font-size: 13px !important;
+}
 .close:hover {
     color: #fff !important;
+}
+.daterangepicker .calendar-table .next span, 
+.daterangepicker .calendar-table .prev span {
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+}
+.select2-container .select2-selection--single,
+.select2-container .select2-selection--multiple {
+    height: 32px !important;
 }
