@@ -106,6 +106,9 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
         this.showTable = false;
         this.showAddForm = true;
         this.my_leaves = {};
+        $('.select2').select2({
+            placeholder: "Select approver/s"
+        })
     }
 
     reInitializeState() {
@@ -133,7 +136,9 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
         let startDateVal = requestedDateRange.split(' - ')[0].trim();
         let endDateVal = requestedDateRange.split(' - ')[1].trim();
         //let requestedToVal = $('select[name="requested_to[]"]').val();
-        let requestedToVal = Array.from<HTMLInputElement>(event.target.elements['requested_to'].selectedOptions).map(option => option.value.split(':')[1]).join(',').trim();
+        let requestedToVal = '';
+        if(event.target.elements['requested_to'] !== undefined)
+            requestedToVal = Array.from<HTMLInputElement>(event.target.elements['requested_to'].selectedOptions).map(option => option.value.split(':')[1]).join(',').trim();
         
         $('.select2-modal').change( event => {
             event.preventDefault();
@@ -178,7 +183,10 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
         let requestedDateRange = event.target.elements['leave_request_date'].value;
         let startDateVal = requestedDateRange.split(' - ')[0].trim();
         let endDateVal = requestedDateRange.split(' - ')[1].trim();
-        let requestedToVal = Array.from<HTMLInputElement>(event.target.elements['requested_to'].selectedOptions).map(option => option.value.split(':')[1]).join(',').trim();
+        
+        let requestedToVal = '';
+        if(event.target.elements['requested_to'] !== undefined)
+            requestedToVal = Array.from<HTMLInputElement>(event.target.elements['requested_to'].selectedOptions).map(option => option.value.split(':')[1]).join(',').trim();
         
         $('.select2').change( event => {
             event.preventDefault();
@@ -230,9 +238,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
     onDisplayModalData(id) {
         console.log(id)
 
-        $('.select2-modal').select2({
-            placeholder: "Select approver/s"
-        });
+        $('.select2-modal').select2();
         
         $('#daterangepicker').daterangepicker(
             {
@@ -315,6 +321,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+        $('.select2').select();
     }
 
     ngOnDestroy(): void {
