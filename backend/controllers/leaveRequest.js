@@ -154,6 +154,7 @@ exports.getLeaveRequests = function (req, res) {
                         fn_dateFormat(lr.start_date) as start_date,
                         fn_dateFormat(lr.end_date) as end_date,
                         fn_dateTimeFormat(lr.requested_at) as requested_at,
+                        case when lr.remarks = '' then 'N/a' else lr.remarks end as remarks,
                         CASE WHEN ls.name IS NULL OR ls.name = ''
                         THEN 'Pending'
                         ELSE ls.name

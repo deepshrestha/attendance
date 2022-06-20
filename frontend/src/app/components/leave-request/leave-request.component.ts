@@ -63,6 +63,7 @@ export class LeaveRequestComponent implements OnInit, OnDestroy {
         end_date: "End Date",
         requested_to: "Requested To",
         requested_at: "Requested Date",
+        remarks: "Remarks",
         action_request: "Action",
         searchFilter: ["leave_type", "created_by"]
     };
