@@ -1,77 +1,155 @@
 <app-breadcrumb></app-breadcrumb>
-<div *ngIf="type === 'add'" class="float-left" style="position: absolute;">
-    <button class="btn btn-primary" (click)="showForm()"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add</button>
+<div *ngIf="type === 'add'" class="float-left" style="position: absolute">
+  <button class="btn btn-primary" (click)="showForm()">
+    <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add
+  </button>
 </div>
-<div *ngIf="type === 'select'" class="float-left" style="position: absolute;">
-    <select class="form-control" (change)="onFilterOptionChangeHandler($event)">
-        <option *ngFor="let option of options" [value]="option.id" [selected]="option.selected">
-            {{option.value}}
-          </option>
-    </select>
+<div *ngIf="type === 'select'" class="float-left" style="position: absolute">
+  <select class="form-control" (change)="onFilterOptionChangeHandler($event)">
+    <option
+      *ngFor="let option of options"
+      [value]="option.id"
+      [selected]="option.selected"
+    >
+      {{ option.value }}
+    </option>
+  </select>
 </div>
-<app-search (onSearchHandler)="searchHandler($event)" (onPaginationHandler)="paginateHandler($event)"></app-search>
+<app-search
+  (onSearchHandler)="searchHandler($event)"
+  (onPaginationHandler)="paginateHandler($event)"
+></app-search>
 <table class="table">
-    <thead>
-        <!-- <tr [innerHTML]="tableColumns | safeHtml"></tr> -->
-        <tr>   
-            <ng-container *ngFor="let item of tableHeadersKeyList">
-                <th 
-                    attr.data-column="{{item}}" 
-                    class="table-{{item}}" 
-                    data-order="desc" 
-                    scope="col" 
-                    *ngIf="item !== 'searchFilter'"
-                    (click)="item !== 'action' ? onClickHandler($event) : ''"
-                >
-                {{tableHeaders[item]}}
-                </th>
-            </ng-container>
-        </tr>
-    </thead>
-    <!-- <tbody [innerHTML]="tableDataColumns | safeHtml"></tbody> -->
-        <tbody>
-            <!-- <tr *ngFor="let item of tableData"> -->
-            <tr *ngFor="let item of paginateData">
-                <ng-container *ngFor="let key of tableHeadersKeyList">
-                    <td *ngIf="isBoolean(item[key]) == 'string' && key !== 'action' && key !== 'action_request' && key !== 'searchFilter'">
-                        {{item[key]}}
-                    </td>
-                    <td *ngIf="isBoolean(item[key]) == 'boolean'">
-                        <input type="checkbox" [checked]="item[key] == 'true' ? true : false" (click)="onCheckboxClickHandler($event, item.id)">
-                    </td>
-                    <td *ngIf="key === 'action'" class="text-center">
-                        <button
-                            id="showModalButton"
-                            class="btn btn-primary"
-                            data-toggle="modal"
-                            data-target="#showModal"
-                            (click)="onToggle(item.id)"
-                        >
-                        <li class="fa fa-edit" aria-hidden="true"></li>
-                        Edit
-                        </button>
-                    </td>
-                    <td *ngIf="key === 'action_request' && item['status_name'] === 'Pending'" class="text-center">
-                        <button
-                            id="showModalButton"
-                            class="btn btn-success"
-                            (click)="onActionRequestHandler(item.id, 'Approved')"
-                            title="Approve"
-                        >
-                        <li class="fa fa-edit" aria-hidden="true"></li>
-                        </button>
-                        <button
-                            id="showModalButton"
-                            class="btn btn-danger m-2"
-                            (click)="onActionRequestHandler(item.id, 'Rejected')"
-                            title="Reject"
-                        >
-                        <li class="fa fa-ban" aria-hidden="true"></li>
-                        </button>
-                    </td>
-                </ng-container>
-            </tr>
-        </tbody>
+  <thead>
+    <!-- <tr [innerHTML]="tableColumns | safeHtml"></tr> -->
+    <tr>
+      <ng-container *ngFor="let item of tableHeadersKeyList">
+        <th
+          attr.data-column="{{ item }}"
+          class="table-{{ item }}"
+          data-order="desc"
+          scope="col"
+          *ngIf="item !== 'searchFilter'"
+          (click)="item !== 'action' ? onClickHandler($event) : ''"
+        >
+          {{ tableHeaders[item] }}
+        </th>
+      </ng-container>
+    </tr>
+  </thead>
+  <!-- <tbody [innerHTML]="tableDataColumns | safeHtml"></tbody> -->
+  <tbody>
+    <!-- <tr *ngFor="let item of tableData"> -->
+    <tr *ngFor="let item of paginateData">
+      <ng-container *ngFor="let key of tableHeadersKeyList">
+        <td
+          *ngIf="
+            isBoolean(item[key]) == 'string' &&
+            key !== 'action' &&
+            key !== 'action_request' &&
+            key !== 'action_my_leave' &&
+            key !== 'searchFilter' &&
+            key !== 'remarks'
+          "
+        >
+          {{ item[key] }}
+        </td>
+        <td *ngIf="key == 'remarks'" class="text-center">
+          <a
+            href="#"
+            data-skin="skin-green"
+            class="btn btn-success btn-sm"
+            data-toggle="tooltip"
+            data-placement="top"
+            role="button"
+            [title]="item[key]"
+            ><i class="fa fa-comment"></i
+          ></a>
+        </td>
+        <td *ngIf="isBoolean(item[key]) == 'boolean'">
+          <input
+            type="checkbox"
+            [checked]="item[key] == 'true' ? true : false"
+            (click)="onCheckboxClickHandler($event, item.id)"
+          />
+        </td>
+        <td *ngIf="key === 'action'" class="text-center">
+          <button
+            id="showModalButton"
+            class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#showModal"
+            (click)="onToggle(item.id)"
+          >
+            <li class="fa fa-edit" aria-hidden="true"></li>
+            Edit
+          </button>
+        </td>
+        <td
+          *ngIf="key === 'action_request' && item['status_name'] === 'Pending'"
+          class="text-center"
+        >
+          <button
+            id="showModalButton"
+            class="btn btn-success"
+            (click)="onActionRequestHandler(item.id, 'Approved')"
+            title="Approve"
+          >
+            <li class="fa fa-edit" aria-hidden="true"></li>
+          </button>
+          <button
+            id="showModalButton"
+            class="btn btn-danger m-2"
+            (click)="onActionRequestHandler(item.id, 'Rejected')"
+            title="Reject"
+          >
+            <li class="fa fa-ban" aria-hidden="true"></li>
+          </button>
+        </td>
+        <td *ngIf="key === 'action_my_leave'" class="text-center">
+          <ng-container
+            *ngIf="
+              item['status_name'] === 'Pending';
+              else reviewedRequestTemplate
+            "
+          >
+            <button
+              id="showModalButton"
+              class="btn btn-primary"
+              data-toggle="modal"
+              data-target="#showModal"
+              (click)="onToggle(item.id)"
+            >
+              <li class="fa fa-edit" aria-hidden="true"></li>
+              Edit
+            </button>
+          </ng-container>
+          <ng-template #reviewedRequestTemplate>
+            <h5>
+              <span
+                class="badge"
+                [ngClass]="
+                  item['status_name'] === 'Approved'
+                    ? 'badge-success'
+                    : 'badge-danger'
+                "
+              >
+                {{ item["status_name"] }}
+              </span>
+            </h5>
+          </ng-template>
+        </td>
+      </ng-container>
+    </tr>
+  </tbody>
 </table>
-<app-modal [modalTitle]="modalTitle" [modalBody]="modalBody" (onSaveInfo)="onSaveInfoDetail($event)" (onCancel)="onCancelModal()"></app-modal>
-<app-pagination [paginationConfig]="paginationConfig" (onPaginationHandler)="paginateHandler($event)"></app-pagination>
+<app-modal
+  [modalTitle]="modalTitle"
+  [modalBody]="modalBody"
+  (onSaveInfo)="onSaveInfoDetail($event)"
+  (onCancel)="onCancelModal()"
+></app-modal>
+<app-pagination
+  [paginationConfig]="paginationConfig"
+  (onPaginationHandler)="paginateHandler($event)"
+></app-pagination>

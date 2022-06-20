@@ -83,6 +83,16 @@ tbody .modal-text-danger {
     font-size: 12px;
     margin: 0 0 0 150px;
 }
+tbody .modal-text-warning {
+    color: #e38614;
+    font-size: 12px;
+    margin: unset;
+}
+.modal-text-warning {
+    color: #e38614;
+    font-size: 12px;
+    margin: 0 0 0 150px;
+}
 .content-wrapper {
     min-height: calc(100vh - 100px);
 }

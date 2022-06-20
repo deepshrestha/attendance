@@ -124,11 +124,17 @@ exports.getMyLeaveRequests = function (req, res) {
                         fn_dateFormat(lr.start_date) as start_date,
                         fn_dateFormat(lr.end_date) as end_date,
                         fn_dateTimeFormat(lr.requested_at) as requested_at,
-                        case when lr.remarks = '' then 'N/a' else lr.remarks end as remarks
+                        case when lr.remarks = '' then 'N/a' else lr.remarks end as remarks,
+                        CASE WHEN ls.name IS NULL OR ls.name = ''
+                        THEN 'Pending'
+                        ELSE ls.name
+                        END AS status_name
                 from leave_request lr
                 join leave_master lm on lr.leave_master_id = lm.id
                 join employees e1 on lr.requested_by = e1.id
                 join employees e2 on lr.requested_to = e2.id
+                LEFT JOIN leave_request_detail lrd on lr.id = lrd.leave_request_id
+                LEFT JOIN leave_status ls on ls.id = lrd.status_id
                 where lr.requested_by = ${req.params.requested_by}
                 order by lr.id`;
 

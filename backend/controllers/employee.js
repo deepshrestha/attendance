@@ -91,7 +91,7 @@ exports.insertEmployeeData = function (req, res) {
         res,
         req.body.full_name,
         req.body.email_id,
-        password
+        getDecryptedPasswordFromEmail(req.body.email_id)
       );
     //   res.json(data.insertId);
     })
@@ -130,6 +130,9 @@ exports.updateEmployeeData = function (req, res) {
 };
 
 function getEncryptedPasswordFromEmail(email){
-  let password = email.split("@")[0];
-  return encryptedPassword = bcrypt.hashSync(password, 8)
+  return bcrypt.hashSync(getDecryptedPasswordFromEmail(email), 8)
+}
+
+function getDecryptedPasswordFromEmail(email){
+  return email.split("@")[0];
 }

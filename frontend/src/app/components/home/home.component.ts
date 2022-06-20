@@ -6,7 +6,7 @@ import * as $ from 'jquery';
     template: require('./home.component.html'),
 })
 export class HomeComponent implements AfterViewInit {
-
+    
     ngAfterViewInit(): void {
         $('[data-widget="treeview"]').Treeview('init');
         $('[data-widget="sidebar-search"]').SidebarSearch('init');
@@ -31,6 +31,12 @@ export class HomeComponent implements AfterViewInit {
                     }
                 }
             );
+            // $('#daterangepicker').on('apply.daterangepicker', function(ev, picker) {
+            //     // picker.startDate and picker.endDate are already Moment.js objects.
+            //     // You can use diff() method to calculate the day difference.
+            //     console.log(picker.endDate.diff(picker.startDate, "days"))
+            //     // $('#numberdays').val(picker.endDate.diff(picker.startDate, "days"));
+            // });
 
             /* $('#daterangepicker').on("apply.daterangepicker", function(ev, picker) {
                 $(this).val(

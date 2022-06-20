@@ -35,18 +35,27 @@
   <div class="input-group">
     <label>Leave Type</label>
     <select
-      class="inputText w-75"
+      class="inputText w-75 select-leave-type-edit"
       name="leave_master_id"
       [(ngModel)]="my_leaves.leave_master_id"
       #leave_master_id="ngModel"
       (input)="onHandleChange($event)"
       (blur)="onHandleBlur($event)"
+      (change)="onHandleChange($event); showRemainingLeaveInfo($event)"
     >
       <option [value]="" selected disabled="disabled">Leave Type</option>
-      <option *ngFor="let option of leaveTypeOptions" [value]="option.id">
+      <option
+        *ngFor="let option of leaveTypeOptions"
+        [value]="option.id"
+        [attr.data-remaining-leave-days]="option.remainingLeaveDays"
+      >
         {{ option.value }}
       </option>
     </select>
+    <div *ngIf="selectedLeaveType.length > 0" class="modal-text-warning">
+      You have {{ remainingLeaveDays }} day/s of
+      {{ selectedLeaveType }} remaining
+    </div>
     <div *ngIf="errors.leave_master_id" class="modal-text-danger">
       {{ errors.leave_master_id }}
     </div>
@@ -54,7 +63,7 @@
   <div class="input-group" *ngIf="approversOptions.length > 0">
     <label>Requested To</label>
     <select
-      multiple="multiple"
+      multiple="true"
       class="inputText select2-modal w-75"
       name="requested_to"
       [(ngModel)]="my_leaves.requested_to"
@@ -100,7 +109,8 @@
       [(ngModel)]="my_leaves.remarks"
       placeholder="Remarks"
       (keyup)="onHandleChange($event)"
-      (blur)="onHandleBlur($event)">
+      (blur)="onHandleBlur($event)"
+    >
     </textarea>
   </div>
 </ng-template>
@@ -114,7 +124,11 @@
       </div>
       <div class="form-header">
         <div class="card-body">
-          <form #leaveForm="ngForm" (ngSubmit)="saveInfo($event, leaveForm)" autocomplete="off">
+          <form
+            #leaveForm="ngForm"
+            (ngSubmit)="saveInfo($event, leaveForm)"
+            autocomplete="off"
+          >
             <div class="input-group">
               <label>Leave Type</label>
               <select
@@ -123,7 +137,9 @@
                 name="leave_master_id"
                 [ngModel]="my_leaves.leave_master_id"
                 #leave_master_id="ngModel"
-                (change)="onHandleChange($event)"
+                (change)="
+                  onHandleChange($event); showRemainingLeaveInfo($event)
+                "
                 (blur)="onHandleBlur($event)"
               >
                 <option [value]="" selected disabled="disabled">
@@ -132,10 +148,19 @@
                 <option
                   *ngFor="let option of leaveTypeOptions"
                   [value]="option.id"
+                  [attr.data-remaining-leave-days]="option.remainingLeaveDays"
                 >
                   {{ option.value }}
                 </option>
               </select>
+              <div
+                *ngIf="selectedLeaveType.length > 0"
+                class="modal-text-warning"
+              >
+                You have {{ remainingLeaveDays }} day/s of
+                {{ selectedLeaveType }} remaining
+              </div>
+
               <div *ngIf="errors.leave_master_id" class="modal-text-danger">
                 {{ errors.leave_master_id }}
               </div>
@@ -150,8 +175,13 @@
                 #requested_to="ngModel"
                 data-placeholder="Select approver/s"
               >
-                <option [value]="" selected disabled="disabled">Requested To</option>
-                <option *ngFor="let option of approversOptions" [value]="option.id">
+                <option [value]="" selected disabled="disabled">
+                  Requested To
+                </option>
+                <option
+                  *ngFor="let option of approversOptions"
+                  [value]="option.id"
+                >
                   {{ option.value }}
                 </option>
               </select>
@@ -177,7 +207,7 @@
                 placeholder="Start/End Date"
                 (keyup)="onHandleChange($event)"
                 (blur)="onHandleBlur($event)"
-                [value]="01/01/2018 - 01/15/2018"
+                [value]="01 / 01 / 2018 - 01 / 15 / 2018"
               />
             </div>
             <div class="input-group">
@@ -189,7 +219,8 @@
                 [ngModel]="my_leaves.remarks"
                 placeholder="Remarks"
                 (keyup)="onHandleChange($event)"
-                (blur)="onHandleBlur($event)">
+                (blur)="onHandleBlur($event)"
+              >
               </textarea>
             </div>
             <div class="d-flex justify-content-center">

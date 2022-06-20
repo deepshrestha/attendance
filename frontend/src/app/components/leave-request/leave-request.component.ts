@@ -228,6 +228,7 @@ export class LeaveRequestComponent implements OnInit, OnDestroy {
         this.leaveRequestService.processLeaveRequestFromService(data).
             subscribe({
                 next: data => {
+                    this.notification.showMessage("success", data.message);
                     this.getAll();
                 },
                 error: err => {

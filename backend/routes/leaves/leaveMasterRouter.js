@@ -8,5 +8,6 @@ router.get('/api/leaves/:id', [authJwtMiddleWare.verifyToken], leaveMasterContro
 router.get('/api/leaves', [authJwtMiddleWare.verifyToken], leaveMasterController.getAll);
 router.post('/api/leaves', [authJwtMiddleWare.verifyToken], leaveMasterController.insertLeaveMasterData);
 router.put('/api/leaves', [authJwtMiddleWare.verifyToken], leaveMasterController.updateLeaveMasterData);
+router.get('/api/leavesOfRequestor', [authJwtMiddleWare.verifyToken], leaveMasterController.getAllWithLeaveDaysOfRequestor);
 
 module.exports = router;
