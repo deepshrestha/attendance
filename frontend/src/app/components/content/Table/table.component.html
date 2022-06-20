@@ -51,7 +51,7 @@
                         Edit
                         </button>
                     </td>
-                    <td *ngIf="key === 'action_request'" class="text-center">
+                    <td *ngIf="key === 'action_request' && item['status_name'] === 'Pending'" class="text-center">
                         <button
                             id="showModalButton"
                             class="btn btn-success"
