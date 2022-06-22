@@ -1,20 +1,25 @@
 <app-breadcrumb></app-breadcrumb>
-<div *ngIf="type === 'add'" class="float-left" style="position: absolute">
-  <button class="btn btn-primary" (click)="showForm()">
-    <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add
-  </button>
-</div>
-<div *ngIf="type === 'select'" class="float-left" style="position: absolute">
-  <select class="form-control" (change)="onFilterOptionChangeHandler($event)">
-    <option
-      *ngFor="let option of options"
-      [value]="option.id"
-      [selected]="option.selected"
-    >
-      {{ option.value }}
-    </option>
-  </select>
-</div>
+<ng-container *ngFor="let type of type.split('|')">
+  <div>
+    <div *ngIf="type.split(':')[0] === 'add'" class="float-left" [ngClass]="type.split(':')[1] > 0 ? 'ml-2' : ''">
+      <button class="btn btn-primary" (click)="showForm()">
+        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add
+      </button>
+    </div>
+    <div *ngIf="type.split(':')[0] === 'select'" class="float-left" [ngClass]="type.split(':')[1] > 0 ? 'ml-2' : ''">
+      <select class="form-control" (change)="onFilterOptionChangeHandler($event)">
+        <option
+          *ngFor="let option of options"
+          [value]="option.id"
+          [selected]="option.selected"
+        >
+          {{ option.value }}
+        </option>
+      </select>
+    </div>
+  </div>
+</ng-container>
+
 <app-search
   (onSearchHandler)="searchHandler($event)"
   (onPaginationHandler)="paginateHandler($event)"
@@ -24,13 +29,18 @@
     <!-- <tr [innerHTML]="tableColumns | safeHtml"></tr> -->
     <tr>
       <ng-container *ngFor="let item of tableHeadersKeyList">
-        <th
-          attr.data-column="{{ item }}"
+        <th *ngIf="item === 'action_request'"
+            class="table-{{ item }}"
+            scope="col"
+        >
+          {{ tableHeaders[item].title }}
+        </th>
+        <th attr.data-column="{{ item }}"
           class="table-{{ item }}"
           data-order="desc"
           scope="col"
-          *ngIf="item !== 'searchFilter'"
-          (click)="item !== 'action' ? onClickHandler($event) : ''"
+          *ngIf="item !== 'action_request' && item !== 'searchFilter'"
+          (click)="item !== 'action' && item !== 'action_my_leave' ? onClickHandler($event) : ''"
         >
           {{ tableHeaders[item] }}
         </th>
@@ -73,6 +83,7 @@
             (click)="onCheckboxClickHandler($event, item.id)"
           />
         </td>
+
         <td *ngIf="key === 'action'" class="text-center">
           <button
             id="showModalButton"
@@ -85,27 +96,19 @@
             Edit
           </button>
         </td>
-        <td
-          *ngIf="key === 'action_request' && item['status_name'] === 'Pending'"
-          class="text-center"
-        >
-          <button
-            id="showModalButton"
-            class="btn btn-success"
-            (click)="onActionRequestHandler(item.id, 'Approved')"
-            title="Approve"
-          >
-            <li class="fa fa-edit" aria-hidden="true"></li>
-          </button>
-          <button
-            id="showModalButton"
-            class="btn btn-danger m-2"
-            (click)="onActionRequestHandler(item.id, 'Rejected')"
-            title="Reject"
-          >
-            <li class="fa fa-ban" aria-hidden="true"></li>
-          </button>
+
+        <td *ngIf="key === 'action_request' && item['status_name'] === 'Pending'" class="text-center">
+          <ng-container *ngFor="let button of tableHeaders[key].buttons">
+            <button
+              [ngClass]="button.status ? 'btn btn-success' : 'btn btn-danger m-2'"
+              (click)="onActionRequestHandler(item.id, button.name)"
+              [title]="button.title"
+            >
+              <li [class]="button.status ? 'fa fa-check-circle' : 'fa fa-ban'" aria-hidden="true"></li>
+            </button>
+          </ng-container>
         </td>
+
         <td *ngIf="key === 'action_my_leave'" class="text-center">
           <ng-container
             *ngIf="
@@ -125,18 +128,16 @@
             </button>
           </ng-container>
           <ng-template #reviewedRequestTemplate>
-            <h5>
-              <span
-                class="badge"
-                [ngClass]="
-                  item['status_name'] === 'Approved'
-                    ? 'badge-success'
-                    : 'badge-danger'
-                "
-              >
-                {{ item["status_name"] }}
-              </span>
-            </h5>
+            <span
+              class="badge"
+              [ngClass]="
+                item['status_name'] === 'Approved'
+                  ? 'badge-success'
+                  : 'badge-danger'
+              "
+            >
+              {{ item["status_name"] }}
+            </span>
           </ng-template>
         </td>
       </ng-container>

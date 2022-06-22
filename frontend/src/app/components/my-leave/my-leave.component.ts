@@ -28,8 +28,9 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('modalBody') modalBody: ElementRef;
 
     options: any[] = [
-        { id: false, value: 'Option 1' },
-        { id: true, value: 'Option 2' }
+        { id: false, value: 'Pending' },
+        { id: true, value: 'Approved' },
+        { id: true, value: 'Rejected' }
     ];
 
     remainingLeaveDays = 0;
@@ -52,9 +53,9 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     my_leaves: any = {};
-
     leaveTypeOptions: any[] = [];
     approversOptions: any[] = [];
+    tableData: any = [];
 
     tableHeaders = {
         sn: "#",
@@ -75,8 +76,6 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
         recordPerPage: 5,
         totalRecordsCount: 0,
     }
-
-    tableData: any = [];
 
     initialState = {
         leave_request_id: "",

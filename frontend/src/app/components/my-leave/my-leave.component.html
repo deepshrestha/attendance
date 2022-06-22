@@ -3,7 +3,8 @@
 <ng-template #table>
   <app-home>
     <app-table
-      type="add"
+      type="add:0|select:1"
+      [options]="options"
       (onAddHandler)="showForm()"
       [tableHeaders]="tableHeaders"
       [tableData]="tableData"

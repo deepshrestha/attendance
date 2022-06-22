@@ -199,11 +199,18 @@ exports.processLeaveRequest = function(req, res){
         var query = `insert into leave_request_detail(leave_request_id, status_id, status_date, remarks) values(
             ${req.body.leave_request_id}, ${data[0]["id"]}, now(), '${req.body.remarks}'
         )`;
+
+        console.log(query);
     
         var result = db.queryHandler(query);
     
         result.then(data => {
-            res.json(data);
+            res.json(
+                {
+                    success: true,
+                    message: `Leave has been ${req.body.status_name}`
+                }
+            );
         })
         .catch(err => {
             console.log(err)

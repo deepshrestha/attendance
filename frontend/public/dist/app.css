@@ -224,9 +224,9 @@ label {
 /* select {
     color: #ccc;
 } */
-option:first-child {
+/* option:first-child {
     color: #ccc;
-}
+} */
 div .search-bar {
     position: absolute;
 }
@@ -600,7 +600,8 @@ th.table-total_hours,
 th.table-leave_days {
     width: 10%;
 }
-th.table-action {
+th.table-action,
+th.table-action_request {
     width: 12%;
 }
 div#accordion .table {
@@ -932,6 +933,9 @@ li.select2-results__option.select2-results__option--selectable.select2-results__
     cursor: pointer;
     border: unset;
 }
+select.form-control {
+    height: 33px;
+}
 input.form-control.datetimepicker-input {
     width: 48%;
     height: 32px;
@@ -953,4 +957,8 @@ input.form-control.datetimepicker-input {
 .select2-container .select2-selection--single,
 .select2-container .select2-selection--multiple {
     height: 32px !important;
+}
+tbody > tr > td > span.badge {
+    font-size: 12px;
+    line-height: 1.5;
 }
