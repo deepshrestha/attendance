@@ -62,9 +62,9 @@ export class TableComponent implements OnInit, OnChanges {
 
     onFilterOptionChangeHandler(event){
         if(event.target.value !== '0') 
-            $('.table-action_request').hide();
+            $('.table-action_request, .table-action_my_leave').hide();
         else 
-            $('.table-action_request').show();
+            $('.table-action_request, .table-action_my_leave').show();
             
         this.onFilterOptionChange.emit(event.target.value);
     }

@@ -87,13 +87,13 @@ export class LeaveRequestComponent implements OnInit, OnDestroy {
     }
 
     onFilterOptionChange(id) {
-        console.log(id)
         this.leaveRequestService.getDataFromService(id).
             subscribe(data => {
                 console.log(data)
                 this.tableData = data;
                 this.paginationConfig = {
                     ...this.paginationConfig,
+                    currentPage: 1,
                     totalRecordsCount: data.length
                 }
             })
@@ -110,6 +110,8 @@ export class LeaveRequestComponent implements OnInit, OnDestroy {
                             ...this.paginationConfig,
                             totalRecordsCount: data.length
                         }
+                        console.log(this.paginationConfig.currentPage)
+
                     },
                     error: err => {
                         console.log(err)

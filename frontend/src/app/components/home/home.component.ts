@@ -31,6 +31,8 @@ export class HomeComponent implements AfterViewInit {
                     }
                 }
             );
+
+            
             // $('#daterangepicker').on('apply.daterangepicker', function(ev, picker) {
             //     // picker.startDate and picker.endDate are already Moment.js objects.
             //     // You can use diff() method to calculate the day difference.
@@ -55,6 +57,13 @@ export class HomeComponent implements AfterViewInit {
 
             $('.select2').select2();
             $('.select2-modal').select2();
+            // $('.select2-modal').change(event => {
+            //     console.log("hello")
+            //     event.preventDefault();
+            //     if (event.target && event.target.matches("select")) {
+            //         this.onHandleChange(event)
+            //     }
+            // });
         })
     }
 }

@@ -35,11 +35,17 @@
         >
           {{ tableHeaders[item].title }}
         </th>
+        <th *ngIf="item === 'action_my_leave'"
+            class="table-{{ item }}"
+            scope="col"
+        >
+          {{ tableHeaders[item].title }}
+        </th>
         <th attr.data-column="{{ item }}"
           class="table-{{ item }}"
           data-order="desc"
           scope="col"
-          *ngIf="item !== 'action_request' && item !== 'searchFilter'"
+          *ngIf="item !== 'action_request' && item !== 'action_my_leave' && item !== 'searchFilter'"
           (click)="item !== 'action' && item !== 'action_my_leave' ? onClickHandler($event) : ''"
         >
           {{ tableHeaders[item] }}
@@ -109,7 +115,7 @@
           </ng-container>
         </td>
 
-        <td *ngIf="key === 'action_my_leave'" class="text-center">
+        <td *ngIf="key === 'action_my_leave' && item['status_name'] === 'Pending'" class="text-center">
           <ng-container
             *ngIf="
               item['status_name'] === 'Pending';

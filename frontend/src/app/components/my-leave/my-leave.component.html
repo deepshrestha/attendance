@@ -14,6 +14,7 @@
       (onSaveHandler)="editInfo($event, this)"
       (onDisplayModalData)="onDisplayModalData($event)"
       (onCancelModalHandler)="onCancelModal()"
+      (onFilterOptionChange)="onFilterOptionChange($event)"
     >
     </app-table>
     <!-- <app-table type="select" 
@@ -134,7 +135,7 @@
               <label>Leave Type</label>
               <select
                 id="leave_master_id"
-                class="inputText w-75"
+                class="inputText w-75 select-leave-type-add"
                 name="leave_master_id"
                 [ngModel]="my_leaves.leave_master_id"
                 #leave_master_id="ngModel"

@@ -109,6 +109,7 @@ const  formValidator = (props) => {
           break;
         case "select-one":
         case "select-multiple":
+          console.log(name, value);
           if(props.errors.hasOwnProperty(name)) {
             errors[name] =
               value.length == 0

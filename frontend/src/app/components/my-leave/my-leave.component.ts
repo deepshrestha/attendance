@@ -7,6 +7,7 @@ import { TokenStorageService } from "../../services/token-storage/token-storage.
 import { LeaveMasterService } from "../leave-master/leave-master.service";
 import { Notification } from "./../../services/notification/notification.service";
 import * as $ from "jquery";
+import { LeaveStatusService } from "../leave-status/leave-status.service";
 
 @Component({
     selector: 'app-my-leave',
@@ -39,16 +40,19 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
     myLeaveService: MyLeaveService;
     tokenStorageService: TokenStorageService;
     leaveMasterService: LeaveMasterService;
+    leaveStatusService: LeaveStatusService;
     notification: Notification;
     constructor(
         @Inject(MyLeaveService) myLeaveService: MyLeaveService,
         @Inject(TokenStorageService) tokenStorageService: TokenStorageService,
         @Inject(LeaveMasterService) leaveMasterService: LeaveMasterService,
+        @Inject(LeaveStatusService) leaveStatusService: LeaveStatusService,
         @Inject(Notification) notification: Notification
     ) {
         this.myLeaveService = myLeaveService;
         this.tokenStorageService = tokenStorageService;
         this.leaveMasterService = leaveMasterService;
+        this.leaveStatusService = leaveStatusService;
         this.notification = notification;
     }
 
@@ -66,7 +70,10 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
         requested_to: "Requested To",
         requested_at: "Requested Date",
         remarks: "Remarks",
-        action_my_leave: "Action",
+        // action_my_leave: "Action",
+        action_my_leave: {
+            title: 'Action',
+        },
         searchFilter: ["leave_type", "created_by"]
     };
 
@@ -141,28 +148,29 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
         //let requestedToVal = $('select[name="requested_to[]"]').val();
         let appliedLeaveDays = this.calculateAppliedLeaveDays(startDateVal, endDateVal);
 
-        if (appliedLeaveDays <= this.remainingLeaveDays) {
-            let requestedToVal = '';
-            if (event.target.elements['requested_to'] !== undefined)
-                requestedToVal = Array.from<HTMLInputElement>(event.target.elements['requested_to'].selectedOptions).map(option => option.value.split(':')[1]).join(',').trim();
+        let requestedToVal = '';
+        if (event.target.elements['requested_to'] !== undefined)
+            requestedToVal = Array.from<HTMLInputElement>(event.target.elements['requested_to'].selectedOptions).map(option => option.value.split(':')[1]).join(',').trim();
 
-            $('.select2-modal').change(event => {
-                event.preventDefault();
-                if (event.target && event.target.matches("select")) {
-                    this.onHandleChange(event)
-                }
-            });
-
-            let formObject = {
-                id: event.target.elements['leave_request_id'].value,
-                leave_master_id: event.target.elements['leave_master_id'].value,
-                start_date: startDateVal,
-                end_date: endDateVal,
-                requested_to: requestedToVal,
-                remarks: event.target.elements['remarks'].value
+        $('.select2-modal').change(event => {
+            event.preventDefault();
+            if (event.target && event.target.matches("select")) {
+                this.onHandleChange(event)
             }
-            if (this.onHandleSubmit(event)) {
-                console.log("fields", formObject)
+        });
+        console.log(event.target.elements['requested_to'].value);
+        let formObject = {
+            id: event.target.elements['leave_request_id'].value,
+            leave_master_id: event.target.elements['leave_master_id'].value,
+            start_date: startDateVal,
+            end_date: endDateVal,
+            requested_to: requestedToVal,
+            remarks: event.target.elements['remarks'].value
+        }
+        if (this.onHandleSubmit(event)) {
+            console.log("fields", formObject)
+            if (appliedLeaveDays <= this.remainingLeaveDays) {
+
                 this.subscribeData = this.myLeaveService.editDataFromService(formObject)
                     .subscribe(
                         {
@@ -178,10 +186,11 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
                             }
                         }
                     )
+            } else {
+                this.notification.showMessage('error', `Your leave request of ${appliedLeaveDays} days of ${this.selectedLeaveType} is not applicable!!`);
             }
-        } else {
-            this.notification.showMessage('error', `Your leave request of ${appliedLeaveDays} days of ${this.selectedLeaveType} is not applicable!!`);
         }
+
     }
 
     saveInfo(event: any, obj: any) {
@@ -189,17 +198,12 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
         let requestedDateRange = event.target.elements['leave_request_date'].value;
         let startDateVal = requestedDateRange.split(' - ')[0].trim();
         let endDateVal = requestedDateRange.split(' - ')[1].trim();
-        
+
         let requestedToVal = '';
         if (event.target.elements['requested_to'] !== undefined)
             requestedToVal = Array.from<HTMLInputElement>(event.target.elements['requested_to'].selectedOptions).map(option => option.value.split(':')[1]).join(',').trim();
 
-        $('.select2').change(event => {
-            event.preventDefault();
-            if (event.target && event.target.matches("select")) {
-                this.onHandleChange(event);
-            }
-        });
+
         let formObject = {
             leave_master_id: event.target.elements['leave_master_id'].value,
             start_date: startDateVal,
@@ -210,12 +214,12 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         if (this.onHandleSubmit(event)) {
+            console.log(formObject)
 
             let appliedLeaveDays = this.calculateAppliedLeaveDays(startDateVal, endDateVal);
 
             if (appliedLeaveDays <= this.remainingLeaveDays) {
-                console.log(formObject)
-                /* this.subscribeData = this.myLeaveService.postDataFromService(formObject)
+                this.subscribeData = this.myLeaveService.postDataFromService(formObject)
                     .subscribe(
                         {
                             next: data => {
@@ -226,12 +230,13 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
                                 $('.select2').val(null).trigger('change');
                                 this.reInitializeState();
                                 this.initializeFormValidation();
+                                this.selectedLeaveType = '';
                             },
                             error: err => {
                                 console.log(err)
                             }
                         }
-                    ) */
+                    )
                 obj.resetForm();
             }
             else {
@@ -250,9 +255,19 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onDisplayModalData(id) {
-        console.log(id)
-
         $('.select2-modal').select2();
+
+        // $('.select2-modal option').each(function () {
+        //     $(this).val($(this).attr('ng-reflect-value'));
+        // })
+
+        $(document).on('change', '.select2-modal', (event) => {
+            console.log("hello")
+            event.preventDefault();
+            if (event.target && event.target.matches("select")) {
+                this.onHandleChange(event);
+            }
+        });
 
         $('#daterangepicker').daterangepicker(
             {
@@ -275,14 +290,24 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
                         // $('.select2-modal').val(['1: 3','2: 4']).trigger('change');
                         let requestedToSelect2Val = [];
                         let requestedToSelect2FormElementVal = [];
-                        data.requested_to.split(',').forEach((approverId, index) => {
-                            requestedToSelect2Val.push(`${index + 1}: ${approverId.trim()}`);
-                            requestedToSelect2FormElementVal.push(parseInt(approverId.trim()));
-                        });
+                        $('.select2-modal option').each(function () {
+                            let requestedToVal = $(this).attr('ng-reflect-value');
+                            let requestedToSelectVal = $(this).val();
+                            console.log(data.requested_to.split(','))
+                            console.log(requestedToVal)
+                            data.requested_to.split(',').forEach(function (requested_to) {
+                                if(requested_to.trim() == requestedToVal){
+                                    requestedToSelect2Val.push(requestedToSelectVal);
+                                    requestedToSelect2FormElementVal.push(parseInt(requestedToVal));
+                                }
+                            })
+                        })
+
+                        console.log(requestedToSelect2Val);
+                        console.log(requestedToSelect2FormElementVal)
                         data.requested_to = requestedToSelect2FormElementVal;
                         this.my_leaves = data;
                         $('.select2-modal').val(requestedToSelect2Val).trigger('change');
-
                         this.initialState = {
                             ...this.initialState,
                             leave_request_id: data.id,
@@ -294,8 +319,8 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
                             requested_at: data.requested_at,
                         }
 
-                        this.remainingLeaveDays = parseInt($(`option[value='${data.leave_master_id}']`).data('remaining-leave-days')) + this.calculateAppliedLeaveDays(data.start_date, data.end_date);
-                        this.selectedLeaveType = $(`option[value='${data.leave_master_id}']`).text();
+                        this.remainingLeaveDays = parseInt($(`.select-leave-type-edit option[value='${data.leave_master_id}']`).data('remaining-leave-days')) + this.calculateAppliedLeaveDays(data.start_date, data.end_date);
+                        this.selectedLeaveType = $(`.select-leave-type-edit option[value='${data.leave_master_id}']`).text();
                         this.initializeFormValidation();
                     },
                     error: err => {
@@ -305,12 +330,24 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
             )
     }
 
+    onFilterOptionChange(id) {
+        this.myLeaveService.getDataFromService(id).
+            subscribe(data => {
+                console.log(data)
+                this.tableData = data;
+                this.paginationConfig = {
+                    ...this.paginationConfig,
+                    currentPage: 1,
+                    totalRecordsCount: data.length
+                }
+            })
+    }
+
     getAll(): void {
-        this.subscribeData = this.myLeaveService.getDataFromService()
+        this.subscribeData = this.myLeaveService.getDataFromService(0)
             .subscribe(
                 {
                     next: data => {
-                        console.log(data)
                         this.tableData = data;
                         this.paginationConfig = {
                             ...this.paginationConfig,
@@ -329,13 +366,11 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
         this.leaveMasterService.getLeavesDataWithRemainingLeavesFromService().subscribe(
             data => {
                 this.leaveTypeOptions = data;
-                console.log(this.leaveTypeOptions)
             }
         )
     }
 
     showRemainingLeaveInfo(event) {
-        console.log("hello", $(event.target).find(':selected').data('remaining-leave-days'), $(event.target).find(':selected').text())
         this.remainingLeaveDays = $(event.target).find(':selected').data('remaining-leave-days');
         this.selectedLeaveType = $(event.target).find(':selected').text();
     }
@@ -354,12 +389,26 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnInit(): void {
 
         this.initializeFormValidation();
+        this.leaveStatusService.getLeaveStatusData().subscribe(
+            data => {
+                this.options = data;
+            }
+        );
         this.getAll();
+
         this.myLeaveService.getSeniorApproversData().subscribe(
             data => {
                 this.approversOptions = data;
             }
         )
+
+        $(document).on('change', '.select2', (event) => {
+            console.log("hello")
+            event.preventDefault();
+            if (event.target && event.target.matches("select")) {
+                this.onHandleChange(event);
+            }
+        });
     }
 
     ngAfterViewInit(): void {
