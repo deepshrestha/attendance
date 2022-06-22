@@ -189,32 +189,33 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
         let requestedDateRange = event.target.elements['leave_request_date'].value;
         let startDateVal = requestedDateRange.split(' - ')[0].trim();
         let endDateVal = requestedDateRange.split(' - ')[1].trim();
+        
+        let requestedToVal = '';
+        if (event.target.elements['requested_to'] !== undefined)
+            requestedToVal = Array.from<HTMLInputElement>(event.target.elements['requested_to'].selectedOptions).map(option => option.value.split(':')[1]).join(',').trim();
 
-        let appliedLeaveDays = this.calculateAppliedLeaveDays(startDateVal, endDateVal);
-
-        if (appliedLeaveDays <= this.remainingLeaveDays) {
-            let requestedToVal = '';
-            if (event.target.elements['requested_to'] !== undefined)
-                requestedToVal = Array.from<HTMLInputElement>(event.target.elements['requested_to'].selectedOptions).map(option => option.value.split(':')[1]).join(',').trim();
-
-            $('.select2').change(event => {
-                event.preventDefault();
-                if (event.target && event.target.matches("select")) {
-                    this.onHandleChange(event);
-                }
-            });
-            let formObject = {
-                leave_master_id: event.target.elements['leave_master_id'].value,
-                start_date: startDateVal,
-                end_date: endDateVal,
-                requested_to: requestedToVal,
-                remarks: event.target.elements['remarks'].value,
-                requested_by: this.tokenStorageService.getUser()["id"]
+        $('.select2').change(event => {
+            event.preventDefault();
+            if (event.target && event.target.matches("select")) {
+                this.onHandleChange(event);
             }
+        });
+        let formObject = {
+            leave_master_id: event.target.elements['leave_master_id'].value,
+            start_date: startDateVal,
+            end_date: endDateVal,
+            requested_to: requestedToVal,
+            remarks: event.target.elements['remarks'].value,
+            requested_by: this.tokenStorageService.getUser()["id"]
+        }
 
-            if (this.onHandleSubmit(event)) {
+        if (this.onHandleSubmit(event)) {
+
+            let appliedLeaveDays = this.calculateAppliedLeaveDays(startDateVal, endDateVal);
+
+            if (appliedLeaveDays <= this.remainingLeaveDays) {
                 console.log(formObject)
-                this.subscribeData = this.myLeaveService.postDataFromService(formObject)
+                /* this.subscribeData = this.myLeaveService.postDataFromService(formObject)
                     .subscribe(
                         {
                             next: data => {
@@ -230,11 +231,12 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
                                 console.log(err)
                             }
                         }
-                    )
+                    ) */
                 obj.resetForm();
             }
-        } else {
-            this.notification.showMessage('error', `Your leave request of ${appliedLeaveDays} days of ${this.selectedLeaveType} is not applicable!!`);
+            else {
+                this.notification.showMessage('error', `Your leave request of ${appliedLeaveDays} days of ${this.selectedLeaveType} is not applicable!!`);
+            }
         }
     }
 

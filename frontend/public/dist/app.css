@@ -962,3 +962,6 @@ tbody > tr > td > span.badge {
     font-size: 12px;
     line-height: 1.5;
 }
+.daterangepicker th.available:hover {
+    background-color: #357EBD !important;
+}

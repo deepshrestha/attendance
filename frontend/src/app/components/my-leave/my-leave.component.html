@@ -61,25 +61,6 @@
       {{ errors.leave_master_id }}
     </div>
   </div>
-  <div class="input-group" *ngIf="approversOptions.length > 0">
-    <label>Requested To</label>
-    <select
-      multiple="true"
-      class="inputText select2-modal w-75"
-      name="requested_to"
-      [(ngModel)]="my_leaves.requested_to"
-      #requested_to="ngModel"
-      data-placeholder="Select approver/s"
-    >
-      <option [value]="" selected disabled="disabled">Requested To</option>
-      <option *ngFor="let option of approversOptions" [value]="option.id">
-        {{ option.value }}
-      </option>
-    </select>
-    <div *ngIf="errors.requested_to" class="modal-text-danger">
-      {{ errors.requested_to }}
-    </div>
-  </div>
   <div class="input-group">
     <label>Date range</label>
     <div class="input-group-prepend">
@@ -100,6 +81,25 @@
       (blur)="onHandleBlur($event)"
       value=""
     />
+  </div>
+  <div class="input-group" *ngIf="approversOptions.length > 0">
+    <label>Requested To</label>
+    <select
+      multiple="true"
+      class="inputText select2-modal w-75"
+      name="requested_to"
+      [(ngModel)]="my_leaves.requested_to"
+      #requested_to="ngModel"
+      data-placeholder="Select approver/s"
+    >
+      <option [value]="" selected disabled="disabled">Requested To</option>
+      <option *ngFor="let option of approversOptions" [value]="option.id">
+        {{ option.value }}
+      </option>
+    </select>
+    <div *ngIf="errors.requested_to" class="modal-text-danger">
+      {{ errors.requested_to }}
+    </div>
   </div>
   <div class="input-group">
     <label>Remarks</label>
@@ -166,6 +166,27 @@
                 {{ errors.leave_master_id }}
               </div>
             </div>
+            <div class="input-group">
+              <label>Date range</label>
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="far fa-calendar-alt"></i>
+                </span>
+              </div>
+              <input
+                type="text"
+                id="daterangepicker"
+                name="leave_request_date"
+                class="form-control daterangepicker-input"
+                [ngModel]="my_leaves.leave_request_date"
+                #leave_request_date="ngModel"
+                data-target="#daterangepicker"
+                placeholder="Start/End Date"
+                (keyup)="onHandleChange($event)"
+                (blur)="onHandleBlur($event)"
+                [value]="01 / 01 / 2018 - 01 / 15 / 2018"
+              />
+            </div>
             <div class="input-group" *ngIf="approversOptions.length > 0">
               <label>Requested To</label>
               <select
@@ -189,27 +210,6 @@
               <div *ngIf="errors.requested_to" class="modal-text-danger">
                 {{ errors.requested_to }}
               </div>
-            </div>
-            <div class="input-group">
-              <label>Date range</label>
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="far fa-calendar-alt"></i>
-                </span>
-              </div>
-              <input
-                type="text"
-                id="daterangepicker"
-                name="leave_request_date"
-                class="form-control daterangepicker-input"
-                [ngModel]="my_leaves.leave_request_date"
-                #leave_request_date="ngModel"
-                data-target="#daterangepicker"
-                placeholder="Start/End Date"
-                (keyup)="onHandleChange($event)"
-                (blur)="onHandleBlur($event)"
-                [value]="01 / 01 / 2018 - 01 / 15 / 2018"
-              />
             </div>
             <div class="input-group">
               <label>Remarks</label>
