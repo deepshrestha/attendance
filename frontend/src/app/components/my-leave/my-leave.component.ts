@@ -158,7 +158,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.onHandleChange(event)
             }
         });
-        console.log(event.target.elements['requested_to'].value);
+        
         let formObject = {
             id: event.target.elements['leave_request_id'].value,
             leave_master_id: event.target.elements['leave_master_id'].value,
@@ -168,7 +168,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
             remarks: event.target.elements['remarks'].value
         }
         if (this.onHandleSubmit(event)) {
-            console.log("fields", formObject)
+            //console.log("fields", formObject)
             if (appliedLeaveDays <= this.remainingLeaveDays) {
 
                 this.subscribeData = this.myLeaveService.editDataFromService(formObject)
@@ -257,10 +257,6 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
     onDisplayModalData(id) {
         $('.select2-modal').select2();
 
-        // $('.select2-modal option').each(function () {
-        //     $(this).val($(this).attr('ng-reflect-value'));
-        // })
-
         $(document).on('change', '.select2-modal', (event) => {
             console.log("hello")
             event.preventDefault();
@@ -284,17 +280,16 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
             .subscribe(
                 {
                     next: data => {
-                        $("#daterangepicker").data('daterangepicker').setStartDate(data.start_date);
-                        $("#daterangepicker").data('daterangepicker').setEndDate(data.end_date);
-
-                        // $('.select2-modal').val(['1: 3','2: 4']).trigger('change');
                         let requestedToSelect2Val = [];
                         let requestedToSelect2FormElementVal = [];
+
+                        $("#daterangepicker").data('daterangepicker').setStartDate(data.start_date);
+                        $("#daterangepicker").data('daterangepicker').setEndDate(data.end_date);
+ 
                         $('.select2-modal option').each(function () {
                             let requestedToVal = $(this).attr('ng-reflect-value');
                             let requestedToSelectVal = $(this).val();
-                            console.log(data.requested_to.split(','))
-                            console.log(requestedToVal)
+                            
                             data.requested_to.split(',').forEach(function (requested_to) {
                                 if(requested_to.trim() == requestedToVal){
                                     requestedToSelect2Val.push(requestedToSelectVal);
@@ -303,11 +298,10 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
                             })
                         })
 
-                        console.log(requestedToSelect2Val);
-                        console.log(requestedToSelect2FormElementVal)
+                        $('.select2-modal').val(requestedToSelect2Val).trigger('change');
                         data.requested_to = requestedToSelect2FormElementVal;
                         this.my_leaves = data;
-                        $('.select2-modal').val(requestedToSelect2Val).trigger('change');
+
                         this.initialState = {
                             ...this.initialState,
                             leave_request_id: data.id,
@@ -333,7 +327,6 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
     onFilterOptionChange(id) {
         this.myLeaveService.getDataFromService(id).
             subscribe(data => {
-                console.log(data)
                 this.tableData = data;
                 this.paginationConfig = {
                     ...this.paginationConfig,
@@ -403,7 +396,6 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
         )
 
         $(document).on('change', '.select2', (event) => {
-            console.log("hello")
             event.preventDefault();
             if (event.target && event.target.matches("select")) {
                 this.onHandleChange(event);

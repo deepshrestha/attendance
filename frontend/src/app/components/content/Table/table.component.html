@@ -29,13 +29,7 @@
     <!-- <tr [innerHTML]="tableColumns | safeHtml"></tr> -->
     <tr>
       <ng-container *ngFor="let item of tableHeadersKeyList">
-        <th *ngIf="item === 'action_request'"
-            class="table-{{ item }}"
-            scope="col"
-        >
-          {{ tableHeaders[item].title }}
-        </th>
-        <th *ngIf="item === 'action_my_leave'"
+        <th *ngIf="item === 'action_request' || item === 'action_my_leave'"
             class="table-{{ item }}"
             scope="col"
         >
@@ -46,7 +40,7 @@
           data-order="desc"
           scope="col"
           *ngIf="item !== 'action_request' && item !== 'action_my_leave' && item !== 'searchFilter'"
-          (click)="item !== 'action' && item !== 'action_my_leave' ? onClickHandler($event) : ''"
+          (click)="item !== 'action' ? onClickHandler($event) : ''"
         >
           {{ tableHeaders[item] }}
         </th>
@@ -116,12 +110,7 @@
         </td>
 
         <td *ngIf="key === 'action_my_leave' && item['status_name'] === 'Pending'" class="text-center">
-          <ng-container
-            *ngIf="
-              item['status_name'] === 'Pending';
-              else reviewedRequestTemplate
-            "
-          >
+          <ng-container *ngIf="item['status_name'] === 'Pending'">
             <button
               id="showModalButton"
               class="btn btn-primary"
@@ -133,7 +122,7 @@
               Edit
             </button>
           </ng-container>
-          <ng-template #reviewedRequestTemplate>
+          <!-- <ng-template #reviewedRequestTemplate>
             <span
               class="badge"
               [ngClass]="
@@ -144,7 +133,7 @@
             >
               {{ item["status_name"] }}
             </span>
-          </ng-template>
+          </ng-template> -->
         </td>
       </ng-container>
     </tr>
