@@ -6,6 +6,11 @@
         <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add
       </button>
     </div>
+    <div *ngIf="type.split(':')[0] === 'import'" class="float-left" [ngClass]="type.split(':')[1] > 0 ? 'ml-2' : ''">
+      <button class="btn btn-primary" (click)="importData()">
+        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Import
+      </button>
+    </div>
     <div *ngIf="type.split(':')[0] === 'select'" class="float-left" [ngClass]="type.split(':')[1] > 0 ? 'ml-2' : ''">
       <select class="form-control" (change)="onFilterOptionChangeHandler($event)">
         <option

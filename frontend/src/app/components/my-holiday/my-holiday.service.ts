@@ -18,11 +18,11 @@ export class MyHolidayService {
     this.http = http;
   }
 
-//   getDataByIdFromService(id: any): Observable<any> {
-//     return this.http
-//       .get(`http://localhost:3000/api/holidays/${id}`, httpOptions)
-//       .pipe(map((data) => data));
-//   }
+  //   getDataByIdFromService(id: any): Observable<any> {
+  //     return this.http
+  //       .get(`http://localhost:3000/api/holidays/${id}`, httpOptions)
+  //       .pipe(map((data) => data));
+  //   }
 
   getDataFromService(): Observable<any> {
     return this.http
@@ -30,15 +30,21 @@ export class MyHolidayService {
       .pipe(map((data) => data));
   }
 
-//   postDataFromService(data): Observable<any> {
-//     return this.http
-//       .post("http://localhost:3000/api/holidays/", data, httpOptions)
-//       .pipe(map((data) => data));
-//   }
+  importNepaliPatroHolidayDataFromService(data): Observable<any> {
+    return this.http
+      .post("http://localhost:3000/api/nepaliPatroHolidays/import/", data, httpOptions)
+      .pipe(map((data) => data));
+  }
 
-//   editDataFromService(data): Observable<any> {
-//     return this.http
-//       .put("http://localhost:3000/api/holidays/", data, httpOptions)
-//       .pipe(map((data) => data));
-//   }
+  //   postDataFromService(data): Observable<any> {
+  //     return this.http
+  //       .post("http://localhost:3000/api/holidays/", data, httpOptions)
+  //       .pipe(map((data) => data));
+  //   }
+
+  //   editDataFromService(data): Observable<any> {
+  //     return this.http
+  //       .put("http://localhost:3000/api/holidays/", data, httpOptions)
+  //       .pipe(map((data) => data));
+  //   }
 }

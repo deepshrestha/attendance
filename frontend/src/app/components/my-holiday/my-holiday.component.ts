@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, Inject, ViewChild, ElementRef, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
+import { Notification } from "../../services/notification/notification.service";
+import { TokenStorageService } from "../../services/token-storage/token-storage.service";
 import { MyHolidayService } from "./my-holiday.service";
 
 @Component({
@@ -19,10 +21,16 @@ export class MyHolidayComponent implements OnInit, OnDestroy {
     subscribeData: Subscription;
 
     myHolidayService: MyHolidayService;
+    tokenStorageService: TokenStorageService;
+    notification: Notification;
     constructor(
         @Inject(MyHolidayService) myHolidayService: MyHolidayService,
+        @Inject(TokenStorageService) tokenStorageService: TokenStorageService,
+        @Inject(Notification) notification: Notification
     ) {
         this.myHolidayService = myHolidayService;
+        this.tokenStorageService = tokenStorageService;
+        this.notification = notification;
     }
 
     holidays: any = {};
@@ -168,6 +176,18 @@ export class MyHolidayComponent implements OnInit, OnDestroy {
     //             }
     //         )
     // }
+
+    importData() {
+        let data = { created_by: this.tokenStorageService.getUser()["id"] }
+        this.notification.showMessage('info', "Importing holidays. Please wait.")
+        this.myHolidayService.importNepaliPatroHolidayDataFromService(data)
+            .subscribe(res => {
+                if(res.message){
+                    this.notification.showMessage('success', res.message)
+                    this.getAll();
+                }
+            })
+    }
 
     getAll(): void {
         this.subscribeData = this.myHolidayService.getDataFromService()

@@ -3,7 +3,8 @@
 <ng-template #table>
   <app-home>
     <app-table
-      type="list"
+      type="import"
+      (onImportHandler)="importData()"
       [tableHeaders]="tableHeaders"
       [tableData]="tableData"
       [paginationConfig]="paginationConfig"

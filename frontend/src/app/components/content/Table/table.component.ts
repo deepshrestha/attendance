@@ -17,6 +17,7 @@ export class TableComponent implements OnInit, OnChanges {
     @Input() modalTitle: string;
     @Input() modalBody: any;
     @Output() onAddHandler = new EventEmitter<string>();
+    @Output() onImportHandler = new EventEmitter<string>();
     @Output() onDisplayModalData = new EventEmitter<string>();
     @Output() onSaveHandler = new EventEmitter<{event: any, obj: any}>();
     @Output() onCancelModalHandler = new EventEmitter<string>();
@@ -138,6 +139,10 @@ export class TableComponent implements OnInit, OnChanges {
 
     showForm = () => {
         this.onAddHandler.emit();
+    }
+
+    importData = () => {
+        this.onImportHandler.emit();
     }
 
     ngOnInit(): void {
