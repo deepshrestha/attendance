@@ -116,7 +116,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     showForm() {
-
+        
         this.showTable = false;
         this.showAddForm = true;
         this.my_leaves = {};
@@ -270,30 +270,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.onHandleChange(event);
             }
         });
-        this.myHolidayService.getDataFromService()
-            .subscribe(data => {
-                let comingHolidayDates = [];
-                data.forEach(holiday => {
-                    if(holiday.remaining_days > 0) comingHolidayDates.push(holiday.holiday_date);
-                });
-                $('#daterangepicker').daterangepicker(
-                    {
-                        isInvalidDate: function (date) {
-                            return comingHolidayDates.includes(date.format('YYYY-MM-DD'))
-                        },
-                        minDate: new Date(),
-                        opens: "left",
-                        autoUpdateInput: true,
-                        locale: {
-                            format: "YYYY-MM-DD",
-                            cancelLabel: "Clear"
-                        }
-                    }
-                );
-            })
-
         
-
         this.subscribeData = this.myLeaveService.getDataByIdFromService(id)
             .subscribe(
                 {

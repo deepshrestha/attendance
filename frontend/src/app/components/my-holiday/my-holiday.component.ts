@@ -48,7 +48,7 @@ export class MyHolidayComponent implements OnInit, OnDestroy {
     paginationConfig = {
         data: [],
         currentPage: 1,
-        recordPerPage: 5,
+        recordPerPage: 10,
         totalRecordsCount: 0,
     }
 
