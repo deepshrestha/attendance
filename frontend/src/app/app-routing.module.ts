@@ -26,6 +26,7 @@ import { LeaveMasterComponent } from "./components/leave-master/leave-master.com
 import { LeaveStatusComponent } from "./components/leave-status/leave-status.component";
 import { LeaveRequestComponent } from "./components/leave-request/leave-request.component";
 import { MyLeaveComponent } from "./components/my-leave/my-leave.component";
+import { MyHolidayComponent } from "./components/my-holiday/my-holiday.component";
 //import { SettingsComponent } from "./components/settings/settings.component";
 
 const routes: Routes = [
@@ -93,6 +94,12 @@ const routes: Routes = [
     data: { role: "ROLE_ADMIN",  breadcrumb: 'Leave Requests' }
   },
   {
+    path: "my-holiday",
+    component: MyHolidayComponent,
+    // canActivate: [AuthGuard],
+    data: { role: "ROLE_ADMIN",  breadcrumb: 'My Holiday' }
+  },
+  {
     path: "subscribers",
     component: SubscriberListComponent,
     canActivate: [AuthGuard],
@@ -138,5 +145,6 @@ export const appRoutingComponents = [
   LeaveMasterComponent,
   LeaveStatusComponent,
   MyLeaveComponent,
-  LeaveRequestComponent
+  LeaveRequestComponent,
+  MyHolidayComponent
 ]
