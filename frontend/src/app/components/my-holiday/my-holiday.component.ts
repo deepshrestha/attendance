@@ -40,6 +40,7 @@ export class MyHolidayComponent implements OnInit, OnDestroy {
         holiday_name: "Holiday Name",
         holiday_date: "Date",
         remaining_days: "Remaining Days",
+        category: "Category",
         // action: "Action",
         searchFilter: ["holiday_name", "remaining_days"]
     };
@@ -180,9 +181,11 @@ export class MyHolidayComponent implements OnInit, OnDestroy {
     importData() {
         let data = { created_by: this.tokenStorageService.getUser()["id"] }
         this.notification.showMessage('info', "Importing holidays. Please wait.")
+        let loadingMsg = this.notification.showLoadingMessage("Importing holidays. Please wait.");
         this.myHolidayService.importNepaliPatroHolidayDataFromService(data)
             .subscribe(res => {
                 if(res.message){
+                    loadingMsg.close();
                     this.notification.showMessage('success', res.message)
                     this.getAll();
                 }

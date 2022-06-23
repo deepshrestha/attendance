@@ -10,15 +10,17 @@ exports.import = function (req, res) {
       var query = `TRUNCATE TABLE holidays`;
       var result = db.queryHandler(query);
       result.then((data) => {
-        var mainHolidays = jsonData.filter((holiday) => {
-          return holiday.priority === "1";
+        var importantHolidays = jsonData.filter((holiday) => {
+          let holidayDetails = JSON.parse(holiday.description);
+          return holidayDetails.important_event ==="1";
         });
 
         const importHolidays = async () => {
-          for (let mainHoliday of mainHolidays) {
-            var query1 = `INSERT INTO holidays(holiday_name, holiday_date, created_at, created_by) 
-                  values('${JSON.parse(mainHoliday.description)["en"]}', 
-                  '${mainHoliday.event_date}', now(), 
+          for (let importantHoliday of importantHolidays) {
+            let importantHolidayDetails = JSON.parse(importantHoliday.description);
+            var query1 = `INSERT INTO holidays(holiday_name, holiday_date, category, created_at, created_by) 
+                  values('${importantHolidayDetails["en"]}', 
+                  '${importantHoliday.event_date}', '${importantHolidayDetails.category}', now(), 
                   ${req.body.created_by})`;
             await db.queryHandler(query1);
           }

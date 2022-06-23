@@ -9,6 +9,7 @@ exports.getAll = function(req, res) {
                         THEN DATEDIFF(h.holiday_date, now())
                         ELSE '-' 
                         END AS remaining_days,
+                        h.category,
                         fn_dateTimeFormat(h.created_at) as created_at,
                         e.full_name as created_by
                 from holidays h
