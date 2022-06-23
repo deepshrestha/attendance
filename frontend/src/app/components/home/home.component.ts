@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { Component, AfterViewInit } from '@angular/core';
 import * as $ from 'jquery';
 
@@ -20,9 +21,9 @@ export class HomeComponent implements AfterViewInit {
             $('#endTimePicker').datetimepicker({
                 format: 'LT'
             })
-           
             $('#daterangepicker').daterangepicker(
                 {
+                    minDate: new Date(),
                     opens: "left",
                     autoUpdateInput: true,
                     locale: {

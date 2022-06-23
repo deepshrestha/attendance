@@ -8,6 +8,7 @@ import { LeaveMasterService } from "../leave-master/leave-master.service";
 import { Notification } from "./../../services/notification/notification.service";
 import * as $ from "jquery";
 import { LeaveStatusService } from "../leave-status/leave-status.service";
+import { MyHolidayService } from "../my-holiday/my-holiday.service";
 
 @Component({
     selector: 'app-my-leave',
@@ -42,18 +43,21 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
     leaveMasterService: LeaveMasterService;
     leaveStatusService: LeaveStatusService;
     notification: Notification;
+    myHolidayService: MyHolidayService;
     constructor(
         @Inject(MyLeaveService) myLeaveService: MyLeaveService,
         @Inject(TokenStorageService) tokenStorageService: TokenStorageService,
         @Inject(LeaveMasterService) leaveMasterService: LeaveMasterService,
         @Inject(LeaveStatusService) leaveStatusService: LeaveStatusService,
-        @Inject(Notification) notification: Notification
+        @Inject(Notification) notification: Notification,
+        @Inject(MyHolidayService) myHolidayService: MyHolidayService
     ) {
         this.myLeaveService = myLeaveService;
         this.tokenStorageService = tokenStorageService;
         this.leaveMasterService = leaveMasterService;
         this.leaveStatusService = leaveStatusService;
         this.notification = notification;
+        this.myHolidayService = myHolidayService;
     }
 
     my_leaves: any = {};
@@ -112,6 +116,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     showForm() {
+
         this.showTable = false;
         this.showAddForm = true;
         this.my_leaves = {};
@@ -119,6 +124,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
         $('.select2').select2({
             placeholder: "Select approver/s"
         })
+
     }
 
     reInitializeState() {
@@ -158,7 +164,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.onHandleChange(event)
             }
         });
-        
+
         let formObject = {
             id: event.target.elements['leave_request_id'].value,
             leave_master_id: event.target.elements['leave_master_id'].value,
@@ -264,17 +270,29 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.onHandleChange(event);
             }
         });
+        this.myHolidayService.getDataFromService()
+            .subscribe(data => {
+                let comingHolidayDates = [];
+                data.forEach(holiday => {
+                    if(holiday.remaining_days > 0) comingHolidayDates.push(holiday.holiday_date);
+                });
+                $('#daterangepicker').daterangepicker(
+                    {
+                        isInvalidDate: function (date) {
+                            return comingHolidayDates.includes(date.format('YYYY-MM-DD'))
+                        },
+                        minDate: new Date(),
+                        opens: "left",
+                        autoUpdateInput: true,
+                        locale: {
+                            format: "YYYY-MM-DD",
+                            cancelLabel: "Clear"
+                        }
+                    }
+                );
+            })
 
-        $('#daterangepicker').daterangepicker(
-            {
-                opens: "left",
-                autoUpdateInput: true,
-                locale: {
-                    format: "YYYY-MM-DD",
-                    cancelLabel: "Clear"
-                }
-            }
-        );
+        
 
         this.subscribeData = this.myLeaveService.getDataByIdFromService(id)
             .subscribe(
@@ -285,13 +303,13 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
 
                         $("#daterangepicker").data('daterangepicker').setStartDate(data.start_date);
                         $("#daterangepicker").data('daterangepicker').setEndDate(data.end_date);
- 
+
                         $('.select2-modal option').each(function () {
                             let requestedToVal = $(this).attr('ng-reflect-value');
                             let requestedToSelectVal = $(this).val();
-                            
+
                             data.requested_to.split(',').forEach(function (requested_to) {
-                                if(requested_to.trim() == requestedToVal){
+                                if (requested_to.trim() == requestedToVal) {
                                     requestedToSelect2Val.push(requestedToSelectVal);
                                     requestedToSelect2FormElementVal.push(parseInt(requestedToVal));
                                 }
@@ -380,7 +398,6 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     ngOnInit(): void {
-
         this.initializeFormValidation();
         this.leaveStatusService.getLeaveStatusData().subscribe(
             data => {
