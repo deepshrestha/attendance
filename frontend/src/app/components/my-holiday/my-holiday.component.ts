@@ -195,8 +195,6 @@ export class MyHolidayComponent implements OnInit, OnDestroy {
                 {
                     next: data => {
                         this.tableData = data;
-                        
-                        // this.tableData.remaining_days = this.calculateRemainingDays(data.holiday_date) > 0 ? this.calculateRemainingDays(data.holiday_date) : '-';
                         this.paginationConfig = {
                             ...this.paginationConfig,
                             currentPage: 1,
