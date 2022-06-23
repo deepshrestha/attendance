@@ -5,7 +5,10 @@ exports.getAll = function(req, res) {
                         h.id,
                         h.holiday_name,
                         fn_dateFormat(h.holiday_date) as holiday_date,
-                        h.remaining_days,
+                        CASE WHEN DATEDIFF(h.holiday_date, now()) > 0 
+                        THEN DATEDIFF(h.holiday_date, now())
+                        ELSE '-' 
+                        END AS remaining_days,
                         fn_dateTimeFormat(h.created_at) as created_at,
                         e.full_name as created_by
                 from holidays h

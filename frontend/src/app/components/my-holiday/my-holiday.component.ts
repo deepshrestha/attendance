@@ -195,8 +195,11 @@ export class MyHolidayComponent implements OnInit, OnDestroy {
                 {
                     next: data => {
                         this.tableData = data;
+                        
+                        // this.tableData.remaining_days = this.calculateRemainingDays(data.holiday_date) > 0 ? this.calculateRemainingDays(data.holiday_date) : '-';
                         this.paginationConfig = {
                             ...this.paginationConfig,
+                            currentPage: 1,
                             totalRecordsCount: data.length
                         }
                     },
@@ -218,4 +221,6 @@ export class MyHolidayComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.subscribeData.unsubscribe();
     }
+
+    
 }

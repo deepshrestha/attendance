@@ -29,14 +29,4 @@ exports.import = function (req, res) {
     });
 };
 
-function calculateRemainingDays(eventDate) {
-  let startDate = new Date();
-  console.log(startDate);
-  let endDate = new Date("2022-06-22");
-  console.log(endDate);
-  var milli_secs = endDate.getTime() - startDate.getTime();
 
-  // Convert the milli seconds to Days
-  var days = milli_secs / (1000 * 3600 * 24);
-  return Math.round(days);
-}
