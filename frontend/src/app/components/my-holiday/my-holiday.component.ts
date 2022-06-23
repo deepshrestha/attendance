@@ -29,11 +29,11 @@ export class MyHolidayComponent implements OnInit, OnDestroy {
 
     tableHeaders = {
         sn: "#",
-        name: "Holiday Name",
+        holiday_name: "Holiday Name",
         holiday_date: "Date",
         remaining_days: "Remaining Days",
         // action: "Action",
-        searchFilter: ["name", "remaining_days"]
+        searchFilter: ["holiday_name", "remaining_days"]
     };
 
     paginationConfig = {
@@ -47,11 +47,11 @@ export class MyHolidayComponent implements OnInit, OnDestroy {
 
     // initialState = {
     //     holiday_id: "",
-    //     name: "",
+    //     holiday_name: "",
     //     holiday_date: "",
     //     remaining_days: "",
     //     errors: {
-    //         name: "",
+    //         holiday_name: "",
     //         holiday_date: "",
     //         remaining_days: ""
     //     }
@@ -78,11 +78,11 @@ export class MyHolidayComponent implements OnInit, OnDestroy {
     // reInitializeState() {
     //     this.initialState = {
     //         ...this.initialState,
-    //         name: "",
+    //         holiday_name: "",
     //         holiday_date: "",
     //         remaining_days: "",
     //         errors: {
-    //             name: "",
+    //             holiday_name: "",
     //             holiday_date: "",
     //             remaining_days: ""
     //         }
@@ -92,7 +92,7 @@ export class MyHolidayComponent implements OnInit, OnDestroy {
     //     let { event } = modalEvent;
     //     let formObject = {
     //         id: event.target.elements['holiday_id'].value,
-    //         name: event.target.elements['name'].value,
+    //         holiday_name: event.target.elements['holiday_name'].value,
     //         holiday_date: event.target.elements['holiday_date'].value,
     //         remaining_days: event.target.elements['remaining_days'].value
     //     }
@@ -156,7 +156,7 @@ export class MyHolidayComponent implements OnInit, OnDestroy {
     //                     this.holidays = data;
     //                     this.initialState = {
     //                         ...this.initialState,
-    //                         name: data.name,
+    //                         holiday_name: data.holiday_name,
     //                         holiday_date: data.holiday_date,
     //                         remaining_days: data.remaining_days
     //                     }
