@@ -159,11 +159,10 @@ exports.getMyLeaveRequests = function (req, res) {
 };
 
 exports.getLeaveRequests = function (req, res) {
-  var query = `select row_number() over(order by lr.id) as sn,
-                        lr.id,
+  var query = `SELECT row_number() over(order by id) as sn, tmp_table.* FROM (SELECT lr.id,
                         lm.name as leave_type,
                         e1.full_name as requested_by,
-                        e2.full_name as requested_to,
+                        GROUP_CONCAT(e2.full_name SEPARATOR ', ') requested_to,
                         fn_dateFormat(lr.start_date) as start_date,
                         fn_dateFormat(lr.end_date) as end_date,
                         fn_dateTimeFormat(lr.requested_at) as requested_at,
@@ -175,14 +174,15 @@ exports.getLeaveRequests = function (req, res) {
                 from leave_request lr
                 join leave_master lm on lr.leave_master_id = lm.id
                 join employees e1 on lr.requested_by = e1.id
-                join employees e2 on lr.requested_to = e2.id
+                JOIN employees e2 ON FIND_IN_SET(e2.id, REPLACE(lr.requested_to, ' ', ''))
                 LEFT JOIN leave_request_detail lrd on lr.id = lrd.leave_request_id
                 LEFT JOIN leave_status ls on ls.id = lrd.status_id
                 WHERE FIND_IN_SET(${
                   req.params.requested_to
                 }, REPLACE(lr.requested_to, ' ', ''))
                 ${getStatusWhereQuery(req.query.leave_status_id)}
-                order by lr.id`;
+                group by lr.id
+                ) as tmp_table order by id`;
 
   console.log(query);
 
