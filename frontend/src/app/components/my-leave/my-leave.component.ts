@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Inject, ViewChild, ElementRef, OnDestroy, AfterViewInit } from "@angular/core";
+import { Component, OnInit, Input, Inject, ViewChild, ElementRef, OnDestroy } from "@angular/core";
 import { formatDate } from "@angular/common";
 import { Subscription } from "rxjs";
 import { formValidator } from "../../helpers/form-validator";
@@ -15,7 +15,7 @@ import { MyHolidayService } from "../my-holiday/my-holiday.service";
     template: require('./my-leave.component.html'),
     providers: [MyLeaveService]
 })
-export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
+export class MyLeaveComponent implements OnInit, OnDestroy {
 
     showTable: boolean = true;
     showAddForm: boolean = false;
@@ -116,15 +116,11 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     showForm() {
-        
         this.showTable = false;
         this.showAddForm = true;
         this.my_leaves = {};
         this.selectedLeaveType = '';
-        $('.select2').select2({
-            placeholder: "Select approver/s"
-        })
-
+        this.showCalendar('form');
     }
 
     reInitializeState() {
@@ -196,7 +192,6 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.notification.showMessage('error', `Your leave request of ${appliedLeaveDays} days of ${this.selectedLeaveType} is not applicable!!`);
             }
         }
-
     }
 
     saveInfo(event: any, obj: any) {
@@ -208,7 +203,6 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
         let requestedToVal = '';
         if (event.target.elements['requested_to'] !== undefined)
             requestedToVal = Array.from<HTMLInputElement>(event.target.elements['requested_to'].selectedOptions).map(option => option.value.split(':')[1]).join(',').trim();
-
 
         let formObject = {
             leave_master_id: event.target.elements['leave_master_id'].value,
@@ -257,7 +251,35 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
         this.reInitializeState();
         this.initializeFormValidation();
         this.getAll();
-        $('#daterangepicker').data('daterangepicker').remove();
+        //$('#daterangepicker').data('daterangepicker').remove();
+    }
+
+    showCalendar(type: string) {
+        return this.myHolidayService.getDataFromService()
+            .subscribe(data => {
+                
+                let comingHolidayDates = [];
+                let minDate: Date = (type === 'form') && new Date();
+
+                data.forEach(holiday => {
+                    if (holiday.remaining_days > 0) comingHolidayDates.push(holiday.holiday_date);
+                });
+    
+                $('#daterangepicker').daterangepicker(
+                    {
+                        isInvalidDate: function (date) {
+                            return comingHolidayDates.includes(date.format('YYYY-MM-DD'))
+                        },
+                        minDate,
+                        opens: "left",
+                        autoUpdateInput: true,
+                        locale: {
+                            format: "YYYY-MM-DD",
+                            cancelLabel: "Clear"
+                        }
+                    }
+                );
+            })
     }
 
     onDisplayModalData(id) {
@@ -270,6 +292,8 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.onHandleChange(event);
             }
         });
+
+        this.showCalendar('modal');
         
         this.subscribeData = this.myLeaveService.getDataByIdFromService(id)
             .subscribe(
@@ -373,7 +397,6 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
         return Math.round(Math.abs(days)) + 1;
     }
 
-
     ngOnInit(): void {
         this.initializeFormValidation();
         this.leaveStatusService.getLeaveStatusData().subscribe(
@@ -381,6 +404,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.options = data;
             }
         );
+
         this.getAll();
 
         this.myLeaveService.getSeniorApproversData().subscribe(
@@ -395,19 +419,6 @@ export class MyLeaveComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.onHandleChange(event);
             }
         });
-    }
-
-    ngAfterViewInit(): void {
-        $('.select2').select();
-        // $(function() {
-        //     $('#daterangepicker').on('apply.daterangepicker', function(ev, picker) {
-        //         // picker.startDate and picker.endDate are already Moment.js objects.
-        //         // You can use diff() method to calculate the day difference.
-        //         console.log(picker.endDate.diff(picker.startDate, "days"))
-        //         // $('#numberdays').val(picker.endDate.diff(picker.startDate, "days"));
-        //     });
-        // })
-
     }
 
     ngOnDestroy(): void {

@@ -524,7 +524,7 @@ label:not(.form-check-label):not(.custom-file-label) {
 }
 /* pagination */
 ul.pagination {
-    font-size: 12px;
+    font-size: 14px;
 }
 p.no-record {
     color: #dc3545;
@@ -599,6 +599,9 @@ th.table-out_time,
 th.table-total_hours,
 th.table-leave_days {
     width: 10%;
+}
+th.table-holiday_name {
+    width: 50%;
 }
 th.table-action,
 th.table-action_request {
