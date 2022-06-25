@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, Inject } from "@angular/core";
 import { Modal } from "bootstrap";
+import { TokenStorageService } from './../../../services/token-storage/token-storage.service'
 import * as $ from "jquery";
 
 @Component({
@@ -29,6 +30,14 @@ export class TableComponent implements OnInit, OnChanges {
     tableDataColumns: string = '';
     tableHeadersKeyList = [];
     paginateData = [];
+    currentRole: any;
+    tokenStorageService: TokenStorageService;
+
+    constructor(
+        @Inject(TokenStorageService) tokenStorageService: TokenStorageService
+    ) {
+        this.tokenStorageService = tokenStorageService;
+    }
     
     isBoolean(val): any { 
         return (val === 'true' || val === 'false') ? 'boolean' : 'string';
@@ -148,6 +157,7 @@ export class TableComponent implements OnInit, OnChanges {
     ngOnInit(): void {
         /* console.log(this.tableData)
         this.getTableData(this.tableData); */
+        this.currentRole = this.tokenStorageService.getUser().roles[0];
         this.tableHeadersKeyList = Object.keys(this.tableHeaders)
     }
 

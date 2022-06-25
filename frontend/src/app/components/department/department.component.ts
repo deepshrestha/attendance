@@ -116,6 +116,8 @@ export class DepartmentComponent implements OnInit, OnDestroy {
                         if(data.success) {
                             this.notification.showMessage("success", data.message);
                             $('#showModal').modal('hide');
+                            this.reInitializeState();
+                            this.initializeFormValidation();
                             this.getAll();
                         }
                     },
@@ -135,8 +137,11 @@ export class DepartmentComponent implements OnInit, OnDestroy {
             .subscribe(
                 {
                     next: data => {
-                        this.reInitializeState();
-                        this.initializeFormValidation();
+                        if(data.success) {
+                            this.notification.showMessage("success", data.message);
+                            this.reInitializeState();
+                            this.initializeFormValidation();
+                        }
                     },
                     error: err => {
                         console.log(err)

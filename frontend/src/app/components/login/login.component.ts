@@ -72,14 +72,14 @@ export class LoginComponent implements OnInit {
             }
           }
         );
-      // if (obj.email === 'admin@admin.com' && obj.password === 'deep@123') {
-      //   console.log(obj);
-      //   this.router.navigate(["home"]);
-      // }
-      // else {
-      //   this.errorMsg = "Username or password is incorrect";
-      //   this.password.nativeElement.focus();
-      // }
+      /* if (obj.email === 'admin@admin.com' && obj.password === 'deep@123') {
+        console.log(obj);
+        this.router.navigate(["home"]);
+      }
+      else {
+        this.errorMsg = "Username or password is incorrect";
+        this.password.nativeElement.focus();
+      } */
     }
   }
 }

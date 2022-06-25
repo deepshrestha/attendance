@@ -95,10 +95,12 @@ export class RolesComponent implements OnInit {
     saveInfo(event: any, obj: any) {
         event.preventDefault();
         if (this.onHandleSubmit(event)) {
+            console.log(obj.value);
             this.subscribeData = this.service.postDataFromService(obj.value)
                 .subscribe(
                     {
                         next: data => {
+                            this.notification.showMessage("success", data.message);
                             this.reInitializeState();
                             this.initializeFormValidation();
                         },
@@ -130,6 +132,8 @@ export class RolesComponent implements OnInit {
                             if (data.success) {
                                 this.notification.showMessage("success", data.message);
                                 $('#showModal').modal('hide');
+                                this.reInitializeState();
+                                this.initializeFormValidation();
                                 this.getAll();
                             }
                         },

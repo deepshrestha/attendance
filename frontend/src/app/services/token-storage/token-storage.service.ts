@@ -21,10 +21,12 @@ export class TokenStorageService {
   getToken(): string | null {
     return window.localStorage.getItem(TOKEN_KEY);
   }
+
   saveUser(user: any): void {
     window.localStorage.removeItem(USER_KEY);
     window.localStorage.setItem(USER_KEY, JSON.stringify(user));
   }
+  
   getUser(): any {
     const user = window.localStorage.getItem(USER_KEY);
     if (user) {

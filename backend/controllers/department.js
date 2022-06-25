@@ -49,7 +49,12 @@ exports.insertDepartmentData = function(req, res) {
 
     result.then(data => {
         console.log("last insert Id: ", data.insertId);
-        res.json(data.insertId);
+        res.json(
+            {
+                success: true,
+                message: "Created successfully"
+            }
+        );
     })
     .catch(err => {
         console.log(err)

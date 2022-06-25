@@ -34,6 +34,7 @@ exports.getAll = function (req, res) {
 };
 
 exports.insertRoleData = function (req, res) {
+  
   var query = `insert into roles (
                 role_name, 
                 parent_id,
@@ -48,13 +49,18 @@ exports.insertRoleData = function (req, res) {
               )`;
 
   console.log(query);
-
+  
   var result = db.queryHandler(query);
 
   result
     .then((data) => {
       console.log("last insert Id: ", data.insertId);
-    //   res.json(data.insertId);
+      res.json(
+        {
+            success: true,
+            message: "Created successfully"
+        }
+      );
     })
     .catch((err) => {
       console.log(err);

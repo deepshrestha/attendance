@@ -33,6 +33,7 @@ exports.getRealTimeData = function(req, res) {
         .catch(err => {
             console.log(err)
         })
+        res.json(true);
     })
     .catch(err => {
         console.log(err)

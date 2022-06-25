@@ -5,6 +5,7 @@ import { formValidator } from "./../../helpers/form-validator";
 import { EmployeeService } from "./employee.service";
 import { RoleService } from "../role/role.service";
 import { DepartmentService } from "../department/department.service";
+import { Notification } from "./../../services/notification/notification.service";
 import * as $ from "jquery";
 
 @Component({
@@ -17,14 +18,19 @@ export class EmployeesComponent implements OnInit {
     service: EmployeeService;
     shiftService: ShiftService;
     roleService: RoleService;
+    notification: Notification;
     departmentService: DepartmentService;
-    constructor(@Inject(EmployeeService) service: EmployeeService, @Inject(ShiftService) shiftService: ShiftService,
+    constructor(
+        @Inject(EmployeeService) service: EmployeeService, @Inject(ShiftService) shiftService: ShiftService,
         @Inject(RoleService) roleService: RoleService,
-        @Inject(DepartmentService) departmentService: DepartmentService) {
+        @Inject(DepartmentService) departmentService: DepartmentService,
+        @Inject(Notification) notification: Notification
+    ) {
         this.service = service;
         this.shiftService = shiftService;
         this.roleService = roleService;
         this.departmentService = departmentService;
+        this.notification = notification;
     }
 
     showTable: boolean = true;
@@ -37,13 +43,6 @@ export class EmployeesComponent implements OnInit {
     subscribeData: Subscription;
 
     employees: any = {};
-
-    // shiftOptions: any[] = [
-    //     {id: '1', value: 'Regular'},
-    //     {id: '2', value: 'Morning'},
-    //     {id: '3', value: 'Evening'},
-    //     {id: '4', value: 'Night'},
-    // ];
     shiftOptions: any[] = [];
     roleOptions: any[] = [];
     departmentOptions: any[] = [];
@@ -140,8 +139,11 @@ export class EmployeesComponent implements OnInit {
                 .subscribe(
                     {
                         next: data => {
-                            this.reInitializeState();
-                            this.initializeFormValidation();
+                            if(data.success) {
+                                this.notification.showMessage("success", data.message);
+                                this.reInitializeState();
+                                this.initializeFormValidation();
+                            }
                         },
                         error: err => {
                             console.log(err)
@@ -171,7 +173,10 @@ export class EmployeesComponent implements OnInit {
                     {
                         next: data => {
                             if (data.success) {
+                                this.notification.showMessage("success", data.message);
                                 $('#showModal').modal('hide');
+                                this.reInitializeState();
+                                this.initializeFormValidation();
                                 this.getAll();
                             }
                         },

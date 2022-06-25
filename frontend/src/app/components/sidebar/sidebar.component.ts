@@ -15,23 +15,34 @@ export class SidebarComponent implements OnInit {
   router: Router;
   userFullName: String;
   hasApproverRole: boolean;
+  currentRole: any;
   
-  constructor(@Inject(ActivatedRoute) activatedRoute: ActivatedRoute,
+  constructor(
+    @Inject(ActivatedRoute) activatedRoute: ActivatedRoute,
     @Inject(TokenStorageService) tokenStorageService: TokenStorageService,
-    @Inject(Router) router: Router) {
+    @Inject(Router) router: Router
+  ) {
     this.activatedRoute = activatedRoute;
     this.tokenStorageService = tokenStorageService;
     this.router = router;
   }
 
+  title = "CIBT Attendance"
+
   ngOnInit(): void {
     //console.log(this.activatedRoute.snapshot);
+    this.displayMenu();
     this.slug = this.activatedRoute.snapshot.routeConfig?.path;
     this.userFullName = this.tokenStorageService.getUser()["full_name"];
     this.hasApproverRole = this.tokenStorageService.getUser()["has_approver_role"];
   }
 
-  title = "CIBT Attendance"
+  displayMenu() {
+    if(this.tokenStorageService.getUser() !== '') {
+      this.currentRole = this.tokenStorageService.getUser().roles[0];
+      console.log(this.currentRole)
+    }
+  }
 
   logout() {
     this.tokenStorageService.signOut();

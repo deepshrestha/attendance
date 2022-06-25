@@ -180,6 +180,8 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
                                 if (data.success) {
                                     this.notification.showMessage("success", data.message);
                                     $('#showModal').modal('hide');
+                                    this.reInitializeState();
+                                    this.initializeFormValidation();
                                     this.getAll();
                                 }
                             },
@@ -223,14 +225,17 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
                     .subscribe(
                         {
                             next: data => {
-                                let date = new Date();
-                                date.setDate(date.getDate());
-                                $("#daterangepicker").data('daterangepicker').setStartDate(formatDate(date, 'yyyy-MM-dd', 'en-us'));
-                                $("#daterangepicker").data('daterangepicker').setEndDate(formatDate(date, 'yyyy-MM-dd', 'en-us'));
-                                $('.select2').val(null).trigger('change');
-                                this.reInitializeState();
-                                this.initializeFormValidation();
-                                this.selectedLeaveType = '';
+                                if(data.success) {
+                                    let date = new Date();
+                                    date.setDate(date.getDate());
+                                    $("#daterangepicker").data('daterangepicker').setStartDate(formatDate(date, 'yyyy-MM-dd', 'en-us'));
+                                    $("#daterangepicker").data('daterangepicker').setEndDate(formatDate(date, 'yyyy-MM-dd', 'en-us'));
+                                    $('.select2').val(null).trigger('change');
+                                    this.notification.showMessage("success", data.message);
+                                    this.reInitializeState();
+                                    this.initializeFormValidation();
+                                    this.selectedLeaveType = '';
+                                }
                             },
                             error: err => {
                                 console.log(err)

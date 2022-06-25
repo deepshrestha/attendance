@@ -93,7 +93,12 @@ exports.insertEmployeeData = function (req, res) {
         req.body.email_id,
         getDecryptedPasswordFromEmail(req.body.email_id)
       );
-    //   res.json(data.insertId);
+      res.json(
+        {
+            success: true,
+            message: "Created successfully"
+        }
+      );
     })
     .catch((err) => {
       console.log(err);
