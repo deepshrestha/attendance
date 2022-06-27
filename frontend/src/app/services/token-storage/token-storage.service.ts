@@ -1,13 +1,16 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 
 const TOKEN_KEY = "auth-token";
-const USER_KEY = "auth-user";
 
 @Injectable({
   providedIn: "root"
 })
 export class TokenStorageService {
-  constructor() {}
+  router: Router;
+  constructor(@Inject(Router) router: Router) {
+    this.router = router;
+  }
 
   signOut() {
     window.localStorage.clear();
@@ -22,16 +25,23 @@ export class TokenStorageService {
     return window.localStorage.getItem(TOKEN_KEY);
   }
 
-  saveUser(user: any): void {
-    window.localStorage.removeItem(USER_KEY);
-    window.localStorage.setItem(USER_KEY, JSON.stringify(user));
-  }
-  
   getUser(): any {
-    const user = window.localStorage.getItem(USER_KEY);
-    if (user) {
-      return JSON.parse(user);
+    if(this.getToken()){
+      const userDetailsPayload = this.getToken().split('.')[1];
+      if(userDetailsPayload){
+        const user = window.atob(userDetailsPayload);
+        if (user) {
+          return JSON.parse(user);
+        }
+      }else {
+        this.signOut();
+        this.router.navigateByUrl("/login");
+      }
+      return {};
+    } else {
+      this.signOut();
+      this.router.navigateByUrl("/login");
     }
-    return {};
+    
   }
 }

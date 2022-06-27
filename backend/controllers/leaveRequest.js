@@ -1,4 +1,7 @@
 var db = require("../db").db;
+var transaction = require("../db").transaction;
+
+const mailSenderHelper = require("../helpers/mailSender");
 
 exports.getById = function (req, res) {
   //console.log(req.params.id)
@@ -132,6 +135,7 @@ exports.getMyLeaveRequests = function (req, res) {
                 lm.name as leave_type,
                 e1.full_name as requested_by, 
                 GROUP_CONCAT(e2.full_name SEPARATOR ', ') requested_to,
+                e3.full_name as leave_processed_by,
                 fn_dateFormat(lr.start_date) as start_date,
                 fn_dateFormat(lr.end_date) as end_date,
                 fn_dateTimeFormat(lr.requested_at) as requested_at,
@@ -145,6 +149,7 @@ exports.getMyLeaveRequests = function (req, res) {
                 join employees e1 on lr.requested_by = e1.id
                 JOIN employees e2 ON FIND_IN_SET(e2.id, REPLACE(lr.requested_to, ' ', ''))
                 LEFT JOIN leave_request_detail lrd on lr.id = lrd.leave_request_id
+                LEFT JOIN employees e3 ON lrd.leave_processed_by = e3.id
                 LEFT JOIN leave_status ls on ls.id = lrd.status_id
                 where lr.requested_by = ${
                   req.params.requested_by
@@ -208,11 +213,15 @@ function getStatusWhereQuery(leaveStatusId) {
     : `and lrd.status_id = ${leaveStatusId}`;
 }
 exports.processLeaveRequest = function (req, res) {
-  var query0 = `select id from leave_status where name='${req.body.status_name}'`;
+  var statusName = req.body.status_name; 
+  var query0 = `select id from leave_status where name='${statusName}'`;
+  transaction.begin();
   var result0 = db.queryHandler(query0);
   result0.then((data) => {
-    var query = `insert into leave_request_detail(leave_request_id, status_id, status_date, remarks) values(
-            ${req.body.leave_request_id}, ${data[0]["id"]}, now(), '${req.body.remarks}'
+    var statusId = data[0]["id"];
+    var query = `insert into leave_request_detail(leave_request_id, status_id, status_date, leave_processed_by, remarks) 
+        values(
+            ${req.body.leave_request_id}, ${statusId}, now(), ${req.body.leave_processed_by}, '${req.body.remarks}'
         )`;
 
     console.log(query);
@@ -221,13 +230,45 @@ exports.processLeaveRequest = function (req, res) {
 
     result
       .then((data) => {
-        res.json({
-          success: true,
-          message: `Leave has been ${req.body.status_name}`,
+        var query1 = `select e.full_name as full_name, e1.full_name as leave_processor, e.email_id, 
+            lm.name as leave_type_name,
+            fn_dateFormat(lr.start_date) as start_date,
+            fn_dateFormat(lr.end_date) as end_date from leave_request_detail lrd
+            JOIN leave_request lr ON lrd.leave_request_id = lr.id
+            JOIN employees e ON lr.requested_by = e.id
+            JOIN employees e1 ON lrd.leave_processed_by = e1.id
+            JOIN leave_master lm ON lr.leave_master_id = lm.id
+            WHERE leave_request_id = ${req.body.leave_request_id} and status_id = ${statusId}
+        `;
+
+        var result1 = db.queryHandler(query1);
+        result1.then((data1) => {
+          mailSenderHelper.sendLeaveApprovalEmail(
+            res,
+            data1[0]["full_name"],
+            data1[0]["email_id"],
+            data1[0]["leave_processor"],
+            data1[0]["leave_type_name"],
+            statusName,
+            data1[0]["start_date"],
+            data1[0]["end_date"]
+          );
+          res.json({
+            success: true,
+            message: `Leave has been ${statusName}`,
+          });
+          transaction.commit();
+        }).catch((err) => {
+          transaction.rollback();
+          console.log(err);
         });
       })
       .catch((err) => {
+        transaction.rollback();
         console.log(err);
       });
+  }).catch((err) => {
+    transaction.rollback();
+    console.log(err);
   });
 };

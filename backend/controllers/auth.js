@@ -19,21 +19,24 @@ exports.signin = function (req, res) {
         employee.password
       );
       if (passwordIsValid) {
-        var token = jwt.sign({ id: employee.id }, config.secret, {
-          expiresIn: 86400, // 24 hours
-        });
-        var loggedInRole = employee.role_name;
-        var authorities = [`ROLE_${loggedInRole.toUpperCase()}`];
-
         var query1 = `select * from roles where parent_id = ${employee.role_id}`;
         var result1 = db.queryHandler(query1);
         result1.then((data1) => {
+          var loggedInRole = employee.role_name;
+          var authorities = [`ROLE_${loggedInRole.toUpperCase()}`];
+          var token = jwt.sign(
+            { 
+              id: employee.id,
+              email: employee.email_id,
+              full_name: employee.full_name,
+              roles: authorities,
+              has_approver_role: data1.length > 0,
+            }, 
+            config.secret, {
+            expiresIn: 86400, // 24 hours
+          });
+          
           res.status(200).send({
-            id: employee.id,
-            email: employee.email_id,
-            full_name: employee.full_name,
-            roles: authorities,
-            has_approver_role: data1.length > 0,
             accessToken: token,
           });
         });

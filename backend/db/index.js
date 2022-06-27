@@ -21,6 +21,21 @@ var db = function(){
 	}
 };
 
+var transaction = function () {
+	return {
+		begin: function(){
+			connection.beginTransaction();
+		},
+		commit: function(){
+			connection.commit();
+		},
+		rollback: function(){
+			connection.rollback();
+		}
+	}
+}
+
 module.exports = {
-	db: db()
+	db: db(),
+	transaction: transaction()
 }

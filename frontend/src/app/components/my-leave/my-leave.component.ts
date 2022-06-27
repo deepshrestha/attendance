@@ -351,6 +351,15 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
     onFilterOptionChange(id) {
         this.myLeaveService.getDataFromService(id).
             subscribe(data => {
+                if(id == 0) {
+                    this.tableHeaders["requested_to"] = "Requested To"
+                }
+                else {
+                    this.tableHeaders["requested_to"] = `${id == 1 ? 'Approved': 'Rejected'} By`;
+                    data.forEach(leave => {
+                        leave["requested_to"] = leave["leave_processed_by"];
+                    })
+                }
                 this.tableData = data;
                 this.paginationConfig = {
                     ...this.paginationConfig,

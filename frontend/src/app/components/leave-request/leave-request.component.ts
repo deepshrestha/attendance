@@ -70,7 +70,12 @@ export class LeaveRequestComponent implements OnInit, OnDestroy {
     }
 
     onActionRequestClick(requestObj: object) {
-        let data = { leave_request_id: requestObj['id'], status_name: requestObj['status_name'], remarks: '' };
+        let data = { 
+            leave_request_id: requestObj['id'], 
+            status_name: requestObj['status_name'], 
+            leave_processed_by: this.tokenStorageService.getUser()["id"],
+            remarks: '' 
+        };
         this.leaveRequestService.processLeaveRequestFromService(data).
             subscribe({
                 next: data => {

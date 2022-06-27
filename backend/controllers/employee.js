@@ -87,7 +87,7 @@ exports.insertEmployeeData = function (req, res) {
   result
     .then((data) => {
       console.log("last insert Id: ", data.insertId);
-      mailSenderHelper.send(
+      mailSenderHelper.sendRegistrationEmail(
         res,
         req.body.full_name,
         req.body.email_id,
