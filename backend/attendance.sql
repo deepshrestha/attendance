@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 16, 2022 at 05:37 AM
+-- Generation Time: Jun 28, 2022 at 07:04 AM
 -- Server version: 10.4.18-MariaDB
 -- PHP Version: 7.4.16
 
@@ -105,8 +105,68 @@ CREATE TABLE `employees` (
 --
 
 INSERT INTO `employees` (`id`, `shift_id`, `department_id`, `role_id`, `full_name`, `email_id`, `password`, `dob`, `contact_no`, `address`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(1, 6, 1, 1, 'Admin', 'admin@gmail.com', '$2a$12$9dtKdyswziBZilKJox260.EwPu.hQBXC3rK2s4cwj4w15NqBsFxlG', '2000-06-01', '9813123456', 'Satdobato', '2022-06-14 13:45:28', 1, NULL, NULL),
-(2, 6, 2, 5, 'Pranaya Raghubanshi', 'praghubanshi12@gmail.com', '$2a$08$wtHlbwIkHW7v7b4FhNUNTugl2m.l8aJPrnsp.wbfAYU3ZkZ6gHLG.', '1997-06-29', '9813815037', 'Kupondole, Lalitpur', '2022-06-14 17:35:50', 1, NULL, NULL);
+(1, 6, 1, 1, 'Admin', 'admin@gmail.com', '$2a$08$u1hbs7m.vRBqkm5HvcgXP.x8A6lT2ynZ4EIv2YcpdfcVjZwBTmt0.', '2000-06-01', '9813123456', 'Satdobato', '2022-06-14 13:45:28', 1, NULL, NULL),
+(2, 6, 2, 3, 'Pranaya Raghubanshi', 'praghubanshi12@gmail.com', '$2a$08$u1hbs7m.vRBqkm5HvcgXP.x8A6lT2ynZ4EIv2YcpdfcVjZwBTmt0.', '1997-06-29', '9813815037', 'Kupondole, Lalitpur', '2022-06-14 17:35:50', 1, NULL, NULL),
+(3, 6, 2, 5, 'Binit Shrestha', 'binit@gmail.com', '$2a$08$XiO40UoqLdawnvjofJDsYOQ7mFgdJRkmWpx6iTMVeHsS0aKLD3vGq', '1991-06-17', '9841562738', 'Babarmahal', '2022-06-17 22:41:06', 1, NULL, NULL),
+(4, 6, 2, 4, 'Hari Shrestha', 'haritest@gmail.com', '$2a$08$0FZ21N3Fwo9KGzoAjpIkQe6rbH/tCkAz2.OGgX1fjZqNN5th.4Lg2', '1978-10-10', '9851090896', 'Pulchowk', '2022-06-17 22:43:42', 1, NULL, NULL),
+(5, 6, 2, 4, 'Yogesh Karki', 'yogeshtest@gmail.com', '$2a$08$yZ4gGuS808ugqJNdV9TiP.OoCoTlwY/hixf2A1XslglcDTq9uCtym', '1999-06-18', '9841567867', 'Test', '2022-06-18 14:56:12', 1, NULL, NULL),
+(6, 6, 1, 6, 'Dixanta Bahadur Shrestha', 'dixanta@gmail.com', '$2a$08$Aa0uyV400Rchzb3RJCmTIO93jya0APd6tJl0vK0mSaTWfsNZ3zlAK', '1982-08-12', '9849056900', 'Kumaripati', '2022-06-23 09:09:31', 1, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `holidays`
+--
+
+CREATE TABLE `holidays` (
+  `id` int(11) NOT NULL,
+  `holiday_name` varchar(100) NOT NULL,
+  `holiday_date` date NOT NULL,
+  `remaining_days` int(11) DEFAULT NULL,
+  `category` enum('national','regional') DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `holidays`
+--
+
+INSERT INTO `holidays` (`id`, `holiday_name`, `holiday_date`, `remaining_days`, `category`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
+(1, 'Nepali New Year', '2022-04-14', NULL, 'national', '2022-06-24 01:24:24', 1, NULL, NULL),
+(2, 'Ubhauli Parba', '2022-05-16', NULL, 'regional', '2022-06-24 01:24:24', 1, NULL, NULL),
+(3, 'Buddha Jayanti', '2022-05-16', NULL, 'national', '2022-06-24 01:24:24', 1, NULL, NULL),
+(4, 'Republic Day', '2022-05-29', NULL, '', '2022-06-24 01:24:24', 1, NULL, NULL),
+(5, 'Janai Purnima', '2022-08-12', NULL, 'national', '2022-06-24 01:24:24', 1, NULL, NULL),
+(6, 'Raksha Bandhan', '2022-08-12', NULL, 'national', '2022-06-24 01:24:24', 1, NULL, NULL),
+(7, 'Gaijatra (KTM valley only)', '2022-08-12', NULL, '', '2022-06-24 01:24:24', 1, NULL, NULL),
+(8, 'Shree Krishna Janmasthami Brata', '2022-08-19', NULL, 'national', '2022-06-24 01:24:24', 1, NULL, NULL),
+(9, 'Indra Jatra (KTM valley only)', '2022-09-09', NULL, '', '2022-06-24 01:24:24', 1, NULL, NULL),
+(10, 'Constitution Day', '2022-09-19', NULL, '', '2022-06-24 01:24:24', 1, NULL, NULL),
+(11, 'Ghatasthapana', '2022-09-26', NULL, 'national', '2022-06-24 01:24:24', 1, NULL, NULL),
+(12, 'Phulpati', '2022-10-02', NULL, 'national', '2022-06-24 01:24:24', 1, NULL, NULL),
+(13, 'Mahaastami', '2022-10-03', NULL, 'national', '2022-06-24 01:24:24', 1, NULL, NULL),
+(14, 'Mahanawami', '2022-10-04', NULL, 'national', '2022-06-24 01:24:24', 1, NULL, NULL),
+(15, 'Vijaya Dashami (Bada Dashain)', '2022-10-05', NULL, 'national', '2022-06-24 01:24:24', 1, NULL, NULL),
+(16, 'Laxmi Puja', '2022-10-24', NULL, 'national', '2022-06-24 01:24:25', 1, NULL, NULL),
+(17, 'Gai Tihar', '2022-10-25', NULL, '', '2022-06-24 01:24:25', 1, NULL, NULL),
+(18, 'Gobardhan Pooja', '2022-10-26', NULL, '', '2022-06-24 01:24:25', 1, NULL, NULL),
+(19, 'Nepal Sambat Starts', '2022-10-26', NULL, 'national', '2022-06-24 01:24:25', 1, NULL, NULL),
+(20, 'Mha Pooja', '2022-10-26', NULL, 'regional', '2022-06-24 01:24:25', 1, NULL, NULL),
+(21, 'Bhai Tika (Kija Puja)', '2022-10-27', NULL, 'national', '2022-06-24 01:24:25', 1, NULL, NULL),
+(22, 'Chhath Parba', '2022-10-30', NULL, 'regional', '2022-06-24 01:24:25', 1, NULL, NULL),
+(23, 'Guru Nanak Jayanti (Sikh only)', '2022-11-08', NULL, '', '2022-06-24 01:24:25', 1, NULL, NULL),
+(24, 'Yomari Punhi', '2022-12-08', NULL, 'regional', '2022-06-24 01:24:25', 1, NULL, NULL),
+(25, 'Christmas (Christian only)', '2022-12-25', NULL, 'regional', '2022-06-24 01:24:25', 1, NULL, NULL),
+(26, 'Tamu Lhosar', '2022-12-30', NULL, 'regional', '2022-06-24 01:24:25', 1, NULL, NULL),
+(27, 'Sonam Lhosar', '2023-01-22', NULL, 'regional', '2022-06-24 01:24:25', 1, NULL, NULL),
+(28, 'Maha Shivaratri', '2023-02-18', NULL, 'national', '2022-06-24 01:24:25', 1, NULL, NULL),
+(29, 'Gyalpo Lhosar', '2023-02-21', NULL, 'regional', '2022-06-24 01:24:25', 1, NULL, NULL),
+(30, 'Pahadma Holi', '2023-03-06', NULL, 'national', '2022-06-24 01:24:25', 1, NULL, NULL),
+(31, 'Terai Holi', '2023-03-07', NULL, 'regional', '2022-06-24 01:24:26', 1, NULL, NULL),
+(32, 'Ghode Jatra (KTM valley only)', '2023-03-21', NULL, '', '2022-06-24 01:24:26', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -117,6 +177,7 @@ INSERT INTO `employees` (`id`, `shift_id`, `department_id`, `role_id`, `full_nam
 CREATE TABLE `leave_master` (
   `id` int(11) NOT NULL,
   `name` varchar(20) NOT NULL,
+  `leave_days` int(11) NOT NULL,
   `created_by` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_by` int(11) DEFAULT NULL,
@@ -127,10 +188,10 @@ CREATE TABLE `leave_master` (
 -- Dumping data for table `leave_master`
 --
 
-INSERT INTO `leave_master` (`id`, `name`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
-(1, 'Annual Leave', 1, '2022-06-16 09:00:25', NULL, NULL),
-(2, 'Sick Leave', 1, '2022-06-16 09:00:48', NULL, NULL),
-(3, 'Casual Leave', 1, '2022-06-16 09:00:57', NULL, NULL);
+INSERT INTO `leave_master` (`id`, `name`, `leave_days`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
+(1, 'Annual Leave', 15, 1, '2022-06-16 09:00:25', NULL, NULL),
+(2, 'Sick Leave', 12, 1, '2022-06-16 09:00:48', NULL, NULL),
+(3, 'Casual Leave', 12, 1, '2022-06-16 09:00:57', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -142,9 +203,22 @@ CREATE TABLE `leave_request` (
   `id` int(11) NOT NULL,
   `leave_master_id` int(11) NOT NULL,
   `requested_by` int(11) NOT NULL,
-  `requested_to` int(11) NOT NULL,
-  `requested_at` datetime NOT NULL
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `leave_count_days` int(11) NOT NULL,
+  `requested_to` varchar(20) NOT NULL,
+  `requested_at` datetime NOT NULL,
+  `remarks` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `leave_request`
+--
+
+INSERT INTO `leave_request` (`id`, `leave_master_id`, `requested_by`, `start_date`, `end_date`, `leave_count_days`, `requested_to`, `requested_at`, `remarks`) VALUES
+(1, 3, 3, '2022-06-27', '2022-06-28', 2, '4', '2022-06-27 19:30:13', 'Tested'),
+(3, 3, 3, '2022-07-04', '2022-07-05', 2, '4', '2022-06-28 01:00:32', ''),
+(4, 3, 3, '2022-07-11', '2022-07-18', 8, '4', '2022-06-28 01:03:50', 'Tested');
 
 -- --------------------------------------------------------
 
@@ -156,8 +230,18 @@ CREATE TABLE `leave_request_detail` (
   `leave_request_id` int(11) NOT NULL,
   `status_id` int(11) NOT NULL,
   `status_date` datetime NOT NULL,
+  `leave_processed_by` int(11) NOT NULL,
   `remarks` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `leave_request_detail`
+--
+
+INSERT INTO `leave_request_detail` (`leave_request_id`, `status_id`, `status_date`, `leave_processed_by`, `remarks`) VALUES
+(1, 1, '2022-06-28 00:59:40', 4, ''),
+(3, 1, '2022-06-28 01:02:43', 4, ''),
+(4, 2, '2022-06-28 01:04:10', 4, '');
 
 -- --------------------------------------------------------
 
@@ -203,11 +287,12 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `parent_id`, `role_name`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(1, 0, 'Admin', '2022-06-14 14:41:45', 1, NULL, NULL),
+(1, 6, 'Admin', '2022-06-14 14:41:45', 1, NULL, NULL),
 (2, 0, 'HR', '2022-06-14 14:47:45', 1, NULL, NULL),
 (3, 0, 'Manager', '2022-06-14 14:49:05', 1, NULL, NULL),
 (4, 3, 'Supervisor', '2022-06-14 14:49:48', 1, NULL, NULL),
-(5, 4, 'Employee', '2022-06-14 14:55:46', 1, NULL, NULL);
+(5, 4, 'Employee', '2022-06-14 14:55:46', 1, NULL, NULL),
+(6, 0, 'Executive Director', '2022-06-23 08:54:05', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -294,6 +379,12 @@ ALTER TABLE `employees`
   ADD KEY `fk_employee_role` (`role_id`);
 
 --
+-- Indexes for table `holidays`
+--
+ALTER TABLE `holidays`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `leave_master`
 --
 ALTER TABLE `leave_master`
@@ -351,13 +442,19 @@ ALTER TABLE `attendance_logs`
 -- AUTO_INCREMENT for table `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `holidays`
+--
+ALTER TABLE `holidays`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `leave_master`
@@ -369,7 +466,7 @@ ALTER TABLE `leave_master`
 -- AUTO_INCREMENT for table `leave_request`
 --
 ALTER TABLE `leave_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `leave_status`
@@ -381,7 +478,7 @@ ALTER TABLE `leave_status`
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `shifts`
@@ -393,7 +490,7 @@ ALTER TABLE `shifts`
 -- AUTO_INCREMENT for table `working_days`
 --
 ALTER TABLE `working_days`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
