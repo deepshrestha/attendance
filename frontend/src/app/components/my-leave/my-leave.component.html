@@ -54,10 +54,15 @@
         {{ option.value }}
       </option>
     </select>
-    <div *ngIf="selectedLeaveType.length > 0" class="modal-text-warning">
+    <div *ngIf="selectedLeaveType.length > 0" class="row w-100 modal-text-warning">
+      <div class="col-md-8">{{ message }}</div>
+      <div class="col-md-4 text-right">
+        <i class="fa fa-list-alt mr-1" style="color: #3a507e;"></i>View leave details</div>
+    </div>
+    <!-- <div *ngIf="selectedLeaveType.length > 0" class="modal-text-warning">
       You have {{ remainingLeaveDays }} day/s of
       {{ selectedLeaveType }} remaining
-    </div>
+    </div> -->
     <div *ngIf="errors.leave_master_id" class="modal-text-danger">
       {{ errors.leave_master_id }}
     </div>
@@ -155,12 +160,10 @@
                   {{ option.value }}
                 </option>
               </select>
-              <div
-                *ngIf="selectedLeaveType.length > 0"
-                class="modal-text-warning"
-              >
-                You have {{ remainingLeaveDays }} day/s of
-                {{ selectedLeaveType }} remaining
+              <div *ngIf="selectedLeaveType.length > 0" class="row w-100 modal-text-warning">
+                <div class="col-md-8">{{ message }}</div>
+                <div class="col-md-4 text-right">
+                  <i class="fa fa-list-alt mr-1" style="color: #3a507e;"></i>View leave details</div>
               </div>
 
               <div *ngIf="errors.leave_master_id" class="modal-text-danger">

@@ -56,14 +56,17 @@ exports.getAll = function (req, res) {
 exports.insertLeaveRequestData = function (req, res) {
   //console.log(req.body);
   var query = `insert into leave_request (leave_master_id, requested_by, requested_to, 
-                 start_date, end_date, requested_at, remarks) 
-                 values ('${req.body.leave_master_id}', '${
-    req.body.requested_by
-  }', 
-                 '${req.body.requested_to ? req.body.requested_to : 1}', '${
-    req.body.start_date
-  }', '${req.body.end_date}', 
-                 now(), '${req.body.remarks}')`;
+                start_date, end_date, leave_count_days, requested_at, remarks) 
+                values (
+                  '${req.body.leave_master_id}', 
+                  '${req.body.requested_by}', 
+                  '${req.body.requested_to}', 
+                  '${req.body.start_date}', 
+                  '${req.body.end_date}', 
+                  datediff('${req.body.end_date}', '${req.body.start_date}') + 1,
+                  now(), 
+                  '${req.body.remarks}'
+                )`;
 
   console.log(query);
 
@@ -91,6 +94,7 @@ exports.updateLeaveRequestData = function (req, res) {
                  requested_to = '${req.body.requested_to}', 
                  start_date = '${req.body.start_date}', 
                  end_date = '${req.body.end_date}',
+                 leave_count_days = datediff('${req.body.end_date}', '${req.body.start_date}') + 1,
                  remarks = '${req.body.remarks}'
                  where id = '${req.body.id}'`;
 
@@ -111,9 +115,64 @@ exports.updateLeaveRequestData = function (req, res) {
     });
 };
 
+exports.getRemainingLeaveDays = function(req, res) {
+  var query = `select coalesce(sum(leave_count_days), 0) as requested_pending_leave,
+                      m.name
+              from leave_request r
+              join leave_master m on (m.id = r.leave_master_id and r.leave_master_id = ${req.params.id})
+              left join leave_request_detail d on (d.leave_request_id = r.id)
+              where d.leave_request_id is null
+              and r.requested_by = ${req.params.requested_by}`;
+
+  console.log(query);
+  var result = db.queryHandler(query);
+
+  result
+    .then((data) => {
+      if(data[0].requested_pending_leave > 0) {
+        res.json(
+          {
+            pending_leave: true,
+            message: `You have already been requested ${data[0].name} for ${data[0].requested_pending_leave} day/s`
+          }
+        );
+      }
+      else {
+        var query = `select m.leave_days - coalesce(sum(leave_count_days), 0) as total_leave_count,
+                            m.name
+                    from leave_master m
+                    join leave_request r on (r.leave_master_id = m.id and r.leave_master_id = ${req.params.id})
+                    left join leave_request_detail d on (r.id = d.leave_request_id and status_id = 1)
+                    where d.leave_request_id is not null
+                    and r.requested_by = ${req.params.requested_by}`;
+
+        console.log(query);
+        var result = db.queryHandler(query);
+
+        result
+        .then((data) => {
+          res.json(
+            {
+              pending_leave: false,
+              total_remaining_leave: data[0].total_leave_count,
+              message: `You have ${data[0].total_leave_count} day/s of ${data[0].name} remaining`
+            }
+          );
+        })
+        .catch((err) => {
+        console.log(err);
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });     
+  
+};
+
 exports.getSeniorApprovers = function (req, res) {
   var query = `select approverEmployee.id, approverEmployee.full_name from employees approverEmployee
-                 join employees requestorEmployee on requestorEmployee.id = ${req.query.requested_by}
+                 join employees requestorEmployee on requestorEmployee.id = ${req.params.requested_by}
                  join departments d on approverEmployee.department_id = requestorEmployee.department_id = d.id
                  join roles r on requestorEmployee.role_id = r.id
                  where approverEmployee.role_id = r.parent_id
@@ -153,7 +212,7 @@ exports.getMyLeaveRequests = function (req, res) {
                 LEFT JOIN leave_status ls on ls.id = lrd.status_id
                 where lr.requested_by = ${
                   req.params.requested_by
-                } ${getStatusWhereQuery(req.query.leave_status_id)}
+                } ${getStatusWhereQuery(req.params.leave_status_id)}
                 group by lr.id
                 ) as tmp_table order by id`;
 
@@ -187,9 +246,7 @@ exports.getLeaveRequests = function (req, res) {
                 JOIN employees e2 ON FIND_IN_SET(e2.id, REPLACE(lr.requested_to, ' ', ''))
                 LEFT JOIN leave_request_detail lrd on lr.id = lrd.leave_request_id
                 LEFT JOIN leave_status ls on ls.id = lrd.status_id
-                WHERE FIND_IN_SET(${
-                  req.params.requested_to
-                }, REPLACE(lr.requested_to, ' ', ''))
+                WHERE FIND_IN_SET(${req.params.requested_to}, REPLACE(lr.requested_to, ' ', ''))
                 ${getStatusWhereQuery(req.query.leave_status_id)}
                 group by lr.id
                 ) as tmp_table order by id`;

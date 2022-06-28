@@ -29,9 +29,7 @@ export class MyLeaveService {
 
   getDataFromService(leave_status_id: any): Observable<any> {
     return this.http
-      .get(`http://localhost:3000/api/leave-requests/requestor/
-        ${this.tokenStorageService.getUser()["id"]}
-        ?leave_status_id=${leave_status_id}`, httpOptions)
+      .get(`http://localhost:3000/api/leave-requests/requestor/${this.tokenStorageService.getUser().id}/${leave_status_id}`, httpOptions)
       .pipe(map((data) => data));
   }
 
@@ -47,9 +45,15 @@ export class MyLeaveService {
       .pipe(map((data) => data));
   }
 
+  getRemainingLeaveDays(leave_master_id: any, leave_requested_by): Observable<any> {
+    return this.http
+      .get(`http://localhost:3000/api/leave-requests/leave-count/${leave_master_id}/${leave_requested_by}`, httpOptions)
+      .pipe(map((data) => data));
+  } 
+
   getSeniorApproversData(): Observable<any[]> {
     return this.http
-      .get<any[]>(`http://localhost:3000/api/leave-requests/approvers?requested_by=${this.tokenStorageService.getUser()["id"]}`, httpOptions)
+      .get<any[]>(`http://localhost:3000/api/leave-requests/approvers/${this.tokenStorageService.getUser()["id"]}`, httpOptions)
       .pipe(map((data) => {
         const approvers = [];
         data.forEach(element => {

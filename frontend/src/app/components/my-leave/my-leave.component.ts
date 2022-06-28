@@ -35,8 +35,9 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
         { id: true, value: 'Rejected' }
     ];
 
-    remainingLeaveDays = 0;
+    remainingLeaveDays: any;
     selectedLeaveType = '';
+    message: string = '';
 
     myLeaveService: MyLeaveService;
     tokenStorageService: TokenStorageService;
@@ -171,6 +172,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
         }
         if (this.onHandleSubmit(event)) {
             //console.log("fields", formObject)
+            console.log(appliedLeaveDays, this.remainingLeaveDays);
             if (appliedLeaveDays <= this.remainingLeaveDays) {
 
                 this.subscribeData = this.myLeaveService.editDataFromService(formObject)
@@ -216,7 +218,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
         }
 
         if (this.onHandleSubmit(event)) {
-            console.log(formObject)
+            //console.log(formObject)
 
             let appliedLeaveDays = this.calculateAppliedLeaveDays(startDateVal, endDateVal);
 
@@ -291,7 +293,6 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
         $('.select2-modal').select2();
 
         $(document).on('change', '.select2-modal', (event) => {
-            console.log("hello")
             event.preventDefault();
             if (event.target && event.target.matches("select")) {
                 this.onHandleChange(event);
@@ -337,6 +338,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
                             requested_at: data.requested_at,
                         }
 
+                        this.showRemainingLeaveInfo(data.leave_master_id)
                         this.remainingLeaveDays = parseInt($(`.select-leave-type-edit option[value='${data.leave_master_id}']`).data('remaining-leave-days')) + this.calculateAppliedLeaveDays(data.start_date, data.end_date);
                         this.selectedLeaveType = $(`.select-leave-type-edit option[value='${data.leave_master_id}']`).text();
                         this.initializeFormValidation();
@@ -397,7 +399,20 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
     }
 
     showRemainingLeaveInfo(event) {
-        this.remainingLeaveDays = $(event.target).find(':selected').data('remaining-leave-days');
+        let leave_master_id = ($(event.target).find(':selected').val() !== undefined) ? $(event.target).find(':selected').val() : event;
+        //this.remainingLeaveDays = $(event.target).find(':selected').data('remaining-leave-days');
+        this.myLeaveService.getRemainingLeaveDays(leave_master_id, this.tokenStorageService.getUser().id).subscribe(
+            data => {
+                //console.log(data);
+                if(data.pending_leave){
+                    this.message = data.message;
+                }
+                else {
+                    this.remainingLeaveDays = data.total_remaining_leave;
+                    this.message = data.message;
+                }
+            }
+        )
         this.selectedLeaveType = $(event.target).find(':selected').text();
     }
 
