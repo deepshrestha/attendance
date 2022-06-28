@@ -9,6 +9,7 @@ import { Notification } from "./../../services/notification/notification.service
 import * as $ from "jquery";
 import { LeaveStatusService } from "../leave-status/leave-status.service";
 import { MyHolidayService } from "../my-holiday/my-holiday.service";
+import { Modal } from "bootstrap";
 
 @Component({
     selector: 'app-my-leave',
@@ -17,6 +18,7 @@ import { MyHolidayService } from "../my-holiday/my-holiday.service";
 })
 export class MyLeaveComponent implements OnInit, OnDestroy {
 
+    modal: Modal;
     showTable: boolean = true;
     showAddForm: boolean = false;
     fields: any = {};
@@ -38,6 +40,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
     remainingLeaveDays: any;
     selectedLeaveType = '';
     message: string = '';
+    leaveDetails = [];
 
     myLeaveService: MyLeaveService;
     tokenStorageService: TokenStorageService;
@@ -261,6 +264,15 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
         //$('#daterangepicker').data('daterangepicker').remove();
     }
 
+    onToggleTableModal() {
+        this.leaveMasterService.getDataWithRemainingLeavesFromService().subscribe(
+            data => {
+                this.leaveDetails = data;
+                this.modal?.show();
+            }
+        )
+    }
+
     showCalendar(type: string) {
         return this.myHolidayService.getDataFromService()
             .subscribe(data => {
@@ -391,7 +403,7 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
                 }
             )
 
-        this.leaveMasterService.getLeavesDataWithRemainingLeavesFromService().subscribe(
+        this.leaveMasterService.getLeavesData().subscribe(
             data => {
                 this.leaveTypeOptions = data;
             }
@@ -405,6 +417,8 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
             data => {
                 //console.log(data);
                 if(data.pending_leave){
+                    let currentLeaveDetail = this.leaveDetails.find(detail => detail.id == leave_master_id);
+                    this.remainingLeaveDays = currentLeaveDetail.remaining_leave_days;
                     this.message = data.message;
                 }
                 else {
@@ -435,6 +449,13 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
         );
 
         this.getAll();
+
+        this.leaveMasterService.getDataWithRemainingLeavesFromService().subscribe(
+            data => {
+                this.leaveDetails = data;
+                this.modal?.show();
+            }
+        )
 
         this.myLeaveService.getSeniorApproversData().subscribe(
             data => {

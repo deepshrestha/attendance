@@ -48,16 +48,17 @@
       <option [value]="" selected disabled="disabled">Leave Type</option>
       <option
         *ngFor="let option of leaveTypeOptions"
-        [value]="option.id"
-        [attr.data-remaining-leave-days]="option.remainingLeaveDays"
-      >
+        [value]="option.id">
         {{ option.value }}
       </option>
     </select>
     <div *ngIf="selectedLeaveType.length > 0" class="row w-100 modal-text-warning">
       <div class="col-md-8">{{ message }}</div>
       <div class="col-md-4 text-right">
-        <i class="fa fa-list-alt mr-1" style="color: #3a507e;"></i>View leave details</div>
+        <i class="fa fa-list-alt mr-1" style="color: #3a507e;" 
+              data-toggle="modal"
+              data-target="#showTableModal"
+              (click)="onToggleTableModal()"></i>View leave details</div>
     </div>
     <!-- <div *ngIf="selectedLeaveType.length > 0" class="modal-text-warning">
       You have {{ remainingLeaveDays }} day/s of
@@ -162,8 +163,11 @@
               </select>
               <div *ngIf="selectedLeaveType.length > 0" class="row w-100 modal-text-warning">
                 <div class="col-md-8">{{ message }}</div>
-                <div class="col-md-4 text-right">
-                  <i class="fa fa-list-alt mr-1" style="color: #3a507e;"></i>View leave details</div>
+                <div class="col-md-4 text-right" >
+                  <i class="fa fa-list-alt mr-1" style="color: #3a507e;" 
+                  data-toggle="modal"
+                  data-target="#showTableModal"
+                  (click)="onToggleTableModal()"></i>View leave details</div>
               </div>
 
               <div *ngIf="errors.leave_master_id" class="modal-text-danger">
@@ -245,4 +249,26 @@
       </div>
     </div>
   </app-home>
+</ng-template>
+
+<app-table-modal
+  modalTitle="Leave Details"
+  [modalBody]="tableModalBody"
+></app-table-modal>
+
+<ng-template #tableModalBody>
+  <thead>
+    <tr>
+      <th>S.N</th>
+      <th>Leave Name</th>
+      <th>Remaining Leave Days</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let leaveDetail of leaveDetails">
+      <td>{{leaveDetail.sn}}</td>
+      <td>{{leaveDetail.name}}</td>
+      <td>{{leaveDetail.remaining_leave_days}}</td>
+    </tr>
+  </tbody>
 </ng-template>

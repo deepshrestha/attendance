@@ -27,6 +27,7 @@ import { LeaveStatusComponent } from "./components/leave-status/leave-status.com
 import { LeaveRequestComponent } from "./components/leave-request/leave-request.component";
 import { MyLeaveComponent } from "./components/my-leave/my-leave.component";
 import { MyHolidayComponent } from "./components/my-holiday/my-holiday.component";
+import { TableModalComponent } from "./components/content/Modal/TableModal/table-modal.component";
 //import { SettingsComponent } from "./components/settings/settings.component";
 
 const routes: Routes = [
@@ -146,5 +147,6 @@ export const appRoutingComponents = [
   LeaveStatusComponent,
   MyLeaveComponent,
   LeaveRequestComponent,
-  MyHolidayComponent
+  MyHolidayComponent,
+  TableModalComponent
 ]

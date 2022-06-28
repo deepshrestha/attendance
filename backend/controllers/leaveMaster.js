@@ -43,23 +43,33 @@ exports.getAll = function (req, res) {
 };
 
 exports.getAllWithLeaveDaysOfRequestor = function (req, res) {
+  var query = `SELECT row_number() over(order by l1.id) as sn, l1.*, CASE WHEN taken_leaves_table.remaining_leave_days is NOT NULL 
+          THEN taken_leaves_table.remaining_leave_days
+          ELSE l1.leave_days
+          END as remaining_leave_days 
+          FROM leave_master l1 
+          LEFT JOIN 
+          (SELECT lm.*, CASE WHEN lr.id is NOT NULL THEN 
+          lm.leave_days - coalesce(sum(leave_count_days), 0)
+          ELSE lm.leave_days
+          END as remaining_leave_days 
+          FROM leave_master lm 
+          JOIN leave_request lr ON lr.leave_master_id = lm.id AND lr.requested_by=${req.query.requested_by}
+          left JOIN leave_request_detail d ON d.leave_request_id = lr.id AND d.status_id = 1 
+          where d.leave_request_id is not null
+          GROUP by lm.id) 
+          as taken_leaves_table 
+          ON l1.id = taken_leaves_table.id;`;
 
-    var query = `SELECT lm.*, 
-                CASE WHEN lr.id is NOT NULL THEN lm.leave_days - SUM(datediff(lr.end_date, lr.start_date) + 1) 
-                ELSE lm.leave_days
-                END as remaining_leave_days 
-                FROM leave_master lm LEFT JOIN leave_request lr ON lr.leave_master_id = lm.id AND lr.requested_by = ${req.query.requested_by} 
-                GROUP by lm.id;`;
+var result = db.queryHandler(query);
 
-  var result = db.queryHandler(query);
-
-  result
-    .then((data) => {
-      res.json(data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+result
+  .then((data) => {
+    res.json(data);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 };
 
 exports.insertLeaveMasterData = function (req, res) {

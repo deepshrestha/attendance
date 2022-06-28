@@ -3,6 +3,8 @@ var transaction = require("../db").transaction;
 
 const mailSenderHelper = require("../helpers/mailSender");
 
+const leaveMaster = require('./leaveMaster')
+
 exports.getById = function (req, res) {
   //console.log(req.params.id)
   var query = `select id,
@@ -287,6 +289,27 @@ exports.processLeaveRequest = function (req, res) {
 
     result
       .then((data) => {
+        if(statusName === 'Approved'){
+          var query12 = `select m.leave_days - coalesce(sum(r.leave_count_days), 0) as total_leave_count,
+                                m.name
+                        from leave_master m
+                        join leave_request r1 on r1.id = ${req.body.leave_request_id}
+                        join leave_request r on (r.leave_master_id = m.id AND r.leave_master_id = r1.leave_master_id AND r.requested_by = r1.requested_by)
+                        left join leave_request_detail d on (r.id = d.leave_request_id and status_id = 1)
+                        where d.leave_request_id is not null 
+                        `;
+
+            db.queryHandler(query12).then((data12) => {
+              if(data12[0].total_leave_count < 0){
+                transaction.rollback();
+                res.json({
+                  success: false,
+                  message: `Approval failed. Leave limit has exceeded for this leave.`,
+                });
+              }
+            })
+        }
+
         var query1 = `select e.full_name as full_name, e1.full_name as leave_processor, e.email_id, 
             lm.name as leave_type_name,
             fn_dateFormat(lr.start_date) as start_date,

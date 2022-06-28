@@ -33,18 +33,10 @@ export class LeaveMasterService {
       .pipe(map((data) => data));
   }
 
-  getLeavesDataWithRemainingLeavesFromService(): Observable<any> {
+  getDataWithRemainingLeavesFromService(): Observable<any> {
     return this.http
       .get<any[]>(`http://localhost:3000/api/leavesOfRequestor?requested_by=${this.tokenStorageService.getUser()["id"]}`, httpOptions)
-      .pipe(
-        map((data) => {
-          const leaves = [];
-          data.forEach((element) => {
-            leaves.push({ id: element.id, remainingLeaveDays: element.remaining_leave_days, value: `${element.name}` });
-          });
-          return leaves;
-        })
-      );
+      .pipe(map((data) => data));
   }  
 
   getLeavesData(): Observable<any[]> {
