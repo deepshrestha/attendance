@@ -1,0 +1,59 @@
+<app-home>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card card-primary card-outline">
+                <div class="card-body box-profile">
+                    <div class="text-center">
+                        <img
+                        class="profile-user-img img-circle"
+                        src="/public/dist/img/user2-160x160.jpg"
+                        alt="User profile picture"
+                        />
+                    </div>
+                    <h3 class="profile-username text-center">Donald Chapman</h3>
+                    <p class="text-muted text-center">Software Engineer</p>
+                    <a href="#" class="btn btn-primary btn-block"><b>Change Photo</b></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#profile" data-toggle="tab">Profile</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="active tab-pane" id="profile">
+                        <div class="form-group">
+                            <label for="inputName" class="m-3">Name</label>
+                            <span>{{ profile.full_name }}</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail" class="m-3">Email</label>
+                            <span>{{ profile.email_id }}</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputDob" class="m-3">Date of Birth</label>
+                            <span>{{ profile.dob }}</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputContactNo" class="m-3">Contact No</label>
+                            <span>{{ profile.contact_no }}</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputAddress" class="m-3">Address</label>
+                            <span>{{ profile.address }}</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputJoinDate" class="m-3">Joining Date</label>
+                            <span>{{ profile.join_date }}</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputAgreementType" class="m-3">Agreement Type</label>
+                            <span>{{ profile.agreement_type }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-home>

@@ -17,6 +17,7 @@ var leaveStatus = require('./routes/leaves/leaveStatusRouter');
 var leaveRequest = require('./routes/leaves/leaveRequestRouter');
 var holidays = require('./routes/holidays/myHolidayRouter');
 var nepaliPatroHolidays = require('./routes/nepaliPatro/nepaliPatroHolidaysRouter');
+var profile = require('./routes/profile/profileRouter');
 
 app.use(cors());
 
@@ -34,7 +35,8 @@ app.use('/', leaveMaster);
 app.use('/', leaveStatus);
 app.use('/', leaveRequest);
 app.use('/', holidays);
-app.use('/', nepaliPatroHolidays)
+app.use('/', nepaliPatroHolidays);
+app.use('/', profile);
 
 /* app.post("/getRealTimeData", (req, res) => {
     let userId = req.body.userId;

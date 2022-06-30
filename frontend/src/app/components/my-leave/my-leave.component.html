@@ -54,7 +54,7 @@
     </select>
     <div *ngIf="selectedLeaveType.length > 0" class="row w-100 modal-text-warning">
       <div class="col-md-8">{{ message }}</div>
-      <div class="col-md-4 text-right">
+      <div class="col-md-4 text-right" style="cursor: pointer;">
         <i class="fa fa-list-alt mr-1" style="color: #3a507e;" 
               data-toggle="modal"
               data-target="#showTableModal"
@@ -163,11 +163,14 @@
               </select>
               <div *ngIf="selectedLeaveType.length > 0" class="row w-100 modal-text-warning">
                 <div class="col-md-8">{{ message }}</div>
-                <div class="col-md-4 text-right" >
-                  <i class="fa fa-list-alt mr-1" style="color: #3a507e;" 
-                  data-toggle="modal"
-                  data-target="#showTableModal"
-                  (click)="onToggleTableModal()"></i>View leave details</div>
+                <div class="col-md-4 text-right pointer" 
+                     data-toggle="modal"
+                     data-target="#showTableModal" 
+                     (click)="onToggleTableModal()"
+                >
+                  <i class="fa fa-list-alt mr-1" style="color: #3a507e;"></i>
+                  View leave details
+                </div>
               </div>
 
               <div *ngIf="errors.leave_master_id" class="modal-text-danger">
@@ -259,9 +262,9 @@
 <ng-template #tableModalBody>
   <thead>
     <tr>
-      <th>S.N</th>
-      <th>Leave Name</th>
-      <th>Remaining Leave Days</th>
+      <th width="15%">S.N</th>
+      <th width="50%">Leave Name</th>
+      <th width="35%">Remaining Leave Days</th>
     </tr>
   </thead>
   <tbody>

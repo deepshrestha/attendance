@@ -687,15 +687,13 @@ div .search-results {
     background-color: #f7f7f7;
     box-shadow: 0px 2px 2px rgb(0 0 0 / 30%);
 }
-
-/*---------- Create device group Multiselect Starts ----------*/
+/*---------- Create Multiselect Starts ----------*/
 .select2-container--default.select2-container--focus
     .select2-selection--multiple,
 .select2-container--default.select2-container--focus
     .select2-selection--single {
     border: 1px solid #008ed4 !important;
 }
-
 .select2-container--default.select2-container--open .select2-selection--single {
     border-color: #008ed4 !important;
 }
@@ -714,6 +712,9 @@ div .search-results {
     border: 1px solid #ccc !important;
     padding-bottom: 0px;
 }
+/* span.select2.select2-container.select2-container--default {
+    width: calc(100% - 150px);
+} */
 .select2-container--default
     .select2-selection--multiple
     .select2-selection__choice__remove {
@@ -809,7 +810,14 @@ li.select2-results__option.select2-results__option--selectable.select2-results__
     color: #fff !important;
     background-color: #c82333;
 }
-/*---------- Create device group Multiselect Ends ----------*/
+.select2-container .select2-selection--single,
+.select2-container .select2-selection--multiple {
+    height: 32px !important;
+}
+span.select2.select2-container.select2-container--default {
+    width: calc(100% - 150px) !important;
+}
+/*---------- Create Multiselect Ends ----------*/
 
 /* Reset Filter */
 
@@ -957,14 +965,120 @@ input.form-control.datetimepicker-input {
     border: solid #fff;
     border-width: 0 2px 2px 0;
 }
-.select2-container .select2-selection--single,
-.select2-container .select2-selection--multiple {
-    height: 32px !important;
-}
 tbody > tr > td > span.badge {
     font-size: 12px;
     line-height: 1.5;
 }
 .daterangepicker th.available:hover {
     background-color: #357EBD !important;
+}
+.pointer {
+    cursor: pointer;
+}
+.single-menu.nav-link.active {
+    background-color: rgba(255,255,255,.9) !important;
+    color: #343a40 !important;
+}
+.box.box-primary {
+    border-top-color: #3c8dbc;
+}
+.box {
+    position: relative;
+    border-radius: 3px;
+    background: #ffffff;
+    border-top: 3px solid #d2d6de;
+    margin-bottom: 20px;
+    width: 100%;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 10%);
+}
+.box-header.with-border {
+    border-bottom: 1px solid #f4f4f4;
+}
+.box-header {
+    color: #444;
+    display: block;
+    padding: 10px;
+    position: relative;
+}
+.box-body {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    padding: 10px;
+}
+.nav-tabs-custom {
+    margin-bottom: 20px;
+    background: #fff;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 10%);
+    border-radius: 3px;
+}
+.nav-tabs-custom > .nav-tabs {
+    margin: 0;
+    border-bottom-color: #f4f4f4;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+}
+.nav-tabs {
+    border-bottom: 1px solid #ddd;
+}
+.nav {
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+.nav-tabs-custom > .nav-tabs > li:first-of-type {
+    margin-left: 0;
+}
+.nav-tabs-custom > .nav-tabs > li.active{
+    border-top-color: #3c8dbc;
+}
+.nav-tabs-custom>.nav-tabs>li {
+    border-top: 3px solid transparent;
+    margin-bottom: -2px;
+    margin-right: 5px;
+}
+.nav-tabs-custom>.nav-tabs>li:first-of-type.active>a {
+    border-left-color: transparent;
+}
+.nav-tabs-custom > .nav-tabs> li.active>a {
+    border-top-color: transparent;
+    border-left-color: #f4f4f4;
+    border-right-color: #f4f4f4;
+}
+.nav-tabs-custom>.nav-tabs>li.active>a, 
+.nav-tabs-custom>.nav-tabs>li.active:hover>a {
+    background-color: #fff;
+    color: #444;
+    font-size: 14px;
+    letter-spacing: 0.25px;
+}
+.nav-tabs-custom>.nav-tabs>li>a, 
+.nav-tabs-custom>.nav-tabs>li>a:hover {
+    background: transparent;
+    margin: 0;
+}
+.nav-tabs-custom>.nav-tabs>li>a {
+    color: #444;
+    border-radius: 0;
+}
+.nav-tabs>li>a {
+    margin-right: 2px;
+    line-height: 1.42857143;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
+}
+.nav>li>a {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+.tab-content > .tab-pane > .form-group {
+    margin-bottom: 0;
+    border-bottom: 1px solid #f4f4f4;
+}
+.tab-content > .tab-pane > .form-group > label {
+    display: inline-block;
+    max-width: 25%;
+    font-weight: 600;
 }
