@@ -57,8 +57,8 @@ exports.insertWorkingDayData = function (req, res) {
                     '1')
                 `;
 
-  console.log(query);
-  //return
+  //console.log(query);
+  
   var result = db.queryHandler(query);
 
   result
@@ -77,14 +77,14 @@ exports.insertWorkingDayData = function (req, res) {
 };
 
 exports.updateWorkingDayData = function (req, res) {
-    console.log(req.body);
+    //console.log(req.body);
     var query = `update working_days 
                    set working_day = '${req.body.working_day}', 
                    start_time = '${req.body.start_time}',  
                    end_time = '${req.body.end_time}'
                    where id = '${req.body.id}'`;
   
-    console.log(query);
+    //console.log(query);
   
     var result = db.queryHandler(query);
   

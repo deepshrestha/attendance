@@ -24,7 +24,12 @@ exports.import = function (req, res) {
                   ${req.body.created_by})`;
             await db.queryHandler(query1);
           }
-          res.status(200).send({message: "Holidays Import success"});
+          res.status(200).send(
+            {
+              success: true,
+              message: "Holidays Import success"
+            }
+          );
         };
         importHolidays();
       });

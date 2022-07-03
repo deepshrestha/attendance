@@ -600,7 +600,8 @@ th.table-total_hours,
 th.table-leave_days {
     width: 10%;
 }
-th.table-holiday_name {
+th.table-holiday_name,
+th.table-designation_name {
     width: 50%;
 }
 th.table-action,

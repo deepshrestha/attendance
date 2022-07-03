@@ -3,9 +3,9 @@ var db = require('../db').db;
 exports.getById = function(req, res) {
     //console.log(req.params.id)
     var query = `select id,
-                        name,
+                        designation_name,
                         fn_dateTimeFormat(created_at) as created_at
-                from leave_status
+                from designations
                 where id = ${req.params.id}`;
 
     var result = db.queryHandler(query);
@@ -19,14 +19,14 @@ exports.getById = function(req, res) {
 };
 
 exports.getAll = function(req, res) {
-    var query = `select row_number() over(order by ls.id) as sn,
-                        ls.id,
-                        name,
-                        fn_dateTimeFormat(ls.created_at) as created_at,
+    var query = `select row_number() over(order by d.id) as sn,
+                        d.id,
+                        designation_name,
+                        fn_dateTimeFormat(d.created_at) as created_at,
                         e.full_name as created_by
-                from leave_status ls
-                join employees e on ls.created_by = e.id
-                order by ls.id`;
+                from designations d
+                join employees e on d.created_by = e.id
+                order by d.id`;
 
     var result = db.queryHandler(query);
 
@@ -38,10 +38,10 @@ exports.getAll = function(req, res) {
     })
 };
 
-exports.insertLeaveStatusData = function(req, res) {
+exports.insertDesignationData = function(req, res) {
     //console.log(req.body);
-    var query = `insert into leave_status (name, created_at, created_by) 
-                 values ('${req.body.name}', now(), '${req.body.created_by}')`;
+    var query = `insert into designations (designation_name, created_at, created_by) 
+                 values ('${req.body.designation_name}', now(), '${req.body.created_by}')`;
 
     //console.log(query);
     
@@ -61,10 +61,10 @@ exports.insertLeaveStatusData = function(req, res) {
     })
 };
 
-exports.updateLeaveStatusData = function(req, res) {
+exports.updateDesignationData = function(req, res) {
     //console.log(req.body);
-    var query = `update leave_status 
-                 set name = '${req.body.name}'
+    var query = `update designations 
+                 set designation_name = '${req.body.designation_name}'
                  where id = '${req.body.id}'`;
 
     //console.log(query);

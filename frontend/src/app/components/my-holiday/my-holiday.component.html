@@ -1,26 +1,10 @@
-<div *ngIf="showTable; then table; else form"></div>
-
-<ng-template #table>
-  <app-home>
-    <app-table
-      type="import"
-      (onImportHandler)="importData()"
-      [tableHeaders]="tableHeaders"
-      [tableData]="tableData"
-      [paginationConfig]="paginationConfig"
-    >
-    </app-table>
-    <!-- <app-table type="select" 
-                [options]="options"
-                (onAddHandler)="showForm()" 
-                [tableHeaders]="tableHeaders" 
-                [tableData]="tableData" 
-                [paginationConfig]="paginationConfig" 
-                modalTitle="Edit" 
-                [modalBody]="modalBody" 
-                (onSaveHandler)="editInfo($event, this)" 
-                (onDisplayModalData)="onDisplayModalData($event)"
-                (onCancelModalHandler)="onCancelModal()" >
-        </app-table> -->
-  </app-home>
-</ng-template>
+<app-home>
+  <app-table
+    type="import"
+    (onImportHandler)="importData()"
+    [tableHeaders]="tableHeaders"
+    [tableData]="tableData"
+    [paginationConfig]="paginationConfig"
+  >
+  </app-table>
+</app-home>

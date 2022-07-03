@@ -43,7 +43,7 @@ exports.insertDepartmentData = function(req, res) {
     var query = `insert into departments (department_name, created_at, created_by) 
                  values ('${req.body.department_name}', now(), '${req.body.created_by}')`;
 
-    console.log(query);
+    //console.log(query);
     
     var result = db.queryHandler(query);
 
@@ -67,7 +67,7 @@ exports.updateDepartmentData = function(req, res) {
                  set department_name = '${req.body.department_name}'
                  where id = '${req.body.id}'`;
 
-    console.log(query);
+    //console.log(query);
     
     var result = db.queryHandler(query);
 

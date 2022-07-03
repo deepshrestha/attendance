@@ -4,15 +4,21 @@
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
                     <div class="text-center">
+                        <!-- <img
+                        class="profile-user-img img-circle"
+                        [src]="image.length > 0 ? image : (profile.photo ? profile.photo : 'http://localhost:3000/images/noimgavailable.png')"
+                        alt="User profile picture"
+                        /> -->
                         <img
                         class="profile-user-img img-circle"
-                        src="/public/dist/img/user2-160x160.jpg"
+                        [src]="profile.photo ? profile.photo : 'http://localhost:3000/images/noimgavailable.png'"
                         alt="User profile picture"
                         />
                     </div>
-                    <h3 class="profile-username text-center">Donald Chapman</h3>
-                    <p class="text-muted text-center">Software Engineer</p>
-                    <a href="#" class="btn btn-primary btn-block"><b>Change Photo</b></a>
+                    <h3 class="profile-username text-center">{{ profile.full_name }}</h3>
+                    <p class="text-muted text-center">{{ profile.designation }}</p>
+                    <input type="file" #image id="image" accept="image/*" (change)="onFileSelected($event)"/>
+                    <button type="button" class="btn btn-primary btn-block mt-2" (click)="onUploadFileHandler()" [disabled]="!image.value">Upload Photo</button>
                 </div>
             </div>
         </div>

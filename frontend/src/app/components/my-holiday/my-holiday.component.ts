@@ -53,7 +53,7 @@ export class MyHolidayComponent implements OnInit, OnDestroy {
         this.notification.showMessage('info', "Importing holidays. Please wait.")
         this.myHolidayService.importNepaliPatroHolidayDataFromService(data)
             .subscribe(res => {
-                if(res.message){
+                if(res.success){
                     this.notification.showMessage('success', res.message)
                     this.getAll();
                 }

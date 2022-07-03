@@ -19,45 +19,43 @@
 </ng-template>
 
 <ng-template #modalBody>
+  <input type="hidden" name="role_id" [(ngModel)]="roles.id" />
   <div class="input-group">
-    <input type="hidden" name="role_id" [(ngModel)]="roles.id" />
-    <div class="input-group">
-      <label>Role Name</label>
-      <input
-        type="text"
-        autofocus
-        class="inputText w-75"
-        name="role_name"
-        #role_name="ngModel"
-        [(ngModel)]="roles.role_name"
-        placeholder="Role Name"
-        (keyup)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)"
-      />
-      <div *ngIf="errors.role_name" class="modal-text-danger">
-        {{ errors.role_name }}
-      </div>
+    <label>Role Name</label>
+    <input
+      type="text"
+      autofocus
+      class="inputText w-75"
+      name="role_name"
+      #role_name="ngModel"
+      [(ngModel)]="roles.role_name"
+      placeholder="Role Name"
+      (keyup)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    />
+    <div *ngIf="errors.role_name" class="modal-text-danger">
+      {{ errors.role_name }}
     </div>
-    <div class="input-group">
-      <label>Parent Role</label>
-      <select
-        class="inputText w-75"
-        name="parent_id"
-        [(ngModel)]="roles.parent_id"
-        #parent_id="ngModel"
-        (change)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)"
-      >
-        <option [value]="" selected disabled="disabled">Parent Role</option>
-        <option [value]="">None</option>
-        <option *ngFor="let option of roleOptions" [value]="option.id">
-          {{ option.value }}
-        </option>
-      </select>
-      <!-- <div class="modal-text-danger">
-        {{ errors.parent_id }}
-      </div> -->
-    </div>
+  </div>
+  <div class="input-group">
+    <label>Parent Role</label>
+    <select
+      class="inputText w-75"
+      name="parent_id"
+      [(ngModel)]="roles.parent_id"
+      #parent_id="ngModel"
+      (change)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    >
+      <option [value]="" selected disabled="disabled">Parent Role</option>
+      <option [value]="">None</option>
+      <option *ngFor="let option of roleOptions" [value]="option.id">
+        {{ option.value }}
+      </option>
+    </select>
+    <!-- <div class="modal-text-danger">
+      {{ errors.parent_id }}
+    </div> -->
   </div>
 </ng-template>
 

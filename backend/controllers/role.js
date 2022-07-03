@@ -48,7 +48,7 @@ exports.insertRoleData = function (req, res) {
                 '1'
               )`;
 
-  console.log(query);
+  //console.log(query);
   
   var result = db.queryHandler(query);
 
@@ -74,7 +74,7 @@ exports.updateRoleData = function (req, res) {
                  parent_id = '${req.body.parent_id}'
                  where id = '${req.body.id}'`;
 
-  console.log(query);
+  //console.log(query);
 
   var result = db.queryHandler(query);
 

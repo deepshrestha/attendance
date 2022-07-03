@@ -46,8 +46,8 @@ exports.insertShiftData = function(req, res) {
     var query = `insert into shifts (shift_name, start_week_day, allow_overtime, start_overtime, created_at, created_by) 
                 values ('${req.body.shift_name}', '${req.body.start_week_day}', ${req.body.allow_overtime}, '${req.body.start_overtime}', now(), '1')`;
 
-    console.log(query);
-    //return
+    //console.log(query);
+    
     var result = db.queryHandler(query);
 
     result.then(data => {
@@ -65,7 +65,7 @@ exports.insertShiftData = function(req, res) {
 };
 
 exports.updateShiftData = function (req, res) {
-    console.log(req.body);
+    //console.log(req.body);
     var query = `update shifts 
                    set shift_name = '${req.body.shift_name}',
                    start_week_day = '${req.body.start_week_day}', 
@@ -73,7 +73,7 @@ exports.updateShiftData = function (req, res) {
                    start_overtime = '${req.body.start_overtime}'
                    where id = '${req.body.id}'`;
   
-    console.log(query);
+    //console.log(query);
   
     var result = db.queryHandler(query);
   
@@ -91,12 +91,12 @@ exports.updateShiftData = function (req, res) {
   };
 
   exports.updateAllowOvertime = function (req, res) {
-    console.log(req.body);
+    //console.log(req.body);
     var query = `update shifts 
                    set allow_overtime = ${req.body.allow_overtime}
                    where id = '${req.body.id}'`;
   
-    console.log(query);
+    //console.log(query);
   
     var result = db.queryHandler(query);
   

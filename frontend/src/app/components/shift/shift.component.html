@@ -20,83 +20,81 @@
 </ng-template>
 
 <ng-template #modalBody>
+  <input type="hidden" name="shift_id" [(ngModel)]="shifts.id" />
   <div class="input-group">
-    <input type="hidden" name="shift_id" [(ngModel)]="shifts.id" />
-    <div class="input-group">
-      <label>Shift Name</label>
-      <select
-        class="inputText w-75"
-        name="shift_name"
-        [(ngModel)]="shifts.shift_name"
-        #shift_name="ngModel"
-        (change)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)"
-      >
-        <option [value]="" selected disabled="disabled">Shift Name</option>
-        <option *ngFor="let option of shiftOptions" [value]="option.id">
-          {{ option.value }}
-        </option>
-      </select>
-      <div class="modal-text-danger">
-        {{ errors.shift_name }}
-      </div>
+    <label>Shift Name</label>
+    <select
+      class="inputText w-75"
+      name="shift_name"
+      [(ngModel)]="shifts.shift_name"
+      #shift_name="ngModel"
+      (change)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    >
+      <option [value]="" selected disabled="disabled">Shift Name</option>
+      <option *ngFor="let option of shiftOptions" [value]="option.id">
+        {{ option.value }}
+      </option>
+    </select>
+    <div class="modal-text-danger">
+      {{ errors.shift_name }}
     </div>
-    <div class="input-group">
-      <label>Start Week Day</label>
-      <select
-        class="inputText w-75"
-        name="start_week_day"
-        [(ngModel)]="shifts.start_week_day"
-        #start_week_day="ngModel"
-        (change)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)"
+  </div>
+  <div class="input-group">
+    <label>Start Week Day</label>
+    <select
+      class="inputText w-75"
+      name="start_week_day"
+      [(ngModel)]="shifts.start_week_day"
+      #start_week_day="ngModel"
+      (change)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    >
+      <option [value]="" selected disabled="disabled">Start Week Day</option>
+      <option
+        *ngFor="let option of start_week_dayOptions"
+        [value]="option.id"
       >
-        <option [value]="" selected disabled="disabled">Start Week Day</option>
-        <option
-          *ngFor="let option of start_week_dayOptions"
-          [value]="option.id"
-        >
-          {{ option.value }}
-        </option>
-      </select>
-      <div class="modal-text-danger">
-        {{ errors.start_week_day }}
-      </div>
+        {{ option.value }}
+      </option>
+    </select>
+    <div class="modal-text-danger">
+      {{ errors.start_week_day }}
     </div>
-    <!-- <div class="form-group">
-      <label>Allow Over Time</label>
-      <input
-        type="checkbox"
-        class=""
-        name="allow_overtime"
-        [(ngModel)]="shifts.allow_overtime"
-        #allow_overtime="ngModel"
-        placeholder="Allow Over Time"
-        (change)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)"
-      />
-      <div class="modal-text-danger">
-        {{ errors.allow_overtime }}
-      </div>
-    </div> -->
-    <div class="input-group">
-      <label>Start Over Time</label>
-      <input
-        type="number"
-        class="inputText"
-        step="1"
-        min="0"
-        max="3"
-        name="start_overtime"
-        [(ngModel)]="shifts.start_overtime"
-        #start_overtime="ngModel"
-        placeholder="Start Over Time"
-        (keyup)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)"
-      />
-      <div class="modal-text-danger">
-        {{ errors.start_overtime }}
-      </div>
+  </div>
+  <!-- <div class="form-group">
+    <label>Allow Over Time</label>
+    <input
+      type="checkbox"
+      class=""
+      name="allow_overtime"
+      [(ngModel)]="shifts.allow_overtime"
+      #allow_overtime="ngModel"
+      placeholder="Allow Over Time"
+      (change)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    />
+    <div class="modal-text-danger">
+      {{ errors.allow_overtime }}
+    </div>
+  </div> -->
+  <div class="input-group">
+    <label>Start Over Time</label>
+    <input
+      type="number"
+      class="inputText"
+      step="1"
+      min="0"
+      max="3"
+      name="start_overtime"
+      [(ngModel)]="shifts.start_overtime"
+      #start_overtime="ngModel"
+      placeholder="Start Over Time"
+      (keyup)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    />
+    <div class="modal-text-danger">
+      {{ errors.start_overtime }}
     </div>
   </div>
 </ng-template>

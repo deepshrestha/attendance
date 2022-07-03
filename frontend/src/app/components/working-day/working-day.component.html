@@ -19,94 +19,92 @@
 </ng-template>
 
 <ng-template #modalBody>
+  <input type="hidden" name="working_day_id" [(ngModel)]="working_days.id" />
   <div class="input-group">
-    <input type="hidden" name="working_day_id" [(ngModel)]="working_days.id" />
-    <div class="input-group">
-      <label class="text-sm">Working Day</label>
-      <select
-        class="inputText w-75"
-        name="working_day"
-        #wname
-        [(ngModel)]="working_days.working_day"
-        #working_day="ngModel"
-        (change)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)"
-      >
-        <option [value]="" selected disabled="disabled">Working Day</option>
-        <option *ngFor="let option of working_dayOptions" [value]="option.id">
-          {{ option.value }}
-        </option>
-      </select>
-      <div class="modal-text-danger">
-        {{ errors.working_day }}
-      </div>
+    <label class="text-sm">Working Day</label>
+    <select
+      class="inputText w-75"
+      name="working_day"
+      #wname
+      [(ngModel)]="working_days.working_day"
+      #working_day="ngModel"
+      (change)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    >
+      <option [value]="" selected disabled="disabled">Working Day</option>
+      <option *ngFor="let option of working_dayOptions" [value]="option.id">
+        {{ option.value }}
+      </option>
+    </select>
+    <div class="modal-text-danger">
+      {{ errors.working_day }}
     </div>
-    <div class="row">
-      <div class="col-md-6">
-        <div class="bootstrap-timepicker">
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="bootstrap-timepicker">
+        <div
+          class="input-group date"
+          id="startTimePicker"
+          data-target-input="nearest"
+        >
+          <label class="text-sm">Start Time</label>
+          <input
+            type="text"
+            name="start_time"
+            class="form-control datetimepicker-input"
+            [(ngModel)]="working_days.start_time"
+            #start_time="ngModel"
+            data-target="#startTimePicker"
+            placeholder="Start Time"
+            (input)="onHandleChange($event)"
+            (blur)="onHandleBlur($event)"
+          />
           <div
-            class="input-group date"
-            id="startTimePicker"
-            data-target-input="nearest"
+            class="input-group-append"
+            data-target="#startTimePicker"
+            data-toggle="datetimepicker"
           >
-            <label class="text-sm">Start Time</label>
-            <input
-              type="text"
-              name="start_time"
-              class="form-control datetimepicker-input"
-              [(ngModel)]="working_days.start_time"
-              #start_time="ngModel"
-              data-target="#startTimePicker"
-              placeholder="Start Time"
-              (input)="onHandleChange($event)"
-              (blur)="onHandleBlur($event)"
-            />
-            <div
-              class="input-group-append"
-              data-target="#startTimePicker"
-              data-toggle="datetimepicker"
-            >
-              <div class="input-group-text">
-                <i class="far fa-clock"></i>
-              </div>
+            <div class="input-group-text">
+              <i class="far fa-clock"></i>
             </div>
-            <div class="modal-text-danger">
-              {{ errors.start_time }}
-            </div>
+          </div>
+          <div class="modal-text-danger">
+            {{ errors.start_time }}
           </div>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="bootstrap-timepicker">
+    </div>
+    <div class="col-md-6">
+      <div class="bootstrap-timepicker">
+        <div
+          class="input-group date"
+          id="endTimePicker"
+          data-target-input="nearest"
+        >
+          <label class="text-sm">End Time</label>
+          <input
+            type="text"
+            class="form-control datetimepicker-input"
+            name="end_time"
+            [(ngModel)]="working_days.end_time"
+            #end_time="ngModel"
+            data-target="#endTimePicker"
+            placeholder="End Time"
+            (change)="onHandleChange($event)"
+            (blur)="onHandleBlur($event)"
+          />
           <div
-            class="input-group date"
-            id="endTimePicker"
-            data-target-input="nearest"
+            class="input-group-append"
+            data-target="#endTimePicker"
+            data-toggle="datetimepicker"
           >
-            <label class="text-sm">End Time</label>
-            <input
-              type="text"
-              class="form-control datetimepicker-input"
-              name="end_time"
-              [(ngModel)]="working_days.end_time"
-              #end_time="ngModel"
-              data-target="#endTimePicker"
-              placeholder="End Time"
-              (change)="onHandleChange($event)"
-              (blur)="onHandleBlur($event)"
-            />
-            <div
-              class="input-group-append"
-              data-target="#endTimePicker"
-              data-toggle="datetimepicker"
-            >
-              <div class="input-group-text">
-                <i class="far fa-clock"></i>
-              </div>
+            <div class="input-group-text">
+              <i class="far fa-clock"></i>
             </div>
-            <div class="modal-text-danger">
-              {{ errors.end_time }}
-            </div>
+          </div>
+          <div class="modal-text-danger">
+            {{ errors.end_time }}
           </div>
         </div>
       </div>

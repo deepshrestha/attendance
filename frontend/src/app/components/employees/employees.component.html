@@ -19,146 +19,201 @@
 </ng-template>
 
 <ng-template #modalBody>
+  <input type="hidden" name="employee_id" [(ngModel)]="employees.id" />
   <div class="input-group">
-    <input type="hidden" name="employee_id" [(ngModel)]="employees.id" />
-    <div class="input-group">
-      <label>Full Name</label>
-      <input
-        type="text"
-        autofocus
-        class="inputText w-75"
-        name="full_name"
-        #full_name="ngModel"
-        [(ngModel)]="employees.full_name"
-        placeholder="Full Name"
-        (keyup)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)"
-      />
-      <div *ngIf="errors.full_name" class="modal-text-danger">
-        {{ errors.full_name }}
-      </div>
+    <label>Full Name</label>
+    <input
+      type="text"
+      autofocus
+      class="inputText w-75"
+      name="full_name"
+      #full_name="ngModel"
+      [(ngModel)]="employees.full_name"
+      placeholder="Full Name"
+      (keyup)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    />
+    <div *ngIf="errors.full_name" class="modal-text-danger">
+      {{ errors.full_name }}
     </div>
+  </div>
 
-    <div class="input-group">
-      <label>Email Address</label>
-      <input
-        type="text"
-        class="inputText w-75"
-        name="email_id"
-        #email_id="ngModel"
-        [(ngModel)]="employees.email_id"
-        placeholder="Email Address"
-        (keyup)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)"
-      />
-      <div *ngIf="errors.email_id" class="modal-text-danger">
-        {{ errors.email_id }}
-      </div>
+  <div class="input-group">
+    <label>Email Address</label>
+    <input
+      type="text"
+      class="inputText w-75"
+      name="email_id"
+      #email_id="ngModel"
+      [(ngModel)]="employees.email_id"
+      placeholder="Email Address"
+      (keyup)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    />
+    <div *ngIf="errors.email_id" class="modal-text-danger">
+      {{ errors.email_id }}
     </div>
-    <div class="input-group">
-      <label>Address</label>
-      <input
-        type="text"
-        class="inputText w-75"
-        name="address"
-        #address="ngModel"
-        [(ngModel)]="employees.address"
-        placeholder="Address"
-        (keyup)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)"
-      />
-      <div *ngIf="errors.address" class="modal-text-danger">
-        {{ errors.address }}
-      </div>
+  </div>
+  <div class="input-group">
+    <label>Address</label>
+    <input
+      type="text"
+      class="inputText w-75"
+      name="address"
+      #address="ngModel"
+      [(ngModel)]="employees.address"
+      placeholder="Address"
+      (keyup)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    />
+    <div *ngIf="errors.address" class="modal-text-danger">
+      {{ errors.address }}
     </div>
-    <div class="input-group">
-      <label>Contact No</label>
-      <input
-        type="text"
-        class="inputText w-75"
-        name="contact_no"
-        #contact_no="ngModel"
-        [(ngModel)]="employees.contact_no"
-        placeholder="Contact No"
-        (keyup)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)"
-      />
-      <div *ngIf="errors.contact_no" class="modal-text-danger">
-        {{ errors.contact_no }}
-      </div>
+  </div>
+  <div class="input-group">
+    <label>Contact No</label>
+    <input
+      type="text"
+      class="inputText w-75"
+      name="contact_no"
+      #contact_no="ngModel"
+      [(ngModel)]="employees.contact_no"
+      placeholder="Contact No"
+      (keyup)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    />
+    <div *ngIf="errors.contact_no" class="modal-text-danger">
+      {{ errors.contact_no }}
     </div>
-    <div class="input-group">
-      <label>Date of Birth</label>
-      <input
-        type="date"
-        class="inputText w-75"
-        name="dob"
-        #dob="ngModel"
-        [(ngModel)]="employees.dob"
-        placeholder="Date of Birth"
-        (keyup)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)"
-      />
-      <div *ngIf="errors.dob" class="modal-text-danger">
-        {{ errors.dob }}
-      </div>
+  </div>
+  <div class="input-group">
+    <label>Date of Birth</label>
+    <input
+      type="date"
+      class="inputText w-75"
+      name="dob"
+      #dob="ngModel"
+      [(ngModel)]="employees.dob"
+      placeholder="Date of Birth"
+      (keyup)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    />
+    <div *ngIf="errors.dob" class="modal-text-danger">
+      {{ errors.dob }}
     </div>
-    <div class="input-group">
-      <label>Role</label>
-      <select
-        class="inputText w-75"
-        name="role_id"
-        [ngModel]="employees.role_id"
-        #role_id="ngModel"
-        (change)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)"
+  </div>
+  <div class="input-group">
+    <label>Role</label>
+    <select
+      class="inputText w-75"
+      name="role_id"
+      [(ngModel)]="employees.role_id"
+      #role_id="ngModel"
+      (change)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    >
+      <option [ngValue]="" selected disabled="disabled">Role</option>
+      <option *ngFor="let option of roleOptions" [value]="option.id">
+        {{ option.value }}
+      </option>
+    </select>
+    <div class="modal-text-danger">
+      {{ errors.role_id }}
+    </div>
+  </div>
+  <div class="input-group">
+    <label>Department</label>
+    <select
+      class="inputText w-75"
+      name="department_id"
+      [(ngModel)]="employees.department_id"
+      #department_id="ngModel"
+      (change)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    >
+      <option [ngValue]="" selected disabled="disabled">Department</option>
+      <option *ngFor="let option of departmentOptions" [value]="option.id">
+        {{ option.value }}
+      </option>
+    </select>
+    <div class="modal-text-danger">
+      {{ errors.department_id }}
+    </div>
+  </div>
+  <div class="input-group">
+    <label>Shift</label>
+    <select
+      class="inputText w-75"
+      name="shift_id"
+      [(ngModel)]="employees.shift_id"
+      #shift_id="ngModel"
+      (change)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    >
+      <option [ngValue]="" selected disabled="disabled">Shift</option>
+      <option *ngFor="let option of shiftOptions" [value]="option.id">
+        {{ option.value }}
+      </option>
+    </select>
+    <div class="modal-text-danger">
+      {{ errors.shift_id }}
+    </div>
+  </div>
+  <div class="input-group">
+    <label>Designation</label>
+    <select
+      class="inputText w-75"
+      name="designation_id"
+      [(ngModel)]="employees.designation_id"
+      #designation_id="ngModel"
+      (change)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    >
+      <option [ngValue]="" selected disabled="disabled">Designation</option>
+      <option *ngFor="let option of designationOptions" [value]="option.id">
+        {{ option.value }}
+      </option>
+    </select>
+    <div class="modal-text-danger">
+      {{ errors.designation_id }}
+    </div>
+  </div>
+  <div class="input-group">
+    <label>Joining Date</label>
+    <input
+      type="date"
+      class="inputText w-75"
+      name="join_date"
+      #join_date="ngModel"
+      [(ngModel)]="employees.join_date"
+      placeholder="Joining Date"
+      (keyup)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    />
+    <div *ngIf="errors.join_date" class="modal-text-danger">
+      {{ errors.join_date }}
+    </div>
+  </div>
+  <div class="input-group">
+    <label>Agreement Type</label>
+    <select
+      class="inputText w-75"
+      name="agreement_type"
+      [(ngModel)]="employees.agreement_type"
+      #agreement_type="ngModel"
+      (change)="onHandleChange($event)"
+      (blur)="onHandleBlur($event)"
+    >
+      <option [ngValue]="" selected disabled="disabled">Agreement Type</option>
+      <option
+        *ngFor="let option of agreementOptions"
+        [value]="option.id"
       >
-        <option [ngValue]="" selected disabled="disabled">Role</option>
-        <option *ngFor="let option of roleOptions" [value]="option.id">
-          {{ option.value }}
-        </option>
-      </select>
-      <div class="modal-text-danger">
-        {{ errors.role_id }}
-      </div>
-    </div>
-    <div class="input-group">
-      <label>Department</label>
-      <select
-        class="inputText w-75"
-        name="department_id"
-        [ngModel]="employees.department_id"
-        #department_id="ngModel"
-        (change)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)"
-      >
-        <option [ngValue]="" selected disabled="disabled">Department</option>
-        <option *ngFor="let option of departmentOptions" [value]="option.id">
-          {{ option.value }}
-        </option>
-      </select>
-      <div class="modal-text-danger">
-        {{ errors.department_id }}
-      </div>
-    </div>
-    <div class="input-group">
-      <label>Shift</label>
-      <select
-        class="inputText w-75"
-        name="shift_id"
-        [(ngModel)]="employees.shift_id"
-        #shift_id="ngModel"
-        (change)="onHandleChange($event)"
-        (blur)="onHandleBlur($event)"
-      >
-        <option [ngValue]="" selected disabled="disabled">Shift</option>
-        <option *ngFor="let option of shiftOptions" [value]="option.id">
-          {{ option.value }}
-        </option>
-      </select>
-      <div class="modal-text-danger">
-        {{ errors.shift_id }}
-      </div>
+        {{ option.value }}
+      </option>
+    </select>
+    <div class="modal-text-danger">
+      {{ errors.agreement_type }}
     </div>
   </div>
 </ng-template>
@@ -316,6 +371,63 @@
               </select>
               <div class="modal-text-danger">
                 {{ errors.shift_id }}
+              </div>
+            </div>
+            <div class="input-group">
+              <label>Designation</label>
+              <select
+                class="inputText w-75"
+                name="designation_id"
+                [ngModel]="employees.designation_id"
+                #designation_id="ngModel"
+                (change)="onHandleChange($event)"
+                (blur)="onHandleBlur($event)"
+              >
+                <option [ngValue]="" selected disabled="disabled">Designation</option>
+                <option *ngFor="let option of designationOptions" [value]="option.id">
+                  {{ option.value }}
+                </option>
+              </select>
+              <div class="modal-text-danger">
+                {{ errors.designation_id }}
+              </div>
+            </div>
+            <div class="input-group">
+              <label>Joining Date</label>
+              <input
+                type="date"
+                class="inputText w-75"
+                name="join_date"
+                #join_date="ngModel"
+                [ngModel]="employees.join_date"
+                placeholder="Joining Date"
+                (keyup)="onHandleChange($event)"
+                (blur)="onHandleBlur($event)"
+              />
+              <div *ngIf="errors.join_date" class="modal-text-danger">
+                {{ errors.join_date }}
+              </div>
+            </div>
+            <div class="input-group">
+              <label>Agreement Type</label>
+              <select
+                class="inputText w-75"
+                name="agreement_type"
+                [ngModel]="employees.agreement_type"
+                #agreement_type="ngModel"
+                (change)="onHandleChange($event)"
+                (blur)="onHandleBlur($event)"
+              >
+                <option [ngValue]="" selected disabled="disabled">Agreement Type</option>
+                <option
+                  *ngFor="let option of agreementOptions"
+                  [ngValue]="option.id"
+                >
+                  {{ option.value }}
+                </option>
+              </select>
+              <div class="modal-text-danger">
+                {{ errors.agreement_type }}
               </div>
             </div>
             <div class="d-flex justify-content-center">

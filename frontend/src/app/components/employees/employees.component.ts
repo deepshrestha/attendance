@@ -4,6 +4,7 @@ import { ShiftService } from "../shift/shift.service";
 import { formValidator } from "./../../helpers/form-validator";
 import { EmployeeService } from "./employee.service";
 import { RoleService } from "../role/role.service";
+import { DesignationService } from "../designation/designation.service";
 import { DepartmentService } from "../department/department.service";
 import { Notification } from "./../../services/notification/notification.service";
 import * as $ from "jquery";
@@ -18,17 +19,21 @@ export class EmployeesComponent implements OnInit {
     service: EmployeeService;
     shiftService: ShiftService;
     roleService: RoleService;
+    designationService: DesignationService;
     notification: Notification;
     departmentService: DepartmentService;
     constructor(
-        @Inject(EmployeeService) service: EmployeeService, @Inject(ShiftService) shiftService: ShiftService,
+        @Inject(EmployeeService) service: EmployeeService, 
+        @Inject(ShiftService) shiftService: ShiftService,
         @Inject(RoleService) roleService: RoleService,
+        @Inject(DesignationService) designationService: DesignationService,
         @Inject(DepartmentService) departmentService: DepartmentService,
         @Inject(Notification) notification: Notification
     ) {
         this.service = service;
         this.shiftService = shiftService;
         this.roleService = roleService;
+        this.designationService = designationService;
         this.departmentService = departmentService;
         this.notification = notification;
     }
@@ -45,7 +50,14 @@ export class EmployeesComponent implements OnInit {
     employees: any = {};
     shiftOptions: any[] = [];
     roleOptions: any[] = [];
+    designationOptions: any[] = [];
     departmentOptions: any[] = [];
+    agreementOptions: any[] = [
+        { id: 'Contract', value: 'Contract' },
+        { id: 'Probation', value: 'Probation' },
+        { id: 'Temporary', value: 'Temporary' },
+        { id: 'Permanent', value: 'Permanent' },
+    ];
 
     tableHeaders = {
         sn: "#",
@@ -80,6 +92,9 @@ export class EmployeesComponent implements OnInit {
         shift_id: '',
         department_id: '',
         role_id: '',
+        designation_id: '',
+        join_date: '',
+        agreement_type: '',
         errors: {
             full_name: '',
             email_id: '',
@@ -89,6 +104,9 @@ export class EmployeesComponent implements OnInit {
             shift_id: '',
             department_id: '',
             role_id: '',
+            designation_id: '',
+            join_date: '',
+            agreement_type: '',
         }
     };
 
@@ -119,6 +137,9 @@ export class EmployeesComponent implements OnInit {
             shift_id: '',
             department_id: '',
             role_id: '',
+            designation_id: '',
+            join_date: '',
+            agreement_type: '',
             errors: {
                 full_name: '',
                 email_id: '',
@@ -128,6 +149,9 @@ export class EmployeesComponent implements OnInit {
                 shift_id: '',
                 department_id: '',
                 role_id: '',
+                designation_id: '',
+                join_date: '',
+                agreement_type: '',
             }
         }
     }
@@ -165,7 +189,10 @@ export class EmployeesComponent implements OnInit {
             full_name: event.target.elements['full_name'].value,
             shift_id: event.target.elements['shift_id'].value,
             role_id: event.target.elements['role_id'].value,
+            designation_id: event.target.elements['designation_id'].value,
             department_id: event.target.elements['department_id'].value,
+            join_date: event.target.elements['join_date'].value,
+            agreement_type: event.target.elements['agreement_type'].value,
         }
         if (this.onHandleSubmit(event)) {
             this.subscribeData = this.service.editDataFromService(formObject)
@@ -212,7 +239,10 @@ export class EmployeesComponent implements OnInit {
                             dob: data.dob,
                             shift_id: data.shift_id,
                             role_id: data.role_id,
+                            designation_id: data.designation_id,
                             department_id: data.department_id,
+                            join_date: data.join_date,
+                            agreement_type: data.agreement_type,
                         }
                         this.initializeFormValidation();
                     },
@@ -255,6 +285,11 @@ export class EmployeesComponent implements OnInit {
         this.roleService.getRoleData().subscribe(
             data => {
                 this.roleOptions = data;
+            }
+        );
+        this.designationService.getDesignationData().subscribe(
+            data => {
+                this.designationOptions = data;
             }
         );
         this.departmentService.getDepartmentData().subscribe(

@@ -70,7 +70,7 @@ exports.insertLeaveRequestData = function (req, res) {
                   '${req.body.remarks}'
                 )`;
 
-  console.log(query);
+  //console.log(query);
 
   var result = db.queryHandler(query);
 
@@ -100,7 +100,7 @@ exports.updateLeaveRequestData = function (req, res) {
                  remarks = '${req.body.remarks}'
                  where id = '${req.body.id}'`;
 
-  console.log(query);
+  //console.log(query);
 
   var result = db.queryHandler(query);
 
@@ -126,7 +126,7 @@ exports.getRemainingLeaveDays = function(req, res) {
               where d.leave_request_id is null
               and r.requested_by = ${req.params.requested_by}`;
 
-  console.log(query);
+  //console.log(query);
   var result = db.queryHandler(query);
 
   result
@@ -148,7 +148,7 @@ exports.getRemainingLeaveDays = function(req, res) {
                     where d.leave_request_id is not null
                     and r.requested_by = ${req.params.requested_by}`;
 
-        console.log(query);
+        //console.log(query);
         var result = db.queryHandler(query);
 
         result
@@ -179,7 +179,7 @@ exports.getSeniorApprovers = function (req, res) {
                  join roles r on requestorEmployee.role_id = r.id
                  where approverEmployee.role_id = r.parent_id
     `;
-  console.log(query);
+  //console.log(query);
   var result = db.queryHandler(query);
 
   result
@@ -219,7 +219,7 @@ exports.getMyLeaveRequests = function (req, res) {
                 ) as tmp_table order by id`;
 
   var result = db.queryHandler(query);
-  console.log(result);
+  //console.log(result);
   result
     .then((data) => {
       res.json(data);
@@ -253,7 +253,7 @@ exports.getLeaveRequests = function (req, res) {
                 group by lr.id
                 ) as tmp_table order by id`;
 
-  console.log(query);
+  //console.log(query);
 
   var result = db.queryHandler(query);
 
@@ -283,7 +283,7 @@ exports.processLeaveRequest = function (req, res) {
             ${req.body.leave_request_id}, ${statusId}, now(), ${req.body.leave_processed_by}, '${req.body.remarks}'
         )`;
 
-    console.log(query);
+    //console.log(query);
 
     var result = db.queryHandler(query);
 

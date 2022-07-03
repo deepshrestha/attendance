@@ -5,13 +5,22 @@ const mailSenderHelper = require("../helpers/mailSender");
 exports.getById = function (req, res) {
   //console.log(req.params.id)
   var query = `select id,
-                      shift_id, role_id, department_id, 
-                      full_name, email_id, password, fn_dateFormat(dob) as dob, 
-                      contact_no, address,
+                      shift_id, 
+                      role_id, 
+                      designation_id, 
+                      department_id, 
+                      full_name, 
+                      email_id, 
+                      password, 
+                      fn_dateFormat(dob) as dob, 
+                      contact_no, 
+                      address,
+                      fn_dateFormat(join_date) as join_date,
+                      agreement_type,
                       fn_dateTimeFormat(created_at) as created_at
               from employees
               where id = ${req.params.id}`;
-  console.log(query);
+  //console.log(query);
   var result = db.queryHandler(query);
 
   result
@@ -26,16 +35,25 @@ exports.getById = function (req, res) {
 exports.getAll = function (req, res) {
   var query = `select row_number() over(order by id) as sn,
                         employees.id as id,
-                        shifts.shift_name as shift_name, shifts.id as shift_id, 
-                        roles.role_name as role_name, roles.id as role_id, 
-                        departments.department_name as department_name, departments.id as department_id, 
+                        shifts.shift_name as shift_name, 
+                        shifts.id as shift_id, 
+                        roles.role_name as role_name, 
+                        roles.id as role_id, 
+                        designations.id as designation_id, 
+                        departments.department_name as department_name, 
+                        departments.id as department_id, 
                         full_name, 
-                        email_id, password, fn_dateFormat(dob) as dob, 
-                        contact_no, address,
+                        email_id, password, 
+                        fn_dateFormat(dob) as dob, 
+                        contact_no, 
+                        address,
+                        fn_dateFormat(join_date) as join_date,
+                        agreement_type,
                         fn_dateTimeFormat(employees.created_at) as created_at
                 from employees 
                 join shifts on employees.shift_id = shifts.id
                 join roles on employees.role_id = roles.id
+                join designations on employees.designation_id = designations.id
                 join departments on employees.department_id = departments.id
                 order by id `;
 
@@ -55,12 +73,15 @@ exports.insertEmployeeData = function (req, res) {
                 shift_id, 
                 department_id, 
                 role_id, 
+                designation_id,
                 full_name, 
                 email_id, 
                 password, 
                 dob, 
                 contact_no, 
-                address, 
+                address,
+                join_date,
+                agreement_type,
                 created_at, 
                 created_by
               ) 
@@ -68,19 +89,20 @@ exports.insertEmployeeData = function (req, res) {
                 '${req.body.shift_id}', 
                 '${req.body.department_id}',
                 '${req.body.role_id}',
+                '${req.body.designation_id}',
                 '${req.body.full_name}', 
                 '${req.body.email_id}', 
                 '${getEncryptedPasswordFromEmail(req.body.email_id)}',
                 '${req.body.dob}', 
                 '${req.body.contact_no}', 
                 '${req.body.address}', 
+                '${req.body.join_date}', 
+                '${req.body.agreement_type}', 
                 now(),
                 '1'
               )`;
 
-
-
-  console.log(query);
+  //console.log(query);
 
   var result = db.queryHandler(query);
 
@@ -116,8 +138,13 @@ exports.updateEmployeeData = function (req, res) {
                  full_name = '${req.body.full_name}', 
                  shift_id = '${req.body.shift_id}',
                  role_id = '${req.body.role_id}',
-                 department_id = '${req.body.department_id}'
+                 designation_id = '${req.body.designation_id}',
+                 department_id = '${req.body.department_id}',
+                 join_date = '${req.body.join_date}',
+                 agreement_type = '${req.body.agreement_type}'
                  where id = '${req.body.id}'`;
+
+  //console.log(query);
 
   var result = db.queryHandler(query);
 
