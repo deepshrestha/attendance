@@ -171,7 +171,8 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
             start_date: startDateVal,
             end_date: endDateVal,
             requested_to: requestedToVal,
-            remarks: event.target.elements['remarks'].value
+            remarks: event.target.elements['remarks'].value,
+            updated_by: this.tokenStorageService.getUser()["id"]
         }
         if (this.onHandleSubmit(event)) {
             //console.log("fields", formObject)
@@ -217,7 +218,8 @@ export class MyLeaveComponent implements OnInit, OnDestroy {
             end_date: endDateVal,
             requested_to: requestedToVal,
             remarks: event.target.elements['remarks'].value,
-            requested_by: this.tokenStorageService.getUser()["id"]
+            requested_by: this.tokenStorageService.getUser()["id"],
+            created_by: this.tokenStorageService.getUser()["id"]
         }
 
         if (this.onHandleSubmit(event)) {

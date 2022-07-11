@@ -103,7 +103,8 @@ export class DepartmentComponent implements OnInit, OnDestroy {
         let { event } = modalEvent;
         let formObject = {
             id: event.target.elements['department_id'].value,
-            department_name: event.target.elements['department_name'].value
+            department_name: event.target.elements['department_name'].value,
+            updated_by: this.tokenStorageService.getUser()["id"]
         }
         if (this.onHandleSubmit(event)) {
             //console.log(obj);

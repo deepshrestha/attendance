@@ -23,9 +23,16 @@ const socketAPI = async () => {
         // do something when some checkin 
         console.log("data", data);
 
-        axios.post("http://localhost:3000/getRealTimeData", data)
+        axios.post("http://localhost:3000/api/attendance", data)
         .then(response => {
             console.log(response.data)
+            zkInstance.clearAttendanceLog()
+            .then(() => {
+                console.log("Attendance cleared!");
+            })
+            .catch(err => {
+                console.log(err);
+            })
             return response
         })
         .catch(err => {

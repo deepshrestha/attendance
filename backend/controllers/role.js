@@ -18,9 +18,17 @@ exports.getById = function (req, res) {
 };
 
 exports.getAll = function (req, res) {
-  var query = `select row_number() over(order by r1.id) as sn, r1.id,
-                        r1.role_name, r1.parent_id, r2.role_name as parent_role, fn_dateTimeFormat(r1.created_at) as created_at
-                from roles as r1 left join roles as r2 on r1.parent_id = r2.id`;
+  var query = `select row_number() over(order by r1.id) as sn, 
+                      r1.id,
+                      r1.role_name, 
+                      r1.parent_id, 
+                      r2.role_name as parent_role, 
+                      fn_dateTimeFormat(r1.created_at) as created_at,
+                      e.full_name as created_by
+                from roles as r1 
+                join employees e on r1.created_by = e.id
+                left join roles as r2 on r1.parent_id = r2.id
+                where r1.role_name <> 'None'`;
 
   var result = db.queryHandler(query);
 
@@ -45,7 +53,7 @@ exports.insertRoleData = function (req, res) {
                 '${req.body.role_name}', 
                 '${req.body.parent_id}', 
                 now(),
-                '1'
+                '${req.body.created_by}'
               )`;
 
   //console.log(query);
@@ -71,6 +79,8 @@ exports.updateRoleData = function (req, res) {
   //console.log(req.body);
   var query = `update roles 
                  set role_name = '${req.body.role_name}', 
+                 updated_at = now(),
+                 updated_by = '${req.body.updated_by}',
                  parent_id = '${req.body.parent_id}'
                  where id = '${req.body.id}'`;
 

@@ -101,11 +101,12 @@ export class LeaveStatusComponent implements OnInit, OnDestroy {
         let { event } = modalEvent;
         let formObject = {
             id: event.target.elements['leave_status_id'].value,
-            name: event.target.elements['name'].value
+            name: event.target.elements['name'].value,
+            updated_by: this.tokenStorageService.getUser()["id"]
         }
         if (this.onHandleSubmit(event)) {
             //console.log(obj);
-            console.log("fields", formObject)
+            //console.log("fields", formObject)
             this.subscribeData = this.leaveStatusService.editDataFromService(formObject)
             .subscribe(
                 {
@@ -160,12 +161,12 @@ export class LeaveStatusComponent implements OnInit, OnDestroy {
     }
 
     onDisplayModalData(id){
-        console.log(id)
+        //console.log(id)
         this.subscribeData = this.leaveStatusService.getDataByIdFromService(id)
         .subscribe(            
             {
                 next: data => {
-                    console.log(data);
+                    //console.log(data);
                     this.leave_statuses = data;
                     this.initialState = {
                         ...this.initialState,
@@ -186,7 +187,7 @@ export class LeaveStatusComponent implements OnInit, OnDestroy {
         .subscribe(            
             {
                 next: data => {
-                    console.log(data)
+                    //console.log(data)
                     this.tableData = data;
                     this.paginationConfig = {
                         ...this.paginationConfig,

@@ -30,6 +30,7 @@ import { MyLeaveComponent } from "./components/my-leave/my-leave.component";
 import { MyHolidayComponent } from "./components/my-holiday/my-holiday.component";
 import { TableModalComponent } from "./components/content/Modal/TableModal/table-modal.component";
 import { MyProfileComponent } from "./components/my-profile/my-profile.component";
+import { ImportUserData } from "./components/import-user-data/import-user-data.component";
 //import { SettingsComponent } from "./components/settings/settings.component";
 
 const routes: Routes = [
@@ -115,6 +116,12 @@ const routes: Routes = [
     data: { role: "ROLE_ADMIN",  breadcrumb: 'My Profile' }
   },
   {
+    path: "import-user-data",
+    component: ImportUserData,
+    // canActivate: [AuthGuard],
+    data: { role: "ROLE_ADMIN",  breadcrumb: 'Import User Data' }
+  },
+  {
     path: "subscribers",
     component: SubscriberListComponent,
     canActivate: [AuthGuard],
@@ -165,4 +172,5 @@ export const appRoutingComponents = [
   MyHolidayComponent,
   TableModalComponent,
   MyProfileComponent,
+  ImportUserData,
 ]

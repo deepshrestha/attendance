@@ -21,15 +21,18 @@ exports.getById = function (req, res) {
   };
 
 exports.getAll = function(req, res) {
-    var query = `select row_number() over(order by id) as sn,
-                        id,
+    var query = `select row_number() over(order by s.id) as sn,
+                        s.id,
                         shift_name, 
                         start_week_day, 
                         CASE WHEN allow_overtime = 1 THEN 'true' ELSE 'false' END AS allow_overtime, 
                         start_overtime,
-                        fn_dateTimeFormat(created_at) as created_at
-                from shifts
-                order by id`;
+                        fn_dateTimeFormat(s.created_at) as created_at,
+                        e.full_name as created_by
+                from shifts s
+                join employees e on s.created_by = e.id
+                where shift_name <> 'None'
+                order by s.id`;
 
     var result = db.queryHandler(query);
 
@@ -44,7 +47,7 @@ exports.getAll = function(req, res) {
 exports.insertShiftData = function(req, res) {
     //console.log(req.body);
     var query = `insert into shifts (shift_name, start_week_day, allow_overtime, start_overtime, created_at, created_by) 
-                values ('${req.body.shift_name}', '${req.body.start_week_day}', ${req.body.allow_overtime}, '${req.body.start_overtime}', now(), '1')`;
+                values ('${req.body.shift_name}', '${req.body.start_week_day}', ${req.body.allow_overtime}, '${req.body.start_overtime}', now(), '${req.body.created_by}')`;
 
     //console.log(query);
     
@@ -67,11 +70,23 @@ exports.insertShiftData = function(req, res) {
 exports.updateShiftData = function (req, res) {
     //console.log(req.body);
     var query = `update shifts 
-                   set shift_name = '${req.body.shift_name}',
-                   start_week_day = '${req.body.start_week_day}', 
-                   allow_overtime = '${req.body.allow_overtime}',
-                   start_overtime = '${req.body.start_overtime}'
-                   where id = '${req.body.id}'`;
+                 set shift_name = '${req.body.shift_name}',`;
+
+        if(req.body.start_week_day) {
+          query += `start_week_day = '${req.body.start_week_day}',`;
+        }
+
+        if(req.body.allow_overtime) {
+          query += `allow_overtime = '${req.body.allow_overtime}',`
+        }
+        
+        if(req.body.start_overtime) {
+          query += `start_overtime = '${req.body.start_overtime}',`
+        }
+
+        query += `updated_at = now(),
+                  updated_by = '${req.body.updated_by}'
+                  where id = '${req.body.id}'`;
   
     //console.log(query);
   
@@ -93,8 +108,10 @@ exports.updateShiftData = function (req, res) {
   exports.updateAllowOvertime = function (req, res) {
     //console.log(req.body);
     var query = `update shifts 
-                   set allow_overtime = ${req.body.allow_overtime}
-                   where id = '${req.body.id}'`;
+                set allow_overtime = ${req.body.allow_overtime},
+                updated_at = now(),
+                updated_by = '${req.body.updated_by}'
+                where id = '${req.body.id}'`;
   
     //console.log(query);
   

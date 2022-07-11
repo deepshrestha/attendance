@@ -99,9 +99,11 @@ exports.insertLeaveMasterData = function (req, res) {
 exports.updateLeaveMasterData = function (req, res) {
   //console.log(req.body);
   var query = `update leave_master 
-                 set name = '${req.body.name}',
-                     leave_days = '${req.body.leave_days}',
-                 where id = '${req.body.id}'`;
+                set name = '${req.body.name}',
+                leave_days = '${req.body.leave_days}',
+                updated_at = now(),
+                updated_by = '${req.body.updated_by}'
+                where id = '${req.body.id}'`;
 
   //console.log(query);
 

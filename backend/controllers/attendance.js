@@ -19,7 +19,9 @@ exports.getRealTimeData = function(req, res) {
     var query = `insert into attendance_logs (UserID, CheckInTime) 
                 values ('${userId}', '${attendanceTime}')`;
 
-    var result = db.queryHandler(query);
+    console.log(query);
+    
+    /* var result = db.queryHandler(query);
 
     result.then(data => {
         console.log("last insert Id: ", data.insertId);
@@ -37,6 +39,6 @@ exports.getRealTimeData = function(req, res) {
     })
     .catch(err => {
         console.log(err)
-    })
+    }) */
     res.send("Submitted")
 };

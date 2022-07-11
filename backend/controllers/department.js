@@ -26,6 +26,7 @@ exports.getAll = function(req, res) {
                         e.full_name as created_by
                 from departments d
                 join employees e on d.created_by = e.id
+                where department_name <> 'None'
                 order by d.id`;
 
     var result = db.queryHandler(query);
@@ -64,7 +65,9 @@ exports.insertDepartmentData = function(req, res) {
 exports.updateDepartmentData = function(req, res) {
     //console.log(req.body);
     var query = `update departments 
-                 set department_name = '${req.body.department_name}'
+                 set department_name = '${req.body.department_name}',
+                 updated_at = now(),
+                 updated_by = '${req.body.updated_by}'
                  where id = '${req.body.id}'`;
 
     //console.log(query);

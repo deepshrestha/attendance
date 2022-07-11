@@ -20,14 +20,16 @@ exports.getById = function (req, res) {
 };
 
 exports.getAll = function (req, res) {
-  var query = `select row_number() over(order by id) as sn,
-                        id,
+  var query = `select row_number() over(order by w.id) as sn,
+                        w.id,
                         working_day, 
                         start_time, 
                         end_time, 
-                        fn_dateTimeFormat(created_at) as created_at
-                from working_days
-                order by id`;
+                        fn_dateTimeFormat(w.created_at) as created_at,
+                        e.full_name as created_by
+                from working_days w
+                join employees e on w.created_by = e.id
+                order by w.id`;
 
   var result = db.queryHandler(query);
 
@@ -54,7 +56,8 @@ exports.insertWorkingDayData = function (req, res) {
                     '${req.body.start_time}', 
                     '${req.body.end_time}', 
                     now(), 
-                    '1')
+                    '${req.body.created_by}'
+                )
                 `;
 
   //console.log(query);
@@ -81,7 +84,9 @@ exports.updateWorkingDayData = function (req, res) {
     var query = `update working_days 
                    set working_day = '${req.body.working_day}', 
                    start_time = '${req.body.start_time}',  
-                   end_time = '${req.body.end_time}'
+                   end_time = '${req.body.end_time}',
+                   updated_at = now(),
+                   updated_by = '${req.body.updated_by}'
                    where id = '${req.body.id}'`;
   
     //console.log(query);

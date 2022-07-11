@@ -3,6 +3,7 @@ import { formValidator } from "./../../helpers/form-validator";
 import { WorkingDayService } from './working-day.service'
 import { Subscription } from "rxjs";
 import { Notification } from "./../../services/notification/notification.service";
+import { TokenStorageService } from "../../services/token-storage/token-storage.service";
 import * as $ from "jquery";
 
 @Component({
@@ -26,12 +27,16 @@ export class WorkingDayComponent implements OnInit {
 
     service: WorkingDayService;
     notification: Notification;
+    tokenStorageService: TokenStorageService;
+
     constructor(
         @Inject(WorkingDayService) service: WorkingDayService,
-        @Inject(Notification) notification: Notification
+        @Inject(Notification) notification: Notification,
+        @Inject(TokenStorageService) tokenStorageService: TokenStorageService,
     ) {
         this.service = service;
         this.notification = notification;
+        this.tokenStorageService = tokenStorageService;
     }
 
     working_days: any = {};
@@ -110,6 +115,7 @@ export class WorkingDayComponent implements OnInit {
     saveInfo(event, obj) {
         event.preventDefault();
         if (this.onHandleSubmit(event)) {
+            obj.value.created_by = this.tokenStorageService.getUser()["id"];
             this.subscribeData = this.service.postDataFromService(obj.value)
                 .subscribe(
                     {
@@ -136,6 +142,7 @@ export class WorkingDayComponent implements OnInit {
             working_day: event.target.elements['working_day'].value,
             start_time: event.target.elements['start_time'].value,
             end_time: event.target.elements['end_time'].value,
+            updated_by: this.tokenStorageService.getUser()["id"]
         }
         if (this.onHandleSubmit(event)) {
             //console.log(obj);

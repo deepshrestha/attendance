@@ -26,6 +26,7 @@ exports.getAll = function(req, res) {
                         e.full_name as created_by
                 from designations d
                 join employees e on d.created_by = e.id
+                where designation_name <> 'None'
                 order by d.id`;
 
     var result = db.queryHandler(query);
@@ -64,7 +65,9 @@ exports.insertDesignationData = function(req, res) {
 exports.updateDesignationData = function(req, res) {
     //console.log(req.body);
     var query = `update designations 
-                 set designation_name = '${req.body.designation_name}'
+                 set designation_name = '${req.body.designation_name}',
+                 updated_at = now(),
+                 updated_by = '${req.body.updated_by}'
                  where id = '${req.body.id}'`;
 
     //console.log(query);

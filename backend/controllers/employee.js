@@ -13,6 +13,7 @@ exports.getById = function (req, res) {
                       email_id, 
                       password, 
                       fn_dateFormat(dob) as dob, 
+                      gender, 
                       contact_no, 
                       address,
                       fn_dateFormat(join_date) as join_date,
@@ -45,6 +46,7 @@ exports.getAll = function (req, res) {
                         full_name, 
                         email_id, password, 
                         fn_dateFormat(dob) as dob, 
+                        gender, 
                         contact_no, 
                         address,
                         fn_dateFormat(join_date) as join_date,
@@ -78,6 +80,7 @@ exports.insertEmployeeData = function (req, res) {
                 email_id, 
                 password, 
                 dob, 
+                gender, 
                 contact_no, 
                 address,
                 join_date,
@@ -94,12 +97,13 @@ exports.insertEmployeeData = function (req, res) {
                 '${req.body.email_id}', 
                 '${getEncryptedPasswordFromEmail(req.body.email_id)}',
                 '${req.body.dob}', 
+                '${req.body.gender}',
                 '${req.body.contact_no}', 
                 '${req.body.address}', 
                 '${req.body.join_date}', 
                 '${req.body.agreement_type}', 
                 now(),
-                '1'
+                '${req.body.created_by}'
               )`;
 
   //console.log(query);
@@ -133,6 +137,7 @@ exports.updateEmployeeData = function (req, res) {
                  set address = '${req.body.address}', 
                  contact_no = '${req.body.contact_no}', 
                  dob = '${req.body.dob}', 
+                 gender = '${req.body.gender}', 
                  email_id = '${req.body.email_id}', 
                  password = '${getEncryptedPasswordFromEmail(req.body.email_id)}',
                  full_name = '${req.body.full_name}', 
@@ -141,7 +146,9 @@ exports.updateEmployeeData = function (req, res) {
                  designation_id = '${req.body.designation_id}',
                  department_id = '${req.body.department_id}',
                  join_date = '${req.body.join_date}',
-                 agreement_type = '${req.body.agreement_type}'
+                 agreement_type = '${req.body.agreement_type}',
+                 updated_at = now(),
+                 updated_by = '${req.body.updated_by}'
                  where id = '${req.body.id}'`;
 
   //console.log(query);

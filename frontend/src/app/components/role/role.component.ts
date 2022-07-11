@@ -3,6 +3,7 @@ import { Subscription } from "rxjs";
 import { formValidator } from "../../helpers/form-validator";
 import { RoleService } from "./role.service";
 import { Notification } from "./../../services/notification/notification.service";
+import { TokenStorageService } from "../../services/token-storage/token-storage.service";
 import * as $ from "jquery";
 
 @Component({
@@ -14,12 +15,15 @@ export class RolesComponent implements OnInit {
 
     service: RoleService;
     notification: Notification;
+    tokenStorageService: TokenStorageService;
     constructor(
         @Inject(RoleService) service: RoleService, 
-        @Inject(Notification) notification: Notification
+        @Inject(Notification) notification: Notification,
+        @Inject(TokenStorageService) tokenStorageService: TokenStorageService,
     ) {
         this.service = service;
         this.notification = notification;
+        this.tokenStorageService = tokenStorageService;
     }
 
     showTable: boolean = true;
@@ -95,7 +99,8 @@ export class RolesComponent implements OnInit {
     saveInfo(event: any, obj: any) {
         event.preventDefault();
         if (this.onHandleSubmit(event)) {
-            console.log(obj.value);
+            //console.log(obj.value);
+            obj.value.created_by = this.tokenStorageService.getUser()["id"];
             this.subscribeData = this.service.postDataFromService(obj.value)
                 .subscribe(
                     {
@@ -120,6 +125,7 @@ export class RolesComponent implements OnInit {
             id: event.target.elements['role_id'].value,
             role_name: event.target.elements['role_name'].value,
             parent_id: event.target.elements['parent_id'].value,
+            updated_by: this.tokenStorageService.getUser()["id"]
         }
         if (this.onHandleSubmit(event)) {
             //console.log(obj);

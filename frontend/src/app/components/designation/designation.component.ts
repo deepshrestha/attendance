@@ -3,6 +3,7 @@ import { Observable, Subscription } from "rxjs";
 import { formValidator } from "./../../helpers/form-validator";
 import { DesignationService } from "./designation.service";
 import { Notification } from "./../../services/notification/notification.service";
+import { TokenStorageService } from "../../services/token-storage/token-storage.service";
 import * as $ from "jquery";
 
 @Component({
@@ -14,13 +15,16 @@ export class DesignationComponent implements OnInit {
 
     designationService: DesignationService;
     notification: Notification;
+    tokenStorageService: TokenStorageService;
     
     constructor(
         @Inject(DesignationService) designationService: DesignationService,
-        @Inject(Notification) notification: Notification
+        @Inject(Notification) notification: Notification,
+        @Inject(TokenStorageService) tokenStorageService: TokenStorageService,
     ) {
         this.designationService = designationService;
         this.notification = notification;
+        this.tokenStorageService = tokenStorageService;
     }
 
     showTable: boolean = true;
@@ -89,6 +93,7 @@ export class DesignationComponent implements OnInit {
     saveInfo(event: any, obj: any) {
         event.preventDefault();
         if (this.onHandleSubmit(event)) {
+            obj.value.created_by = this.tokenStorageService.getUser()["id"];
             this.subscribeData = this.designationService.postDataFromService(obj.value)
                 .subscribe(
                     {
@@ -113,6 +118,7 @@ export class DesignationComponent implements OnInit {
         let formObject = {
             id: event.target.elements['designation_id'].value,
             designation_name: event.target.elements['designation_name'].value,
+            updated_by: this.tokenStorageService.getUser()["id"]
         }
         if (this.onHandleSubmit(event)) {
             this.subscribeData = this.designationService.editDataFromService(formObject)

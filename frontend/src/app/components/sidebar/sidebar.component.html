@@ -9,12 +9,11 @@
       />
       <span class="brand-text font-weight-light">{{ title }}</span>
     </a>
-
     <div class="sidebar">
       <div class="user-panel mt-3 mb-3 d-flex">
         <div class="image">
           <img
-            src="/public/dist/img/user2-160x160.jpg"
+            [src]="profile.photo ? profile.photo : 'http://localhost:3000/images/noimgavailable.png'"
             class="img-circle elevation-2"
             alt="User Image"
           />
@@ -262,6 +261,15 @@
             >
               <i class="far fa-address-card nav-icon"></i>
               <p>My Profile</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a  [routerLink]="['/import-user-data']"
+                routerLinkActive="active"
+                class="single-menu nav-link"
+            >
+              <i class="fas fa-user-plus nav-icon"></i>
+              <p>Import User Data</p>
             </a>
           </li>
           <li class="nav-item">

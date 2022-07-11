@@ -106,7 +106,9 @@ export class LeaveMasterComponent implements OnInit, OnDestroy {
         let { event } = modalEvent;
         let formObject = {
             id: event.target.elements['leave_id'].value,
-            name: event.target.elements['name'].value
+            name: event.target.elements['name'].value,
+            leave_days: event.target.elements['leave_days'].value,
+            updated_by: this.tokenStorageService.getUser()["id"]
         }
         if (this.onHandleSubmit(event)) {
             //console.log(obj);
@@ -165,7 +167,7 @@ export class LeaveMasterComponent implements OnInit, OnDestroy {
     }
 
     onDisplayModalData(id){
-        console.log(id)
+        //console.log(id)
         this.subscribeData = this.leaveMasterService.getDataByIdFromService(id)
         .subscribe(            
             {
@@ -175,7 +177,8 @@ export class LeaveMasterComponent implements OnInit, OnDestroy {
                     this.initialState = {
                         ...this.initialState,
                         leave_id: data.id,
-                        name: data.name
+                        name: data.name,
+                        leave_days: data.leave_days
                     }
                     this.initializeFormValidation();
                 },

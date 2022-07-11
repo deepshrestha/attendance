@@ -64,7 +64,9 @@ exports.insertLeaveStatusData = function(req, res) {
 exports.updateLeaveStatusData = function(req, res) {
     //console.log(req.body);
     var query = `update leave_status 
-                 set name = '${req.body.name}'
+                 set name = '${req.body.name}',
+                 updated_at = now(),
+                 updated_by = '${req.body.updated_by}'
                  where id = '${req.body.id}'`;
 
     //console.log(query);

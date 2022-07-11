@@ -67,7 +67,7 @@ const  formValidator = (props) => {
         );
       } 
       else if (type === "file") {
-        let fileDescriptor = event.target.files[0];
+        let fileDescriptor = event.target.files[0] ?? value;
         validate(name, 
           (placeholder === undefined || placeholder === '') ? (event.target.files[0].name) : placeholder, 
           fileDescriptor, 

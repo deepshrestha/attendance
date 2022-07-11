@@ -7,6 +7,7 @@ import { RoleService } from "../role/role.service";
 import { DesignationService } from "../designation/designation.service";
 import { DepartmentService } from "../department/department.service";
 import { Notification } from "./../../services/notification/notification.service";
+import { TokenStorageService } from "../../services/token-storage/token-storage.service";
 import * as $ from "jquery";
 
 @Component({
@@ -22,13 +23,16 @@ export class EmployeesComponent implements OnInit {
     designationService: DesignationService;
     notification: Notification;
     departmentService: DepartmentService;
+    tokenStorageService: TokenStorageService;
+
     constructor(
         @Inject(EmployeeService) service: EmployeeService, 
         @Inject(ShiftService) shiftService: ShiftService,
         @Inject(RoleService) roleService: RoleService,
         @Inject(DesignationService) designationService: DesignationService,
         @Inject(DepartmentService) departmentService: DepartmentService,
-        @Inject(Notification) notification: Notification
+        @Inject(Notification) notification: Notification,
+        @Inject(TokenStorageService) tokenStorageService: TokenStorageService,
     ) {
         this.service = service;
         this.shiftService = shiftService;
@@ -36,6 +40,7 @@ export class EmployeesComponent implements OnInit {
         this.designationService = designationService;
         this.departmentService = departmentService;
         this.notification = notification;
+        this.tokenStorageService = tokenStorageService;
     }
 
     showTable: boolean = true;
@@ -52,20 +57,27 @@ export class EmployeesComponent implements OnInit {
     roleOptions: any[] = [];
     designationOptions: any[] = [];
     departmentOptions: any[] = [];
+    
     agreementOptions: any[] = [
+        { id: 'None', value: 'None' },
         { id: 'Contract', value: 'Contract' },
         { id: 'Probation', value: 'Probation' },
         { id: 'Temporary', value: 'Temporary' },
         { id: 'Permanent', value: 'Permanent' },
     ];
 
+    genderOptions: any[] = [
+        { id: 'Male', value: 'Male' },
+        { id: 'Female', value: 'Female' },
+    ];
+
     tableHeaders = {
         sn: "#",
         full_name: "Full Name",
         email_id: "Email Address",
-        address: "Address",
+        //address: "Address",
         contact_no: "Contact No",
-        dob: "Date of Birth",
+        //dob: "Date of Birth",
         shift_name: "Shift",
         role_name: "Role",
         department_name: "Department",
@@ -89,6 +101,7 @@ export class EmployeesComponent implements OnInit {
         address: '',
         contact_no: '',
         dob: '',
+        gender: '',
         shift_id: '',
         department_id: '',
         role_id: '',
@@ -101,6 +114,7 @@ export class EmployeesComponent implements OnInit {
             address: '',
             contact_no: '',
             dob: '',
+            gender: '',
             shift_id: '',
             department_id: '',
             role_id: '',
@@ -134,6 +148,7 @@ export class EmployeesComponent implements OnInit {
             address: '',
             contact_no: '',
             dob: '',
+            gender: '',
             shift_id: '',
             department_id: '',
             role_id: '',
@@ -146,6 +161,7 @@ export class EmployeesComponent implements OnInit {
                 address: '',
                 contact_no: '',
                 dob: '',
+                gender: '',
                 shift_id: '',
                 department_id: '',
                 role_id: '',
@@ -159,6 +175,7 @@ export class EmployeesComponent implements OnInit {
     saveInfo(event: any, obj: any) {
         event.preventDefault();
         if (this.onHandleSubmit(event)) {
+            obj.value.created_by = this.tokenStorageService.getUser()["id"];
             this.subscribeData = this.service.postDataFromService(obj.value)
                 .subscribe(
                     {
@@ -185,6 +202,7 @@ export class EmployeesComponent implements OnInit {
             address: event.target.elements['address'].value,
             contact_no: event.target.elements['contact_no'].value,
             dob: event.target.elements['dob'].value,
+            gender: event.target.elements['gender'].value,
             email_id: event.target.elements['email_id'].value,
             full_name: event.target.elements['full_name'].value,
             shift_id: event.target.elements['shift_id'].value,
@@ -193,6 +211,7 @@ export class EmployeesComponent implements OnInit {
             department_id: event.target.elements['department_id'].value,
             join_date: event.target.elements['join_date'].value,
             agreement_type: event.target.elements['agreement_type'].value,
+            updated_by: this.tokenStorageService.getUser()["id"]
         }
         if (this.onHandleSubmit(event)) {
             this.subscribeData = this.service.editDataFromService(formObject)
@@ -237,6 +256,7 @@ export class EmployeesComponent implements OnInit {
                             address: data.address,
                             contact_no: data.contact_no,
                             dob: data.dob,
+                            gender: data.gender,
                             shift_id: data.shift_id,
                             role_id: data.role_id,
                             designation_id: data.designation_id,

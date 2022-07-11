@@ -19,6 +19,7 @@ var leaveRequest = require('./routes/leaves/leaveRequestRouter');
 var holidays = require('./routes/holidays/myHolidayRouter');
 var nepaliPatroHolidays = require('./routes/nepaliPatro/nepaliPatroHolidaysRouter');
 var profile = require('./routes/profile/profileRouter');
+var importUser = require('./routes/importUser/importUserRouter');
 
 app.use(cors());
 app.use(express.static("./public"));
@@ -40,35 +41,7 @@ app.use('/', leaveRequest);
 app.use('/', holidays);
 app.use('/', nepaliPatroHolidays);
 app.use('/', profile);
-
-/* app.post("/getRealTimeData", (req, res) => {
-    let userId = req.body.userId;
-    let attendanceTime = req.body.attTime;
-    console.log(userId, attendanceTime)
-    
-    var query = `insert into attendance_logs (UserID, CheckInTime) 
-                values ('${userId}', '${attendanceTime}')`;
-
-    var result = db.queryHandler(query);
-
-    result.then(data => {
-        console.log("last insert Id: ", data.insertId);
-        var query = "select * from attendance_logs";
-        db.queryHandler(query)
-        .then(data => {
-            data.map(item => {
-                console.log(item.id, item.userId, item.checkInTime)
-            })
-        })
-        .catch(err => {
-            console.log(err)
-        })
-    })
-    .catch(err => {
-        console.log(err)
-    })
-    res.send("Submitted")
-}) */
+app.use('/', importUser);
 
 app.get("/getUsers", (req, res) => {
     try{
@@ -80,24 +53,6 @@ app.get("/getUsers", (req, res) => {
         })
     } catch(e){}
 })
-
-/* app.get("/getAttendance", (req, res) => {
-    var query = "select * from attendance_logs";
-    var result = db.queryHandler(query);
-    result.then(data => {
-        res.json(data);
-    })
-    .catch(err => {
-        console.log(err)
-    })
-        
-    // socketAPI.then(data => {
-    //     res.json(data.attendences)
-    // })
-    // .catch(err => {
-    //     console.log("Problem occured while fetching data!")
-    // })
-}) */
 
 app.listen(3000, () => {
     console.log("server is running on port 3000!")

@@ -4,6 +4,7 @@ import { formValidator } from "./../../helpers/form-validator";
 import { ShiftService } from './shift.service'
 import { Subscription } from "rxjs";
 import { Notification } from "./../../services/notification/notification.service";
+import { TokenStorageService } from "../../services/token-storage/token-storage.service";
 import * as $ from 'jquery';
 
 @Component({
@@ -28,23 +29,22 @@ export class ShiftComponent implements OnInit {
 
     service: ShiftService;
     notification: Notification;
+    tokenStorageService: TokenStorageService;
+
     constructor(
         @Inject(ShiftService) service: ShiftService,
-        @Inject(Notification) notification: Notification
+        @Inject(Notification) notification: Notification,
+        @Inject(TokenStorageService) tokenStorageService: TokenStorageService,
     ) {
         this.service = service;
         this.notification = notification;
+        this.tokenStorageService = tokenStorageService;
     }
 
     shifts: any = {};
-    shiftOptions: any[] = [
-        { id: 'Regular', value: 'Regular' },
-        { id: 'Morning', value: 'Morning' },
-        { id: 'Evening', value: 'Evening' },
-        { id: 'Night', value: 'Night' },
-    ];
-
+    shiftOptions: any[] = [];
     start_week_dayOptions: any[] = [
+        { id: 'None', value: 'None' },
         { id: 'Sunday', value: 'Sunday' },
         { id: 'Monday', value: 'Monday' },
     ];
@@ -118,6 +118,7 @@ export class ShiftComponent implements OnInit {
     saveInfo(event, obj) {
         event.preventDefault();
         if (this.onHandleSubmit(event)) {
+            obj.value.created_by = this.tokenStorageService.getUser()["id"];
             this.subscribeData = this.service.postDataFromService(obj.value)
                 .subscribe(
                     {
@@ -142,6 +143,7 @@ export class ShiftComponent implements OnInit {
             shift_name: event.target.elements['shift_name'].value,
             start_week_day: event.target.elements['start_week_day'].value,
             start_overtime: event.target.elements['start_overtime'].value,
+            updated_by: this.tokenStorageService.getUser()["id"]
         }
         if (this.onHandleSubmit(event)) {
             //console.log(obj);
@@ -227,6 +229,11 @@ export class ShiftComponent implements OnInit {
     ngOnInit(): void {
         this.initializeFormValidation();
         this.getAll();
+        this.service.getShiftData().subscribe(
+            data => {
+                this.shiftOptions = data;
+            }
+        );
     }
 
     ngOnDestroy(): void {
