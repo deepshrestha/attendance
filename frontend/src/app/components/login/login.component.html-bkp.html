@@ -1,0 +1,62 @@
+<div>
+    <div class="login-form">
+        <form  #loginDetail="ngForm"
+                method="post"
+                (ngSubmit)="onSubmit($event, loginDetail.value)"
+                autocomplete="off">
+            <h2 class="text-center">Log in</h2>
+            <div class="text-center text-danger">{{errorMsg}}</div>
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-user"></i>
+                        </span>
+                    </div>
+                    <input 
+                        autoFocus
+                        type="email" 
+                        class="form-control" 
+                        name="email" 
+                        [ngModel]="email"
+                        placeholder="Email" 
+                        (keyup)="onHandleChange($event)"
+                        (blur)="onHandleBlur($event)"
+                    />
+                </div>
+                <div class="text-danger">
+                    {{errors.email}}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                    </div>
+                    <input 
+                        type="password" 
+                        class="form-control" 
+                        name="password" 
+                        #password
+                        [ngModel]="password"
+                        placeholder="Password" 
+                        (keyup)="onHandleChange($event)"
+                        (blur)="onHandleBlur($event)"
+                    />
+                </div>
+                <div class="text-danger">
+                    {{errors.password}}
+                </div>
+            </div>
+             <div class="form-group">
+                <button class="btn btn-primary btn-block">Log In</button>
+            </div>
+            <div class="text-center">
+                <a href="#">Forgot Password?</a>
+            </div>
+        </form>
+        <p class="text-center"><a routerLink="/register">Create an Account</a></p>
+    </div>
+</div>

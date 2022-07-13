@@ -17,7 +17,7 @@ export class AttendanceComponent implements OnInit {
 
     tableHeaders = {
         id: "#",
-        employee_number: "Employee Number",
+        employee_number: "Emp Number",
         name: "Full Name",
         in_time: "Check-In Time",
         out_time: "Check-Out Time",

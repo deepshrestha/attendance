@@ -145,6 +145,7 @@
   </tbody>
 </table>
 <app-modal
+  *ngIf="paginateData?.length > 0"
   [modalTitle]="modalTitle"
   [modalBody]="modalBody"
   (onSaveInfo)="onSaveInfoDetail($event)"

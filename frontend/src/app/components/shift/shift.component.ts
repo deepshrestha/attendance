@@ -42,9 +42,13 @@ export class ShiftComponent implements OnInit {
     }
 
     shifts: any = {};
-    shiftOptions: any[] = [];
+    shiftOptions: any[] = [
+        { id: 'Regular', value: 'Regular' },
+        { id: 'Morning', value: 'Morning' },
+        { id: 'Evening', value: 'Evening' },
+        { id: 'Night', value: 'Night' },
+    ];
     start_week_dayOptions: any[] = [
-        { id: 'None', value: 'None' },
         { id: 'Sunday', value: 'Sunday' },
         { id: 'Monday', value: 'Monday' },
     ];
@@ -123,8 +127,11 @@ export class ShiftComponent implements OnInit {
                 .subscribe(
                     {
                         next: data => {
-                            this.reInitializeState();
-                            this.initializeFormValidation();
+                            if(data.success) {
+                                this.notification.showMessage("success", data.message);
+                                this.reInitializeState();
+                                this.initializeFormValidation();
+                            }
                         },
                         error: err => {
                             console.log(err)
@@ -180,7 +187,6 @@ export class ShiftComponent implements OnInit {
                 {
                     next: data => {
                         this.shifts = data;
-                        console.log(this.shifts)
                         this.initialState = {
                             ...this.initialState,
                             shift_id: data.id,
@@ -229,11 +235,6 @@ export class ShiftComponent implements OnInit {
     ngOnInit(): void {
         this.initializeFormValidation();
         this.getAll();
-        this.service.getShiftData().subscribe(
-            data => {
-                this.shiftOptions = data;
-            }
-        );
     }
 
     ngOnDestroy(): void {
